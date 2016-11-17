@@ -1,11 +1,11 @@
-module Api
+  module Api
   module V1
     class UsersController < Api::BaseController
       before_action :authenticate
       before_action :set_user, only: [:show, :update, :destroy, :password]
 
       respond_to :json
-      # load_and_authorize_resource :user, parent: false
+      load_and_authorize_resource except: :create
 
       def show
         respond_with build_data_object(@user)
@@ -20,6 +20,8 @@ module Api
       end
 
       def create
+        authorize! :create, current_user
+        binding.pry
         user = User.new(create_user_params)
         user.profile = Profile.new(profile_params)
         user.generate_authentication_token!

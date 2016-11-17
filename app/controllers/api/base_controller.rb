@@ -22,19 +22,10 @@ module Api
       end
     end
 
-    # Public: Devise methods overwrites
-    # returns User
-    # def current_user
-    #   token = request.headers['Authorization']
-    #   response = AuthKey.new(token).current_user
-    #   id = response['data']['id']
-    #   User.find(id)
-    # end
-
-    # Override CanCan method to provide custom Ability files
-    # def current_ability
-    #   @current_ability ||= Ability.build_ability_for(current_user)
-    # end
+    #Override CanCan method to provide custom Ability files
+    def current_ability
+      @current_ability ||= Ability.build_ability_for(current_user)
+    end
 
     # Hash with exception types and status codes
     EXCEPTIONS = {
