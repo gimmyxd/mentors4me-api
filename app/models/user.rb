@@ -4,7 +4,7 @@ class User < ApplicationRecord
 
   validates :role, :email, presence: true
   validates :role, inclusion: { in: %w(admin mentor normal) }
-  validates :auth_token, uniqueness: true
+  validates :auth_token, :invitation_token, uniqueness: true, allow_nil: true
 
   has_one :profile
   has_one :context
@@ -14,8 +14,18 @@ class User < ApplicationRecord
   def generate_authentication_token!
     loop do
       self.auth_token = Devise.friendly_token
-      self.token_created_at = Time.now
+      self.auth_token_created_at = Time.now
       break auth_token unless self.class.exists?(auth_token: auth_token)
+    end
+  end
+
+  # Public: generates an invitation token
+  # returns - token for the user
+  def generate_invitation_token!
+    loop do
+      self.invitation_token = Devise.friendly_token
+      self.invitation_token_created_at = Time.now
+      break invitation_token unless self.class.exists?(invitation_token: invitation_token)
     end
   end
 
@@ -44,8 +54,8 @@ class User < ApplicationRecord
       id: id,
       email: email,
       role:  role,
-      profile_id: profile_id,
-      context_id: context_id
+      first_name: profile.first_name,
+      last_name: profile.last_name
     }
     options.empty? ? custom_response : super
   end

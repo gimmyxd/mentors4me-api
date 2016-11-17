@@ -6,8 +6,10 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     namespace :v1, path: '/' do
       resources :sessions, only: [:create, :destroy]
-      resources :users do
+      resources :invitations, only: :create
+      resources :users, only: [:index, :show, :destroy] do
         get :me, on: :collection
+        post :create_mentor, on: :collection
       end
     end
   end

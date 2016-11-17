@@ -1,11 +1,12 @@
   module Api
   module V1
     class UsersController < Api::BaseController
-      before_action :authenticate
+      before_action :authenticate, except: :create_mentor
+      before_action :authenticate_invitation, only: :create_mentor
       before_action :set_user, only: [:show, :update, :destroy, :password]
 
       respond_to :json
-      load_and_authorize_resource except: :create
+      load_and_authorize_resource except: :create_mentor
 
       def show
         respond_with build_data_object(@user)
@@ -19,14 +20,13 @@
         respond_with build_data_object(current_user)
       end
 
-      def create
-        authorize! :create, current_user
-        binding.pry
-        user = User.new(create_user_params)
+      def create_mentor
+        user = User.find_by(invitation_token: request.headers['Authorization'])
+        return unless user
+        user.invitation_token = nil
         user.profile = Profile.new(profile_params)
-        user.generate_authentication_token!
-        if user.save
-          render json: build_data_object(user), status: 201
+        if user.update(mentor_params)
+          render json: build_data_object(user), status: 200
         else
           render json: build_error_object(user), status: 422
         end
@@ -45,10 +45,11 @@
       end
 
       def create_user_params
-        params.permit(
-          :email, :role, :profile_id, :context_id,
-          :password, :password_confirmation
-        )
+        params.permit(:email, :role, :password, :password_confirmation)
+      end
+
+      def mentor_params
+        params.permit(:email, :password, :password_confirmation)
       end
 
       def password_params

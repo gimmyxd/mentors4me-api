@@ -2,7 +2,11 @@ module Authenticable
   # Public: validates the token
   # returns - boolean
   def authenticate
-    validate_token || render_unauthorized
+    validate_token(:auth) || render_unauthorized
+  end
+
+  def authenticate_invitation
+    validate_token(:invitation, nil, 7.days) || render_unauthorized
   end
 
   # Public: handles invalid token
@@ -15,11 +19,14 @@ module Authenticable
   # Public: verifies validation of token
   # token - token of the user
   # returns - boolean
-  def validate_token(token = nil)
+  def validate_token(type, token = nil, period = 24.hours)
     token ||= request.headers['Authorization']
-    user = User.find_by(auth_token: token)
+    return unless token
+    token_type = "#{type}_token_created_at".to_sym
+    user = User.find_by(auth_token: token) if type == :auth
+    user = User.find_by(invitation_token: token) if type == :invitation
     return unless user.present?
-    user[:token_created_at] + 24.hours > Time.now if user.token_created_at.present?
+    user[token_type] + period > Time.now if user[token_type].present?
   end
 
   # Public: Devise methods overwrites
