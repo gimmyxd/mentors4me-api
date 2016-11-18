@@ -28,7 +28,6 @@ module Api
       def invitation_params
         params.permit(:email)
       end
-
     end
   end
 end

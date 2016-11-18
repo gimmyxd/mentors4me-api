@@ -1,4 +1,4 @@
-  module Api
+module Api
   module V1
     class UsersController < Api::BaseController
       before_action :authenticate, except: :create_mentor
@@ -6,7 +6,7 @@
       before_action :set_user, only: [:show, :update, :destroy, :password]
 
       respond_to :json
-      load_and_authorize_resource except: :create_mentor
+      # load_and_authorize_resource except: [:create_mentor, :create]
 
       def show
         respond_with build_data_object(@user)
@@ -23,12 +23,34 @@
       def create_mentor
         user = User.find_by(invitation_token: request.headers['Authorization'])
         return unless user
-        user.invitation_token = nil
-        user.profile = Profile.new(profile_params)
-        if user.update(mentor_params)
-          render json: build_data_object(user), status: 200
+        profile = Profile.new(profile_params)
+        if profile.save
+          user.profile = profile
+          if user.update(user_params)
+            user.invitation_token = nil
+            render json: build_data_object(user), status: 200
+          else
+            render json: build_error_object(user), status: 422
+          end
         else
-          render json: build_error_object(user), status: 422
+          render json: build_error_object(profile), status: 422
+        end
+      end
+
+      def create
+        create_user_params[:role] = User::NORMAL
+        user = User.new(create_user_params)
+        organization = Organization.new(organization_params)
+        user.generate_authentication_token!
+        if organization.save
+          user.organization = organization
+          if user.update(create_user_params)
+            render json: build_data_object(user), status: 200
+          else
+            render json: build_error_object(user), status: 422
+          end
+        else
+          render json: build_error_object(organization), status: 422
         end
       end
 
@@ -41,15 +63,21 @@
       end
 
       def profile_params
-        params.permit(:first_name, :last_name)
+        params.permit(
+          :first_name, :last_name, :email,
+          :phone_number, :city, :description
+        )
       end
 
       def create_user_params
-        params.permit(:email, :role, :password, :password_confirmation)
+        params.permit(:email, :password, :password_confirmation)
       end
 
-      def mentor_params
-        params.permit(:email, :password, :password_confirmation)
+      def organization_params
+        params.permit(
+          :name, :asignee, :email, :phone_number,
+          :city, :description
+        )
       end
 
       def password_params

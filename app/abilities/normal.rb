@@ -1,5 +1,5 @@
 class Normal < Ability
-  def initialize(user)
-  can :read, :all
+  def initialize(_user)
+    can :read, :all
   end
 end

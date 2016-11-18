@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     namespace :v1, path: '/' do
       resources :sessions, only: [:create, :destroy]
       resources :invitations, only: :create
-      resources :users, only: [:index, :show, :destroy] do
+      resources :users, only: [:index, :show, :create, :destroy] do
         get :me, on: :collection
         post :create_mentor, on: :collection
       end

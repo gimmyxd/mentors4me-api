@@ -22,7 +22,7 @@ module Api
       end
     end
 
-    #Override CanCan method to provide custom Ability files
+    # Override CanCan method to provide custom Ability files
     def current_ability
       @current_ability ||= Ability.build_ability_for(current_user)
     end

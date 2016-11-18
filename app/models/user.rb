@@ -7,7 +7,7 @@ class User < ApplicationRecord
   validates :auth_token, :invitation_token, uniqueness: true, allow_nil: true
 
   has_one :profile
-  has_one :context
+  has_one :organization
 
   # Public: generates an authentication token
   # returns - token for the user
