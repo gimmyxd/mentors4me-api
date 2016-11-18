@@ -55,8 +55,8 @@ class User < ApplicationRecord
       email: email,
       role:  role
     }
-    add_profile_data(custom_response) if profile
-    add_organization_data(custom_response) if organization.present
+    add_profile_data(custom_response) if profile.present?
+    add_organization_data(custom_response) if organization.present?
     options.empty? ? custom_response : super
   end
 
