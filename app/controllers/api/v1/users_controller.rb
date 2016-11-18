@@ -23,6 +23,7 @@ module Api
       def create_mentor
         user = User.find_by(invitation_token: request.headers['Authorization'])
         return unless user
+        user.update(create_user_params)
         profile = Profile.new(profile_params)
         if profile.save
           user.profile = profile

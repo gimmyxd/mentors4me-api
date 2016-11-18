@@ -2,7 +2,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  validates :role, :email, presence: true
+  validates :role, :email, :password, presence: true
+  validates :email, uniqueness: true
   validates :role, inclusion: { in: %w(admin mentor normal) }
   validates :auth_token, :invitation_token, uniqueness: true, allow_nil: true
 
