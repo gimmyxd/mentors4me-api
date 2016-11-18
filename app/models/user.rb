@@ -53,10 +53,21 @@ class User < ApplicationRecord
     custom_response = {
       id: id,
       email: email,
-      role:  role,
-      first_name: profile.first_name,
-      last_name: profile.last_name
+      role:  role
     }
+    add_profile_data(custom_response) if profile
     options.empty? ? custom_response : super
+  end
+
+  private
+
+  def add_profile_data(response)
+    response[:first_name] = profile.first_name
+    response[:last_name] = profile.last_name
+    response[:email] = profile.email
+    response[:phone_number] = profile.phone_number
+    response[:city] = profile.city
+    response[:description] = profile.description
+    response
   end
 end

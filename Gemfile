@@ -9,6 +9,7 @@ gem 'rack-cors'
 gem 'cancancan'
 gem 'rails-i18n'
 gem 'responders'
+gem 'mailgun_rails'
 
 group :development, :test do
   gem 'pry-byebug'

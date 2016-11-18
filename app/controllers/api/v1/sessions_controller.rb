@@ -11,7 +11,6 @@ module Api
           sign_in user
           user.generate_authentication_token!
           user.save
-
           render json: { success: true, data: user.as_json(only: :auth_token) }, status: 200
         else
           raise InvalidAPIRequest.new('Invalid username or password', 401)
