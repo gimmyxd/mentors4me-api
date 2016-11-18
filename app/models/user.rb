@@ -56,6 +56,7 @@ class User < ApplicationRecord
       role:  role
     }
     add_profile_data(custom_response) if profile
+    add_organization_data(custom_response) if organization.present
     options.empty? ? custom_response : super
   end
 
@@ -64,6 +65,16 @@ class User < ApplicationRecord
   def add_profile_data(response)
     response[:first_name] = profile.first_name
     response[:last_name] = profile.last_name
+    response[:email] = profile.email
+    response[:phone_number] = profile.phone_number
+    response[:city] = profile.city
+    response[:description] = profile.description
+    response
+  end
+
+  def add_organization_data(response)
+    response[:name] = profile.name
+    response[:asignee] = profile.asignee
     response[:email] = profile.email
     response[:phone_number] = profile.phone_number
     response[:city] = profile.city

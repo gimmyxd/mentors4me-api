@@ -26,7 +26,7 @@ module Api
         profile = Profile.new(profile_params)
         if profile.save
           user.profile = profile
-          if user.update(user_params)
+          if user.update(create_user_params)
             user.invitation_token = nil
             render json: build_data_object(user), status: 200
           else
