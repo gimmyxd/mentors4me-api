@@ -15,8 +15,6 @@ class User < ApplicationRecord
   belongs_to :profile
   belongs_to :organization
   has_one :proposal
-  has_many :skill_assignments
-  has_many :skills, through: :skill_assignments
 
   # Public: generates an authentication token
   # returns - token for the user
@@ -65,6 +63,7 @@ class User < ApplicationRecord
       role:  role
     }
     add_profile_data(custom_response) if profile_id.present?
+    add_skills_data(custom_response) if profile.skills.any?
     add_organization_data(custom_response) if organization_id .present?
     options.empty? ? custom_response : super
   end
@@ -95,6 +94,10 @@ class User < ApplicationRecord
     response[:city] = organization.city
     response[:description] = organization.description
     response
+  end
+
+  def add_skills_data(response)
+    response[:skills] = profile.skills.pluck(:name)
   end
 
   # Private: verifies that the profile is valid. If it's not, errors are added

@@ -24,6 +24,7 @@ module Api
         user = User.find_by(invitation_token: request.headers['Authorization'])
         return unless user
         user.profile = Profile.new(profile_params)
+        user.profile.skills = assign_skills(params[:skill_ids])
         user.active = true
         user.invitation_token = nil
         if user.update(create_user_params)
@@ -56,14 +57,18 @@ module Api
         user.save(validate: false)
       end
 
+      def assign_skills(skill_ids)
+        Skill.where(id: skill_ids.split(',').map(&:to_i))
+      end
+
       def proposal_params
         params.permit(:email, :description)
       end
 
       def profile_params
         params.permit(
-          :first_name, :last_name,
-          :phone_number, :city, :description
+          :first_name, :last_name, :phone_number,
+          :city, :description
         )
       end
     end

@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     namespace :v1, path: '/' do
       resources :sessions, only: [:create, :destroy]
+      resources :skills
       resources :invitations, only: :create do
         post :reject, on: :collection
       end

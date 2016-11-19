@@ -48,12 +48,12 @@ ActiveRecord::Schema.define(version: 20161119100925) do
   end
 
   create_table "skill_assignments", force: :cascade do |t|
-    t.integer  "users_id"
-    t.integer  "skills_id"
+    t.integer  "profile_id"
+    t.integer  "skill_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["skills_id"], name: "index_skill_assignments_on_skills_id", using: :btree
-    t.index ["users_id"], name: "index_skill_assignments_on_users_id", using: :btree
+    t.index ["profile_id"], name: "index_skill_assignments_on_profile_id", using: :btree
+    t.index ["skill_id"], name: "index_skill_assignments_on_skill_id", using: :btree
   end
 
   create_table "skills", force: :cascade do |t|
