@@ -4,8 +4,12 @@ module Api
       respond_to :json
 
       def create
+        if User.find_by(email: invitation_params[:email]).present?
+          render json: { errors: 'User already exists' }, status: 422
+          return
+        end
         user = generate_user
-        if user.save
+        if user.save(validate: false)
           send_invitation(invitation_params[:email])
           render json: { success: user.invitation_token }, status: 201
         else
@@ -17,8 +21,8 @@ module Api
 
       def generate_user
         user = User.new(email: invitation_params[:email], role: User::MENTOR)
+        user.active = false
         user.generate_invitation_token!
-        user.password = Devise.friendly_token.first(8)
         user
       end
 

@@ -2,13 +2,18 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  validates :role, :email, :password, presence: true
+  validates :role, :email, :password, :password_confirmation, presence: true
   validates :email, uniqueness: true
+  validates_format_of :email, with: Devise.email_regexp
   validates :role, inclusion: { in: %w(admin mentor normal) }
   validates :auth_token, :invitation_token, uniqueness: true, allow_nil: true
 
-  has_one :profile
-  has_one :organization
+  # Check profile errors after validation
+  before_validation :validate_profile
+  before_validation :validate_organization
+
+  belongs_to :profile
+  belongs_to :organization
 
   # Public: generates an authentication token
   # returns - token for the user
@@ -56,8 +61,8 @@ class User < ApplicationRecord
       email: email,
       role:  role
     }
-    add_profile_data(custom_response) if profile.present?
-    add_organization_data(custom_response) if organization.present?
+    add_profile_data(custom_response) if profile_id.present?
+    add_organization_data(custom_response) if organization_id .present?
     options.empty? ? custom_response : super
   end
 
@@ -66,7 +71,6 @@ class User < ApplicationRecord
   def add_profile_data(response)
     response[:first_name] = profile.first_name
     response[:last_name] = profile.last_name
-    response[:email] = profile.email
     response[:phone_number] = profile.phone_number
     response[:city] = profile.city
     response[:description] = profile.description
@@ -74,12 +78,33 @@ class User < ApplicationRecord
   end
 
   def add_organization_data(response)
-    response[:name] = profile.name
-    response[:asignee] = profile.asignee
-    response[:email] = profile.email
-    response[:phone_number] = profile.phone_number
-    response[:city] = profile.city
-    response[:description] = profile.description
+    response[:name] = organization.name
+    response[:asignee] = organization.asignee
+    response[:phone_number] = organization.phone_number
+    response[:city] = organization.city
+    response[:description] = organization.description
     response
+  end
+
+  # Private: verifies that the profile is valid. If it's not, errors are added
+  # returns - hash of errors
+  def validate_profile
+    return if active?
+    self.profile = Profile.new unless profile.present?
+    return if profile.valid?
+    profile.errors.each do |k, v|
+      errors.add(k, v)
+    end
+  end
+
+  # Private: verifies that the profile is valid. If it's not, errors are added
+  # returns - hash of errors
+  def validate_organization
+    return unless active?
+    self.organization = Organization.new unless organization.present?
+    return if organization.valid?
+    profile.errors.each do |k, v|
+      errors.add(k, v)
+    end
   end
 end

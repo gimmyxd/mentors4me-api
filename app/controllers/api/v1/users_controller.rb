@@ -23,35 +23,25 @@ module Api
       def create_mentor
         user = User.find_by(invitation_token: request.headers['Authorization'])
         return unless user
-        user.update(create_user_params)
-        profile = Profile.new(profile_params)
-        if profile.save
-          user.profile = profile
-          if user.update(create_user_params)
-            user.invitation_token = nil
-            render json: build_data_object(user), status: 200
-          else
-            render json: build_error_object(user), status: 422
-          end
+        user.profile = Profile.new(profile_params)
+        if user.update(create_user_params)
+          activate_user!(user)
+          render json: build_data_object(user), status: 200
         else
-          render json: build_error_object(profile), status: 422
+          render json: build_error_object(user), status: 422
         end
       end
 
       def create
         create_user_params[:role] = User::NORMAL
+        create_user_params[:active] = true
         user = User.new(create_user_params)
-        organization = Organization.new(organization_params)
-        user.generate_authentication_token!
-        if organization.save
-          user.organization = organization
-          if user.update(create_user_params)
-            render json: build_data_object(user), status: 200
-          else
-            render json: build_error_object(user), status: 422
-          end
+        user.organization = Organization.new(organization_params)
+        if user.update(create_user_params)
+          normal_user!(user)
+          render json: build_data_object(user), status: 200
         else
-          render json: build_error_object(organization), status: 422
+          render json: build_error_object(user), status: 422
         end
       end
 
@@ -63,20 +53,32 @@ module Api
         raise InvalidAPIRequest.new(I18n.t('User not found', id: params[:id]), 404)
       end
 
+      def activate_user!(user)
+        user.active = true
+        user.invitation_token = nil
+        user.save!
+      end
+
+      def normal_user!(user)
+        user.active = true
+        user.role = User::NORMAL
+        user.save!
+      end
+
       def profile_params
-        params.permit(
-          :first_name, :last_name, :email,
+        params.require(:profile).permit(
+          :first_name, :last_name,
           :phone_number, :city, :description
         )
       end
 
       def create_user_params
-        params.permit(:email, :password, :password_confirmation)
+        params.require(:user).permit(:email, :password, :password_confirmation)
       end
 
       def organization_params
         params.permit(
-          :name, :asignee, :email, :phone_number,
+          :name, :asignee, :phone_number,
           :city, :description
         )
       end

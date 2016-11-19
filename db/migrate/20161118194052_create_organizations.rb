@@ -1,7 +1,6 @@
 class CreateOrganizations < ActiveRecord::Migration[5.0]
   def change
     create_table :organizations do |t|
-      t.belongs_to :user
       t.string :name
       t.string :asignee
       t.string :email
@@ -10,5 +9,6 @@ class CreateOrganizations < ActiveRecord::Migration[5.0]
       t.text :description
       t.timestamps
     end
+    add_belongs_to :users, :organization
   end
 end

@@ -7,7 +7,7 @@ module Api
         user_password = params[:password]
         user_email = params[:email]
         user = User.find_by(email: user_email) if user_email.present?
-        if user.present? && user.valid_password?(user_password)
+        if user.present? && user.valid_password?(user_password) && user.active?
           sign_in user
           user.generate_authentication_token!
           user.save
