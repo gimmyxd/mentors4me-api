@@ -1,0 +1,2 @@
+class SkillAssignment < ApplicationRecord
+end

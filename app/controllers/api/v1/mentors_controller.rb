@@ -50,7 +50,8 @@ module Api
       end
 
       def delete_proposal(email)
-        Proposal.find_by(email: email).destroy
+        proposal = Proposal.find_by(email: email)
+        proposal.destroy if proposal
       end
 
       def generate_user(proposal)
