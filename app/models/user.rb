@@ -80,6 +80,7 @@ class User < ApplicationRecord
   private
 
   def add_profile_data(response)
+    response[:profile_id] = profile.id
     response[:first_name] = profile.first_name
     response[:last_name] = profile.last_name
     response[:phone_number] = profile.phone_number
@@ -89,6 +90,7 @@ class User < ApplicationRecord
   end
 
   def add_organization_data(response)
+    response[:organization_id] = organization.id
     response[:name] = organization.name
     response[:asignee] = organization.asignee
     response[:phone_number] = organization.phone_number

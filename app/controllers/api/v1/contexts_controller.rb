@@ -22,11 +22,15 @@ module Api
       end
 
       def create
-        Profile.find_by!(id: params[:profile_id])
-        Organization.find_by!(id: params[:organization_id])
+        User.find_by!(profile_id: params[:profile_id])
+        User.find_by!(organization_id: params[:organization_id])
       rescue ActiveRecord::RecordNotFound
         raise InvalidAPIRequest.new('profile or organization is invalid', 422)
       else
+        raise InvalidAPIRequest.new('Context already exists', 422) if Context.where(
+          profile_id: params[:profile_id],
+          organization_id: params[:organization_id]
+        )
         context = Context.new(context_params)
         if context.save
           render json: build_data_object(context), status: 200
