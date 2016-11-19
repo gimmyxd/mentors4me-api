@@ -5,6 +5,11 @@ Rails.application.routes.draw do
     namespace :v1, path: '/' do
       resources :sessions, only: [:create, :destroy]
       resources :skills
+      resources :contexts do
+        member do
+          post :accept
+        end
+      end
       resources :invitations, only: :create do
         post :reject, on: :collection
       end
