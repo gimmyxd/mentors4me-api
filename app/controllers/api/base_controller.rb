@@ -6,7 +6,8 @@ module Api
 
     MODULES = [
       ActionController::MimeResponds,
-      CanCan::ControllerAdditions
+      CanCan::ControllerAdditions,
+      HasScope
     ].each { |m| include m }
 
     # Class used to handle API response, and specific error code
@@ -71,6 +72,12 @@ module Api
         obj_errors << "#{k} #{v.join}"
       end
       { success: false, errors: obj_errors }.to_json
+    end
+
+    def valid_date?(date, format = '%Y-%m-%d')
+      date = Date.parse(date).to_s
+      DateTime.strptime(date, format)
+      raise ArgumentError unless /^\d{4}-\d{2}-\d{2}$/.match(date)
     end
   end
 end
