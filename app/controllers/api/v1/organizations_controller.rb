@@ -6,6 +6,10 @@ module Api
       respond_to :json
       # load_and_authorize_resource except: [:create_mentor, :create]
 
+      def index
+        respond_with build_data_object(User.includes(:organization).where(role: User::NORMAL))
+      end
+
       def create
         user = User.new(create_user_params)
         user.role = User::NORMAL

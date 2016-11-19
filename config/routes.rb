@@ -8,10 +8,10 @@ Rails.application.routes.draw do
       resources :invitations, only: :create do
         post :reject, on: :collection
       end
-      resources :mentors, only: [:create, :update] do
+      resources :mentors, only: [:index, :create, :update] do
         post :propose, on: :collection
       end
-      resources :organizations, only: [:create, :update]
+      resources :organizations, only: [:index, :create, :update]
       resources :users, only: [:index, :show, :destroy] do
         get :me, on: :collection
       end

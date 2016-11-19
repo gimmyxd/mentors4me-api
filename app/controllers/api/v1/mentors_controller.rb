@@ -6,6 +6,10 @@ module Api
 
       respond_to :json
 
+      def index
+        respond_with build_data_object(User.includes(:profile).where(role: User::MENTOR))
+      end
+
       def propose
         if exsisting_user?
           render json: { errors: 'User already exists' }, status: 422

@@ -11,7 +11,7 @@ module Api
       end
 
       def index
-        respond_with build_data_object(User.includes(:profile))
+        respond_with build_data_object(User.includes(:profile).includes(:organization))
       end
 
       def me
