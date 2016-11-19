@@ -1,5 +1,5 @@
 class InvitationsMailer < ApplicationMailer
-  default from: 'mentors4me@gmail.com'
+  default from: ENV['EMAIL_FROM']
 
   def send_invitation(email, invitation_token)
     @url = "#{ENV['FRONTEND_URL']}/#{invitation_token}"
