@@ -16,7 +16,7 @@ class User < ApplicationRecord
   belongs_to :organization
   has_one :proposal
   has_many :skill_assignments
-  has_many :skills, trough: :skill_assignments
+  has_many :skills, through: :skill_assignments
 
   # Public: generates an authentication token
   # returns - token for the user
