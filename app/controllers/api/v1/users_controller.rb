@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsersController < Api::BaseController
-      before_action :authenticate, except: :create_mentor
+      before_action :authenticate, except: [:create_mentor, :create]
       before_action :authenticate_invitation, only: :create_mentor
       before_action :set_user, only: [:show, :update, :destroy, :password]
 

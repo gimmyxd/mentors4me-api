@@ -10,7 +10,7 @@ module Api
           render json: { success: user.invitation_token }, status: 201
         else
           render json: build_error_object(user), status: 422
-      end
+        end
       end
 
       private
@@ -23,6 +23,7 @@ module Api
       end
 
       def send_invitation(email)
+        InvitationsMailer.send_invitation(email).deliver
       end
 
       def invitation_params

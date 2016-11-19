@@ -18,6 +18,7 @@ Bundler.require(*Rails.groups)
 
 module Mentors4meApi
   class Application < Rails::Application
+    ActionMailer::Base.delivery_method = :smtp
     config.api_only = true
     # Use the responders controller from the responders gem
     config.app_generators.scaffold_controller :responders_controller

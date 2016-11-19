@@ -9,7 +9,7 @@ gem 'rack-cors'
 gem 'cancancan'
 gem 'rails-i18n'
 gem 'responders'
-gem 'mailgun_rails'
+
 
 group :development, :test do
   gem 'pry-byebug'
@@ -19,6 +19,7 @@ group :development do
   gem 'listen', '~> 3.0.5'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem "letter_opener"
 end
 
 group :test do
