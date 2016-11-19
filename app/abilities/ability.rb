@@ -9,6 +9,8 @@ class Ability
       Mentor.new(user)
     elsif user.is? User::NORMAL
       Normal.new(user)
+    else
+      Guest.new(user)
     end
   end
 end

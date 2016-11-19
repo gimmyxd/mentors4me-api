@@ -1,10 +1,10 @@
 module Api
   module V1
     class UsersController < Api::BaseController
+      before_action :authenticate, only: :update
       before_action :set_user, only: [:show, :update, :destroy, :password]
-
+      load_and_authorize_resource :user, parent: false, only: :update
       respond_to :json
-      # load_and_authorize_resource except: [:create_mentor, :create]
 
       def show
         respond_with build_data_object(@user)
@@ -35,7 +35,7 @@ module Api
       end
 
       def update_user_params
-        params.permit(:email, :role)
+        params.permit(:email, :role, :password, :password_confirmation)
       end
     end
   end

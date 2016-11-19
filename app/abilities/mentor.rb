@@ -1,5 +1,10 @@
 class Mentor < Ability
-  def initialize(_user)
+  def initialize(user)
     can :read, :all
+    can [:me, :create], User
+    can :create, Profile
+    can :update, Profile, id: user.profile_id
+    can [:update, :destroy], User, id: user.id
+    can :accept, Context, profile_id: user.profile_id
   end
 end

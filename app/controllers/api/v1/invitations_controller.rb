@@ -1,9 +1,12 @@
 module Api
   module V1
     class InvitationsController < Api::BaseController
+      before_action :authenticate
       respond_to :json
+      authorize_resource class: false
 
       def create
+        authorize! :create, current_user
         user = User.find_by!(email: params[:email])
       rescue ActiveRecord::RecordNotFound
         render json: { 'errors': 'User not found' }, status: 404
@@ -18,6 +21,7 @@ module Api
       end
 
       def reject
+        authorize! :reject, current_user
         user = User.find_by!(email: params[:email])
         proposal = Proposal.find_by!(email: params[:email])
       rescue ActiveRecord::RecordNotFound

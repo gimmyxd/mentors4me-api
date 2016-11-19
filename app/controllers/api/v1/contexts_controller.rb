@@ -1,8 +1,10 @@
 module Api
   module V1
     class ContextsController < Api::BaseController
+      before_action :authenticate
       before_action :set_context, only: [:show, :update, :destroy, :accept]
       respond_to :json
+      load_and_authorize_resource :context, parent: false
 
       def show
         respond_with build_data_object(@context)

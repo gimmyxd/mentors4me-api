@@ -77,6 +77,18 @@ class User < ApplicationRecord
     role == MENTOR
   end
 
+  def self.new_guest_user
+    user = User.find_or_create_by(email: 'guest_user@example.com')
+    profile = Profile.new
+    profile.save(validate: false)
+    organization = Organization.new
+    organization.save(validate: false)
+    user.profile = profile
+    user.organization = organization
+    user.save(validate: false)
+    user
+  end
+
   private
 
   def add_profile_data(response)

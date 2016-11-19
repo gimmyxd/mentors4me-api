@@ -2,8 +2,8 @@ module Api
   module V1
     class MentorsController < UsersController
       before_action :authenticate_invitation, only: :create
+      before_action :authenticate, only: :update
       before_action :set_user, only: [:show, :update, :destroy, :password]
-
       respond_to :json
 
       def index
@@ -62,6 +62,7 @@ module Api
       end
 
       def assign_skills(skill_ids)
+        raise InvalidAPIRequest.new('skill_ids must be string', 401) unless skill_ids.is_a? String
         raise InvalidAPIRequest.new('Skill is needed', 401) if skill_ids.blank?
         skills = Skill.where(id: skill_ids.split(',').map(&:to_i))
         raise InvalidAPIRequest.new('Skill is needed', 401) unless skills.any?
