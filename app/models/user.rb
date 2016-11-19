@@ -98,6 +98,8 @@ class User < ApplicationRecord
     response[:phone_number] = profile.phone_number
     response[:city] = profile.city
     response[:description] = profile.description
+    response[:facebook] = profile.facebook
+    response[:linkedin] = profile.linkedin
     response
   end
 
