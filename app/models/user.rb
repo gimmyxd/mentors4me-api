@@ -66,6 +66,14 @@ class User < ApplicationRecord
     options.empty? ? custom_response : super
   end
 
+  def normal?
+    role == NORMAL
+  end
+
+  def mentor?
+    role == MENTOR
+  end
+
   private
 
   def add_profile_data(response)
@@ -89,7 +97,7 @@ class User < ApplicationRecord
   # Private: verifies that the profile is valid. If it's not, errors are added
   # returns - hash of errors
   def validate_profile
-    return if active?
+    return unless mentor?
     self.profile = Profile.new unless profile.present?
     return if profile.valid?
     profile.errors.each do |k, v|
@@ -100,10 +108,10 @@ class User < ApplicationRecord
   # Private: verifies that the profile is valid. If it's not, errors are added
   # returns - hash of errors
   def validate_organization
-    return unless active?
+    return unless normal?
     self.organization = Organization.new unless organization.present?
     return if organization.valid?
-    profile.errors.each do |k, v|
+    organization.errors.each do |k, v|
       errors.add(k, v)
     end
   end

@@ -7,4 +7,4 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 user = User.create(email: 'admin@example.com', role: User::ADMIN, password: 'password', password_confirmation: 'password')
-user.save(validate: false)
+user.save

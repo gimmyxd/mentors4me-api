@@ -24,8 +24,9 @@ module Api
         user = User.find_by(invitation_token: request.headers['Authorization'])
         return unless user
         user.profile = Profile.new(profile_params)
+        user.active = true
+        user.invitation_token = nil
         if user.update(create_user_params)
-          activate_user!(user)
           render json: build_data_object(user), status: 200
         else
           render json: build_error_object(user), status: 422
@@ -33,12 +34,11 @@ module Api
       end
 
       def create
-        create_user_params[:role] = User::NORMAL
-        create_user_params[:active] = true
         user = User.new(create_user_params)
+        user.role = User::NORMAL
+        user.active = true
         user.organization = Organization.new(organization_params)
         if user.update(create_user_params)
-          normal_user!(user)
           render json: build_data_object(user), status: 200
         else
           render json: build_error_object(user), status: 422
@@ -51,18 +51,6 @@ module Api
         @user = User.find(params[:id])
       rescue ActiveRecord::RecordNotFound
         raise InvalidAPIRequest.new(I18n.t('User not found', id: params[:id]), 404)
-      end
-
-      def activate_user!(user)
-        user.active = true
-        user.invitation_token = nil
-        user.save!
-      end
-
-      def normal_user!(user)
-        user.active = true
-        user.role = User::NORMAL
-        user.save!
       end
 
       def profile_params
