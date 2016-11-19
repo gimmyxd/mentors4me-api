@@ -30,7 +30,7 @@ module Api
         raise InvalidAPIRequest.new('Context already exists', 422) if Context.where(
           profile_id: params[:profile_id],
           organization_id: params[:organization_id]
-        )
+        ).any?
         context = Context.new(context_params)
         if context.save
           render json: build_data_object(context), status: 200
