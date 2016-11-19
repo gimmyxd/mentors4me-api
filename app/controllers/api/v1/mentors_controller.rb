@@ -27,7 +27,6 @@ module Api
         user.active = true
         user.invitation_token = nil
         if user.update(create_user_params)
-          delete_proposal(user.email)
           render json: build_data_object(user), status: 200
         else
           render json: build_error_object(user), status: 422
@@ -47,11 +46,6 @@ module Api
 
       def exsisting_user?
         User.find_by(email: params[:email]).present? || Proposal.find_by(email: params[:email]).present?
-      end
-
-      def delete_proposal(email)
-        proposal = Proposal.find_by(email: email)
-        proposal.destroy if proposal
       end
 
       def generate_user(proposal)

@@ -8,7 +8,7 @@ module Api
       rescue ActiveRecord::RecordNotFound
         render json: { 'errors': 'User not found' }, status: 404
       else
-        if user.proposal.present?
+        if user.proposal.present? && user.proposal.pending?
           user.proposal.accept
           send_invitation(params[:email], user.invitation_token)
           render json: { success: user.invitation_token }, status: 200
