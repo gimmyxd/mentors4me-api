@@ -1,8 +1,6 @@
 module Api
   module V1
     class UsersController < Api::BaseController
-      before_action :authenticate, except: [:create_mentor, :create]
-      before_action :authenticate_invitation, only: :create_mentor
       before_action :set_user, only: [:show, :update, :destroy, :password]
 
       respond_to :json
@@ -20,31 +18,6 @@ module Api
         respond_with build_data_object(current_user)
       end
 
-      def create_mentor
-        user = User.find_by(invitation_token: request.headers['Authorization'])
-        return unless user
-        user.profile = Profile.new(profile_params)
-        user.active = true
-        user.invitation_token = nil
-        if user.update(create_user_params)
-          render json: build_data_object(user), status: 200
-        else
-          render json: build_error_object(user), status: 422
-        end
-      end
-
-      def create
-        user = User.new(create_user_params)
-        user.role = User::NORMAL
-        user.active = true
-        user.organization = Organization.new(organization_params)
-        if user.update(create_user_params)
-          render json: build_data_object(user), status: 200
-        else
-          render json: build_error_object(user), status: 422
-        end
-      end
-
       private
 
       def set_user
@@ -53,22 +26,8 @@ module Api
         raise InvalidAPIRequest.new(I18n.t('User not found', id: params[:id]), 404)
       end
 
-      def profile_params
-        params.require(:profile).permit(
-          :first_name, :last_name,
-          :phone_number, :city, :description
-        )
-      end
-
       def create_user_params
         params.require(:user).permit(:email, :password, :password_confirmation)
-      end
-
-      def organization_params
-        params.permit(
-          :name, :asignee, :phone_number,
-          :city, :description
-        )
       end
 
       def password_params
