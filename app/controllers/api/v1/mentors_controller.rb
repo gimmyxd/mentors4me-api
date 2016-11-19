@@ -58,7 +58,10 @@ module Api
       end
 
       def assign_skills(skill_ids)
-        Skill.where(id: skill_ids.split(',').map(&:to_i))
+        raise InvalidAPIRequest.new('Skill is needed', 401) if skill_ids.blank?
+        skills = Skill.where(id: skill_ids.split(',').map(&:to_i))
+        raise InvalidAPIRequest.new('Skill is needed', 401) unless skills.any?
+        skills
       end
 
       def proposal_params
