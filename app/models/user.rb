@@ -14,6 +14,7 @@ class User < ApplicationRecord
 
   belongs_to :profile
   belongs_to :organization
+  has_one :proposal
 
   # Public: generates an authentication token
   # returns - token for the user

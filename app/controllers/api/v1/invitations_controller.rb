@@ -4,30 +4,38 @@ module Api
       respond_to :json
 
       def create
-        if User.find_by(email: invitation_params[:email]).present?
-          render json: { errors: 'User already exists' }, status: 422
-          return
-        end
-        user = generate_user
-        if user.save(validate: false)
-          send_invitation(invitation_params[:email])
-          render json: { success: user.invitation_token }, status: 201
+        user = User.find_by!(email: params[:email])
+      rescue ActiveRecord::RecordNotFound
+        render json: { 'errors': 'User not found' }, status: 404
+      else
+        if user.proposal.present?
+          user.proposal.accept
+          send_invitation(params[:email], user.invitation_token)
+          render json: { success: user.invitation_token }, status: 200
         else
-          render json: build_error_object(user), status: 422
+          render json: { errors: 'Only proposed users can be invited' }, status: 200
+        end
+      end
+
+      def reject
+        user = User.find_by!(email: params[:email])
+        proposal = Proposal.find_by!(email: params[:email])
+      rescue ActiveRecord::RecordNotFound
+        render json: { 'errors': 'Email not found' }, status: 404
+      else
+        if user.proposal.pending?
+          user.destroy
+          proposal.reject
+          render json: { success: true }, status: 200
+        else
+          render json: { errors: 'Only pending proposals can be rejected' }, status: 422
         end
       end
 
       private
 
-      def generate_user
-        user = User.new(email: invitation_params[:email], role: User::MENTOR)
-        user.active = false
-        user.generate_invitation_token!
-        user
-      end
-
-      def send_invitation(email)
-        InvitationsMailer.send_invitation(email).deliver
+      def send_invitation(email, invitation_token)
+        InvitationsMailer.send_invitation(email, invitation_token).deliver
       end
 
       def invitation_params
