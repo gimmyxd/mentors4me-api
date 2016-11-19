@@ -13,6 +13,11 @@ class Context < ApplicationRecord
   # /contexts?organization_id=1
   scope :organization_id, -> (organization_id) { where(organization_id: organization_id) }
 
+  # Filer contexts by accepted
+  # /contexts?accepted=true
+  scope :accepted, -> (accepted) { where(accepted: accepted) }
+
+
   # Filter contexts by start date
   # /contexts?start_date="2016-01-04"
   scope :start_date, -> (start_date) { where('created_at >= ?', start_date.to_date) }

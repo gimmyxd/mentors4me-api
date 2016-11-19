@@ -5,10 +5,10 @@ module Api
       before_action :set_context, only: [:show, :update, :destroy, :accept]
 
       before_filter :set_limit, :validate_limit, :validate_profile_id,
-                    :validate_start_date, :validate_end_date,
+                    :validate_start_date, :validate_end_date, :validate_accepted,
                     :validate_organization_id, :validate_offset, only: :index
 
-      has_scope :profile_id, :organization_id, :start_date, :end_date, :offset, :limit
+      has_scope :profile_id, :organization_id, :start_date, :end_date, :accepted, :offset, :limit
       has_scope :date_interval, using: [:start_date, :end_date], type: :hash
 
       respond_to :json
@@ -87,6 +87,11 @@ module Api
 
       def set_limit
         params[:limit] = Context.count if params[:limit].blank?
+      end
+
+      def validate_accepted
+        return unless params[:accepted].present?
+        raise InvalidAPIRequest.new('accepted must be a boolean true/false', 422)
       end
 
       def validate_start_date
