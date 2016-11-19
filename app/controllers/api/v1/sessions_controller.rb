@@ -24,7 +24,7 @@ module Api
           user.save
           head 204
         else
-          raise InvalidAPIRequest.new(I18n.t('sessions.destroy.error'), 401)
+          raise InvalidAPIRequest.new('User not found', 401)
         end
       end
 

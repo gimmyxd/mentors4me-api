@@ -9,6 +9,7 @@ gem 'rack-cors'
 gem 'cancancan'
 gem 'rails-i18n'
 gem 'responders'
+gem "figaro"
 
 
 group :development, :test do

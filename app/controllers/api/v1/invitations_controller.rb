@@ -9,14 +9,14 @@ module Api
         authorize! :create, current_user
         user = User.find_by!(email: params[:email])
       rescue ActiveRecord::RecordNotFound
-        render json: { 'errors': 'User not found' }, status: 404
+        raise InvalidAPIRequest.new('User not found', 404)
       else
         if user.proposal.present? && user.proposal.pending?
           user.proposal.accept
           send_invitation(params[:email], user.invitation_token)
-          render json: { success: user.invitation_token }, status: 200
+          render json: { success: true }, status: 200
         else
-          render json: { errors: 'Only proposed users can be invited' }, status: 200
+          raise InvalidAPIRequest.new('Only proposed users can be invited', 422)
         end
       end
 
@@ -25,21 +25,21 @@ module Api
         user = User.find_by!(email: params[:email])
         proposal = Proposal.find_by!(email: params[:email])
       rescue ActiveRecord::RecordNotFound
-        render json: { 'errors': 'Email not found' }, status: 404
+        raise InvalidAPIRequest.new('Email not found', 404)
       else
         if user.proposal.pending?
           user.destroy
           proposal.reject
           render json: { success: true }, status: 200
         else
-          render json: { errors: 'Only pending proposals can be rejected' }, status: 422
+          raise InvalidAPIRequest.new('Only pending proposals can be rejected', 422)
         end
       end
 
       private
 
       def send_invitation(email, invitation_token)
-        InvitationsMailer.send_invitation(email, invitation_token).deliver
+        InvitationsMailer.send_invitation(email, invitation_token).deliver_later
       end
 
       def invitation_params
