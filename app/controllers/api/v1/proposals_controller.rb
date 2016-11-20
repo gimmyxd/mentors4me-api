@@ -1,9 +1,9 @@
 module Api
   module V1
     class ProposalsController < Api::BaseController
-      # before_action :authenticate
+      before_action :authenticate
       before_action :set_proposal, only: [:show, :accept, :reject]
-      # load_and_authorize_resource :proposal, parent: false
+      authorize_resource class: false
       respond_to :json
       before_filter :set_limit, :validate_limit, :validate_offset, only: :index
       has_scope :status, :offset, :limit
@@ -39,7 +39,7 @@ module Api
       end
 
       def set_limit
-        params[:limit] = Context.count if params[:limit].blank?
+        params[:limit] = Proposal.count if params[:limit].blank?
       end
     end
   end
