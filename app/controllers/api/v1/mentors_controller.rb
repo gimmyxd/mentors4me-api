@@ -29,9 +29,8 @@ module Api
         return unless user
         user.profile = Profile.new(profile_params)
         user.profile.skills = assign_skills(params[:skill_ids])
-        user.active = true
-        user.invitation_token = nil
         if user.update(create_user_params)
+          user.update_attributes(invitation_token: nil, active: true)
           render json: build_data_object(user), status: 200
         else
           render json: build_error_object(user), status: 422
