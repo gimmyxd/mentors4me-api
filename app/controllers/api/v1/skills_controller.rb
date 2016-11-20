@@ -1,7 +1,7 @@
 module Api
   module V1
     class SkillsController < Api::BaseController
-      before_action :authenticate
+      before_action :authenticate, only: [:create, :update, :destroy]
       before_action :set_skill, only: [:show, :update, :destroy]
       load_and_authorize_resource :skill, parent: false
       respond_to :json
