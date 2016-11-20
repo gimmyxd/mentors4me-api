@@ -65,9 +65,9 @@ module Api
 
       def validate_numericality(field, error_message)
         Integer(field) if field.present?
-       rescue ArgumentError
-         raise InvalidAPIRequest.new(error_message, 422)
-       end
+      rescue ArgumentError
+        raise InvalidAPIRequest.new(error_message, 422)
+      end
 
       def validate_profile_id
         validate_numericality(params[:profile_id], 'profile_id must be a number')

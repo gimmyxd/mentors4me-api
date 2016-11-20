@@ -7,6 +7,10 @@ class Proposal < ApplicationRecord
   REJECTED = 'rejected'.freeze
   PENDING = 'pending'.freeze
 
+  # Filer proposals by status
+  # /proposals?status='status'
+  scope :status, -> (status) { where(status: status) }
+
   def accept
     self.status = ACCEPTED
     save!
