@@ -5,7 +5,7 @@ module Api
       before_action :set_proposal, only: [:show, :accept, :reject]
       authorize_resource class: false
       respond_to :json
-      before_filter :set_limit, :validate_limit, :validate_offset, only: :index
+      before_action :set_limit, :validate_limit, :validate_offset, only: :index
       has_scope :status, :offset, :limit
 
       def show

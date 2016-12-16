@@ -222,6 +222,7 @@ DEPENDENCIES
   rails (~> 5.0.0, >= 5.0.0.1)
   rails-i18n
   rails_12factor
+  rake
   responders
   rspec-rails
   shoulda-matchers
@@ -236,4 +237,4 @@ RUBY VERSION
    ruby 2.2.2p95
 
 BUNDLED WITH
-   1.12.5
+   1.13.6
