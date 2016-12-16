@@ -95,6 +95,7 @@ GEM
     mime-types-data (3.2016.0521)
     mini_portile2 (2.1.0)
     minitest (5.9.1)
+    newrelic_rpm (3.16.0.318)
     nio4r (1.2.1)
     nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
@@ -217,6 +218,7 @@ DEPENDENCIES
   has_scope
   letter_opener
   listen (~> 3.0.5)
+  newrelic_rpm
   pg
   pry-byebug
   puma (~> 3.0)

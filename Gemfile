@@ -12,6 +12,7 @@ gem 'responders'
 gem 'figaro'
 gem 'has_scope'
 gem 'dogstatsd-ruby'
+gem 'newrelic_rpm'
 
 
 group :development, :test do

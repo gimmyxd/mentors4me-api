@@ -1,3 +1,7 @@
+require 'new_relic/agent/instrumentation/controller_instrumentation'
+require 'new_relic/agent/instrumentation/rails3/action_controller'
+require 'new_relic/agent/instrumentation/rails3/errors'
+
 module Api
   class BaseController < ActionController::API
     # minimum required controller functionality for rendering, proper mime-type
@@ -7,6 +11,9 @@ module Api
     MODULES = [
       ActionController::MimeResponds,
       CanCan::ControllerAdditions,
+      NewRelic::Agent::Instrumentation::ControllerInstrumentation,
+      NewRelic::Agent::Instrumentation::Rails3::ActionController,
+      NewRelic::Agent::Instrumentation::Rails3::Errors,
       HasScope
     ].each { |m| include m }
 
