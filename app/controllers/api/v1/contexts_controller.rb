@@ -4,7 +4,7 @@ module Api
       before_action :authenticate
       before_action :set_context, only: [:show, :update, :destroy, :accept]
 
-      before_filter :set_limit, :validate_limit, :validate_profile_id,
+      before_action :set_limit, :validate_limit, :validate_profile_id,
                     :validate_start_date, :validate_end_date, :validate_accepted,
                     :validate_organization_id, :validate_offset, only: :index
 

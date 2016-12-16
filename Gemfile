@@ -11,6 +11,7 @@ gem 'rails-i18n'
 gem 'responders'
 gem 'figaro'
 gem 'has_scope'
+gem 'dogstatsd-ruby'
 
 
 group :development, :test do

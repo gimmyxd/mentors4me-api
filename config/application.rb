@@ -41,7 +41,7 @@ module Mentors4meApi
     config.active_record.raise_in_transactional_callbacks = true
 
     # Rack::Cors configuration
-    config.middleware.insert_before 0, 'Rack::Cors', debug: true, logger: (-> { Rails.logger }) do
+    config.middleware.insert_before 0, Rack::Cors, debug: true, logger: (-> { Rails.logger }) do
       allow do
         origins '*'
 

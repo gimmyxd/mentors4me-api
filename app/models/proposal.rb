@@ -9,7 +9,7 @@ class Proposal < ApplicationRecord
 
   # Filer proposals by status
   # /proposals?status='status'
-  scope :status, -> (status) { where(status: status) }
+  scope :status, ->(status) { where(status: status) }
 
   def accept
     self.status = ACCEPTED
