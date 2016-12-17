@@ -5,10 +5,10 @@ module Api
       before_action :set_context, only: [:show, :update, :destroy, :accept]
 
       before_action :set_limit, :validate_limit, :validate_profile_id,
-                    :validate_start_date, :validate_end_date, :validate_accepted,
+                    :validate_start_date, :validate_end_date, :validate_status,
                     :validate_organization_id, :validate_offset, only: :index
 
-      has_scope :profile_id, :organization_id, :start_date, :end_date, :accepted, :offset, :limit
+      has_scope :profile_id, :organization_id, :start_date, :end_date, :status, :offset, :limit
       has_scope :date_interval, using: [:start_date, :end_date], type: :hash
 
       respond_to :json
@@ -25,12 +25,13 @@ module Api
       end
 
       def accept
-        @context.update(accepted: true)
-        if @context.save!
-          render json: build_data_object(@context), status: 200
-        else
-          render json: build_error_object(@context), status: 422
-        end
+        @context.accept
+        render json: build_data_object(@context), status: 200
+      end
+
+      def reject
+        @context.reject
+        render json: build_data_object(@context), status: 200
       end
 
       def create
@@ -44,6 +45,7 @@ module Api
           organization_id: params[:organization_id]
         ).any?
         context = Context.new(context_params)
+        context.pending(false)
         if context.save
           render json: build_data_object(context), status: 200
         else
@@ -60,7 +62,7 @@ module Api
       end
 
       def context_params
-        params.permit(:profile_id, :organization_id, :description)
+        params.permit(:profile_id, :organization_id, :description, :status)
       end
 
       def validate_numericality(field, error_message)
@@ -89,9 +91,10 @@ module Api
         params[:limit] = Context.count if params[:limit].blank?
       end
 
-      def validate_accepted
-        return unless params[:accepted].present?
-        raise InvalidAPIRequest.new('accepted must be a boolean true/false', 422)
+      def validate_status
+        return unless params[:status].present?
+        return if Context::STATUES.include? params[:status]
+        raise InvalidAPIRequest.new('status must be one of [accepted, rejected, pending]', 422)
       end
 
       def validate_start_date
