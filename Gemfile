@@ -11,8 +11,8 @@ gem 'rails-i18n'
 gem 'responders'
 gem 'figaro'
 gem 'has_scope'
-gem 'dogstatsd-ruby'
 gem 'newrelic_rpm'
+gem 'apipie-rails'
 
 
 group :development, :test do

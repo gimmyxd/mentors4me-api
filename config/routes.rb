@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  apipie
   devise_for :users
   # Api definition
   namespace :api, defaults: { format: :json } do
@@ -19,7 +20,7 @@ Rails.application.routes.draw do
       resources :invitations, only: :create do
         post :reject, on: :collection
       end
-      resources :mentors, only: [:index, :create, :update] do
+      resources :mentors do
         post :propose, on: :collection
       end
       resources :organizations, only: [:index, :create, :update]
