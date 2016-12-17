@@ -1,6 +1,5 @@
 class Proposal < ApplicationRecord
-  belongs_to :user
-  validates :email, :description, presence: true
+  validates :email, :description, :status, presence: true
   validates :invitation_token, uniqueness: true, allow_nil: true
 
   # proposals status

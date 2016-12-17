@@ -1,5 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe Skill, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context 'fields' do
+    before { @skill = FactoryGirl.build(:skill) }
+    it { is_expected.to respond_to(:name) }
+    it { is_expected.to validate_presence_of(:name) }
+    it { is_expected.to validate_uniqueness_of(:name) }
+    it { is_expected.to have_many(:profiles) }
+    it { is_expected.to have_many(:skill_assignments) }
+  end
 end

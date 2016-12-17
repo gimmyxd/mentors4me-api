@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :context do
+    association :profile
+    association :organization
     description 'MyText'
-    profile nil
-    organization nil
   end
 end

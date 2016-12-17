@@ -1,5 +1,4 @@
 module Authenticable
-
   # Public: validates the token
   # returns - boolean
   def authenticate
@@ -10,7 +9,7 @@ module Authenticable
   # returns - API error
   def render_unauthorized
     headers['WWW-Authenticate'] = 'Token realm="Application"'
-    fail Api::BaseController::InvalidAPIRequest.new(I18n.t('api.response.unauthorized'), 401)
+    raise Api::BaseController::InvalidAPIRequest.new(I18n.t('api.response.unauthorized'), 401)
   end
 
   # Public: verifies validation of token

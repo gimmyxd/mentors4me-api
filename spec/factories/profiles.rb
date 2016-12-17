@@ -1,7 +1,7 @@
 FactoryGirl.define do
-  factory :organization do
-   name Faker::Company.name
-   asignee Faker::Name.name
+  factory :profile do
+   first_name Faker::Name.name
+   last_name Faker::Name.name
    phone_number Faker::PhoneNumber.cell_phone
    city Faker::Address.city
    description 'some description'
