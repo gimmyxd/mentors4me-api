@@ -18,9 +18,6 @@ Rails.application.routes.draw do
           post :reject
         end
       end
-      resources :invitations, only: :create do
-        post :reject, on: :collection
-      end
       resources :mentors do
         post :propose, on: :collection
       end

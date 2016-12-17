@@ -21,6 +21,7 @@ module Api
       end
 
       def me
+        raise InvalidAPIRequest.new('Invalid token', 404) unless current_user
         respond_with build_data_object(current_user)
       end
 

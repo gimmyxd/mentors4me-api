@@ -32,6 +32,6 @@ module Authenticable
   # Public: Devise methods overwrites
   # returns User
   def current_user
-    current_user ||= User.find_by(auth_token: request.headers['Authorization'])
+    User.find_by(auth_token: request.headers['Authorization'])
   end
 end

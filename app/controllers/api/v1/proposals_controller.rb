@@ -16,12 +16,40 @@ module Api
         respond_with build_data_object(apply_scopes(Proposal))
       end
 
+      def accept
+        user = User.find(@proposal.id)
+      rescue ActiveRecord::RecordNotFound
+        raise InvalidAPIRequest.new('no user associated for this proposal', 404)
+      else
+        @proposal.accept
+        send_invitation_email(user.email, user.invitation_token)
+        render json: { success: true }, status: 200
+      end
+
+      def reject
+        user = User.find(@proposal.id)
+      rescue ActiveRecord::RecordNotFound
+        raise InvalidAPIRequest.new('no user associated for this proposal', 404)
+      else
+        @proposal.reject
+        send_rejection_email(user.email)
+        render json: { success: true }, status: 200
+      end
+
       private
 
       def set_proposal
         @proposal = Proposal.find(params[:id])
       rescue ActiveRecord::RecordNotFound
         raise InvalidAPIRequest.new('proposal not found', 404)
+      end
+
+      def send_invitation_email(email, invitation_token)
+        InvitationsMailer.send_invitation(email, invitation_token).deliver_later
+      end
+
+      def send_rejection_email(email)
+        # TODO: send rejection email with reason
       end
 
       def validate_numericality(field, error_message)

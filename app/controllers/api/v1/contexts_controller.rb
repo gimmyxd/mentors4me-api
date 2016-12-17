@@ -35,15 +35,7 @@ module Api
       end
 
       def create
-        User.find_by!(profile_id: params[:profile_id])
-        User.find_by!(organization_id: params[:organization_id])
-      rescue ActiveRecord::RecordNotFound
-        raise InvalidAPIRequest.new('profile or organization is invalid', 422)
-      else
-        raise InvalidAPIRequest.new('Context already exists', 422) if Context.where(
-          profile_id: params[:profile_id],
-          organization_id: params[:organization_id]
-        ).any?
+        validate_context
         context = Context.new(context_params)
         context.pending(false)
         if context.save
@@ -63,6 +55,17 @@ module Api
 
       def context_params
         params.permit(:profile_id, :organization_id, :description, :status)
+      end
+
+      def validate_context
+        errors = []
+        errors << 'mentor not found' unless User.where(profile_id: params[:profile_id]).any?
+        errors << 'organization not found' unless User.where(organization_id: params[:organization_id]).any?
+        raise InvalidAPIRequest.new(errors.join(' & '), 404) if errors.any?
+        raise InvalidAPIRequest.new('Context already exists', 422) if Context.where(
+          profile_id: params[:profile_id],
+          organization_id: params[:organization_id]
+        ).any?
       end
 
       def validate_numericality(field, error_message)
@@ -99,21 +102,17 @@ module Api
 
       def validate_start_date
         return unless params[:start_date]
-        begin
-          valid_date?(params[:start_date])
-        rescue ArgumentError
-          raise InvalidAPIRequest.new('start date has invalid format', 422)
-        end
+        valid_date?(params[:start_date])
+      rescue ArgumentError
+        raise InvalidAPIRequest.new('start date has invalid format', 422)
       end
 
       def validate_end_date
         return unless params[:end_date]
-        begin
-          valid_date?(params[:end_date])
-        rescue ArgumentError
-          raise InvalidAPIRequest.new('end date has invalid format', 422)
-        end
-        end
+        valid_date?(params[:end_date])
+      rescue ArgumentError
+        raise InvalidAPIRequest.new('end date has invalid format', 422)
       end
     end
+  end
 end
