@@ -1,12 +1,11 @@
 class User < ApplicationRecord
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+  devise :database_authenticatable, :registerable
 
   validates :role, :email, :password, :password_confirmation, presence: true
   validates :email, uniqueness: true
   validates_format_of :email, with: Devise.email_regexp
   validates :role, inclusion: { in: %w(admin mentor normal) }
-  validates :auth_token, :invitation_token, uniqueness: true, allow_nil: true
+  validates :auth_token, uniqueness: true, allow_nil: true
 
   # Check profile errors after validation
   before_validation :validate_profile
@@ -23,16 +22,6 @@ class User < ApplicationRecord
       self.auth_token = Devise.friendly_token
       self.auth_token_created_at = Time.now
       break auth_token unless self.class.exists?(auth_token: auth_token)
-    end
-  end
-
-  # Public: generates an invitation token
-  # returns - token for the user
-  def generate_invitation_token!
-    loop do
-      self.invitation_token = Devise.friendly_token
-      self.invitation_token_created_at = Time.now
-      break invitation_token unless self.class.exists?(invitation_token: invitation_token)
     end
   end
 

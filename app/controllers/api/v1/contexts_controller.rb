@@ -14,8 +14,6 @@ module Api
       respond_to :json
       load_and_authorize_resource :context, parent: false
 
-      include Filters
-
       def show
         respond_with build_data_object(@context)
       end

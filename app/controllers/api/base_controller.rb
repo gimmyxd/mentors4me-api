@@ -37,11 +37,11 @@ module Api
 
     # Hash with exception types and status codes
     EXCEPTIONS = {
+      CanCan::AccessDenied => 403,
       ActiveRecord::RecordNotFound => 404,
       ActiveRecord::RecordInvalid => 422,
       ActiveRecord::DeleteRestrictionError => 422,
-      ArgumentError => 422,
-      CanCan::AccessDenied => 403
+      ArgumentError => 422
     }.freeze
 
     # Exception handler for invalid api requests, forms a message like

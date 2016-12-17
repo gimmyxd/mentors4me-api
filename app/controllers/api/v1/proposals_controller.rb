@@ -16,27 +16,37 @@ module Api
         respond_with build_data_object(apply_scopes(Proposal))
       end
 
+      def create
+        if exsisting_user?
+          render json: { errors: 'User already exists' }, status: 422
+          return
+        end
+        proposal = Proposal.new(proposal_params)
+        proposal.pending(false)
+        if proposal.save
+          render json: build_data_object(proposal), status: 201
+        else
+          render json: build_error_object(proposal), status: 422
+        end
+      end
+
       def accept
-        user = User.find(@proposal.id)
-      rescue ActiveRecord::RecordNotFound
-        raise InvalidAPIRequest.new('no user associated for this proposal', 404)
-      else
-        @proposal.accept
-        send_invitation_email(user.email, user.invitation_token)
-        render json: { success: true }, status: 200
+        raise InvalidAPIRequest.new('only pending proposals can be accepted', 404) unless @proposal.accept
+        send_invitation_email(@proposal.email, @proposal.invitation_token)
+        render json: build_data_object(@proposal), status: 200
       end
 
       def reject
-        user = User.find(@proposal.id)
-      rescue ActiveRecord::RecordNotFound
-        raise InvalidAPIRequest.new('no user associated for this proposal', 404)
-      else
-        @proposal.reject
-        send_rejection_email(user.email)
-        render json: { success: true }, status: 200
+        raise InvalidAPIRequest.new('only pending proposals can be rejected', 404) unless @proposal.reject
+        send_rejection_email(@proposal.email)
+        render json: build_data_object(@proposal), status: 200
       end
 
       private
+
+      def proposal_params
+        params.permit(:email, :description)
+      end
 
       def set_proposal
         @proposal = Proposal.find(params[:id])
@@ -50,6 +60,10 @@ module Api
 
       def send_rejection_email(email)
         # TODO: send rejection email with reason
+      end
+
+      def exsisting_user?
+        User.find_by(email: params[:email]).present? || Proposal.find_by(email: params[:email]).present?
       end
 
       def validate_numericality(field, error_message)

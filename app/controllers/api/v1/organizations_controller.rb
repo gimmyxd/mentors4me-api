@@ -14,7 +14,7 @@ module Api
         user.role = User::NORMAL
         user.active = true
         user.organization = Organization.new(organization_params)
-        if user.update(create_user_params)
+        if user.save
           render json: build_data_object(user), status: 200
         else
           render json: build_error_object(user), status: 422

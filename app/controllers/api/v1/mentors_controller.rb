@@ -1,7 +1,7 @@
 module Api
   module V1
     class MentorsController < UsersController
-      before_action :authenticate_invitation, only: :create
+      before_action :validate_request, only: :create
       before_action :authenticate, only: :update
       before_action :set_user, only: [:show, :update, :destroy, :password]
       respond_to :json
@@ -20,27 +20,13 @@ module Api
         respond_with build_data_object(@user)
       end
 
-      def propose
-        if exsisting_user?
-          render json: { errors: 'User already exists' }, status: 422
-          return
-        end
-        proposal = Proposal.new(proposal_params)
-        if proposal.save
-          generate_user(proposal)
-          render json: { success: true }, status: 201
-        else
-          render json: build_error_object(proposal), status: 422
-        end
-      end
-
       def create
-        user = User.find_by(invitation_token: request.headers['Authorization'])
-        return unless user
+        user = User.new(create_user_params)
+        user.role = User::MENTOR
+        user.active  = true
         user.profile = Profile.new(profile_params)
         user.profile.skills = assign_skills(params[:skill_ids])
-        if user.update(create_user_params)
-          user.update_attributes(invitation_token: nil, active: true)
+        if user.save
           render json: build_data_object(user), status: 200
         else
           render json: build_error_object(user), status: 422
@@ -58,16 +44,10 @@ module Api
 
       private
 
-      def exsisting_user?
-        User.find_by(email: params[:email]).present? || Proposal.find_by(email: params[:email]).present?
-      end
-
-      def generate_user(proposal)
-        user = User.new(email: params[:email], role: User::MENTOR, active: false)
-        user.generate_invitation_token!
-        proposal.pending
-        user.proposal = proposal
-        user.save(validate: false)
+      def validate_request
+        token = request.headers['Authorization']
+        return if token.present? && Proposal.where(invitation_token: token).any?
+        raise InvalidAPIRequest.new('Invalid invitation token', 401)
       end
 
       def assign_skills(skill_ids)
@@ -76,10 +56,6 @@ module Api
         skills = Skill.where(id: skill_ids.split(',').map(&:to_i))
         raise InvalidAPIRequest.new('Skill is needed', 401) unless skills.any?
         skills
-      end
-
-      def proposal_params
-        params.permit(:email, :description)
       end
 
       def profile_params
