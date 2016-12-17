@@ -25,6 +25,7 @@ module Mentors4meApi
 
     config.eager_load_paths += %W(#{config.root}/models)
     config.eager_load_paths += Dir["#{config.root}/models/**/"]
+    config.autoload_paths += Dir[Rails.root.join('app', 'docs', '*')]
 
     # Rspec config
     config.generators do |g|

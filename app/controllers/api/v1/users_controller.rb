@@ -6,6 +6,12 @@ module Api
       load_and_authorize_resource :user, parent: false, only: :update
       respond_to :json
 
+      include ApipieDocs::Api::V1::UserDoc
+
+      resource_description do
+        name 'Users'
+      end
+
       def show
         respond_with build_data_object(@user)
       end
