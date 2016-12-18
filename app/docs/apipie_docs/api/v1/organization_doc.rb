@@ -41,7 +41,7 @@ module ApipieDocs
         end
 
         doc_for :destroy do
-          api :DELETE, '/organizations/:id', 'Deletes a specific organization'
+          api :DELETE, '/organizations/:id', 'Delete a specific organization'
           error 401, 'Unauthorized'
           error 404, 'Not Found'
         end

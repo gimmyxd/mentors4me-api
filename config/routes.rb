@@ -24,6 +24,9 @@ Rails.application.routes.draw do
       resources :organizations, only: [:index, :create, :update]
       resources :users, only: [:index, :show, :destroy] do
         get :me, on: :collection
+        member do
+          put :password
+        end
       end
     end
   end

@@ -23,6 +23,16 @@ module ApipieDocs
           api :GET, '/users/me', 'Retrevie current user based on authorization token'
           error 404, 'Not Found'
         end
+
+        doc_for :password do
+          api :GET, '/users/:id/password', 'Change the user password'
+          param :current_password, String, desc: 'Current  password', required: true
+          param :password, String, desc: 'New password', required: true
+          param :password_confirmation, String, desc: 'New password', required: true
+          error 401, 'Unauthorized'
+          error 404, 'Not Found'
+          error 422, 'Validation Error'
+        end
       end
     end
   end

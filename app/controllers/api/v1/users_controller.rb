@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsersController < Api::BaseController
-      before_action :authenticate, only: :update
+      before_action :authenticate
       before_action :set_user, only: [:show, :update, :destroy, :password]
       load_and_authorize_resource :user, parent: false, only: :update
       respond_to :json
@@ -10,6 +10,9 @@ module Api
 
       resource_description do
         name 'Users'
+        description <<-EOS
+             General endpoint for managin all types of users. Will be used by admin.
+          EOS
       end
 
       def show
@@ -23,6 +26,14 @@ module Api
       def me
         raise InvalidAPIRequest.new('Invalid token', 404) unless current_user
         respond_with build_data_object(current_user)
+      end
+
+      def password
+        if @user.update_with_password(password_params)
+          render json: build_data_object(@user), status: 200
+        else
+          render json: build_error_object(@user), status: 422
+        end
       end
 
       private

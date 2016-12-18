@@ -41,7 +41,7 @@ module ApipieDocs
         end
 
         doc_for :destroy do
-          api :DELETE, '/mentors/:id', 'Deletes a specific mentor'
+          api :DELETE, '/mentors/:id', 'Delete a specific mentor'
           error 401, 'Unauthorized'
           error 404, 'Not Found'
         end
