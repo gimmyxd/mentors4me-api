@@ -3,6 +3,12 @@ module Api
     class SessionsController < Api::BaseController
       respond_to :json
 
+      include ApipieDocs::Api::V1::SessionDoc
+
+      resource_description do
+        name 'Sessions - Login/Logout'
+      end
+
       def create
         user = User.find_by(email: params[:email])
         raise InvalidAPIRequest.new('Invalid username or password', 401) unless valid_sign_in?(user)
@@ -14,7 +20,7 @@ module Api
 
       def destroy
         user = User.find_by(auth_token: params[:id])
-        raise InvalidAPIRequest.new('User not found', 401) unless user.present?
+        raise InvalidAPIRequest.new('User not found', 404) unless user.present?
         user.generate_authentication_token!
         user.save(validate: false)
         head 204

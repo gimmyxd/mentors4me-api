@@ -5,7 +5,7 @@ module ApipieDocs
         extend BaseResource
 
         def self.superclass
-          Api::V1::MentorsController
+          Api::V1::UsersController
         end
 
         doc_for :index do

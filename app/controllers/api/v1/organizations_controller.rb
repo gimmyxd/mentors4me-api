@@ -5,6 +5,12 @@ module Api
       before_action :authenticate, only: :update
       respond_to :json
 
+      include ApipieDocs::Api::V1::OrganizationDoc
+
+      resource_description do
+        name 'Organizations'
+      end
+
       def index
         respond_with build_data_object(User.includes(:organization).where(role: User::NORMAL))
       end

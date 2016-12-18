@@ -14,6 +14,12 @@ module Api
       respond_to :json
       load_and_authorize_resource :context, parent: false
 
+      include ApipieDocs::Api::V1::ContextDoc
+
+      resource_description do
+        name 'Contexts'
+      end
+
       def show
         respond_with build_data_object(@context)
       end
@@ -52,7 +58,7 @@ module Api
       end
 
       def context_params
-        params.permit(:profile_id, :organization_id, :description, :status)
+        params.permit(:profile_id, :organization_id, :description)
       end
 
       def validate_context

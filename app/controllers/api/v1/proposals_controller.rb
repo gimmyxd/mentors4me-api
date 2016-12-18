@@ -8,6 +8,12 @@ module Api
       before_action :set_limit, :validate_limit, :validate_offset, only: :index
       has_scope :status, :offset, :limit
 
+      include ApipieDocs::Api::V1::ProposalDoc
+
+      resource_description do
+        name 'Proposals'
+      end
+
       def show
         respond_with build_data_object(@proposal)
       end

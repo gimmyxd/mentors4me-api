@@ -6,6 +6,12 @@ module Api
       load_and_authorize_resource :skill, parent: false
       respond_to :json
 
+      include ApipieDocs::Api::V1::SkillDoc
+
+      resource_description do
+        name 'Skills'
+      end
+
       def show
         respond_with build_data_object(@skill)
       end
