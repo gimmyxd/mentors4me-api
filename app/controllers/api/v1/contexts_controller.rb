@@ -100,7 +100,7 @@ module Api
 
       def validate_status
         return unless params[:status].present?
-        return if Context::STATUES.include? params[:status]
+        return if Context::STATUSES.include? params[:status]
         raise InvalidAPIRequest.new('status must be one of [accepted, rejected, pending]', 422)
       end
 

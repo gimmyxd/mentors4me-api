@@ -11,7 +11,7 @@ module Api
       resource_description do
         name 'Users'
         description <<-EOS
-             General endpoint for managin all types of users. Will be used by admin.
+             General endpoint for managing all types of users.
           EOS
       end
 

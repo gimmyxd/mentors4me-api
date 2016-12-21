@@ -10,7 +10,7 @@ class Context < ApplicationRecord
   REJECTED = 'rejected'.freeze
   PENDING = 'pending'.freeze
 
-  STATUES = [ACCEPTED, PENDING, REJECTED].freeze
+  STATUSES = [ACCEPTED, PENDING, REJECTED].freeze
 
   # Filer contexts by profile_id
   # /contexts?profile_id=1

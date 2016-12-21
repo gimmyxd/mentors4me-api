@@ -25,7 +25,7 @@ module ApipieDocs
         end
 
         doc_for :password do
-          api :GET, '/users/:id/password', 'Change the user password'
+          api :POST, '/users/:id/password', 'Change the user password'
           param :current_password, String, desc: 'Current  password', required: true
           param :password, String, desc: 'New password', required: true
           param :password_confirmation, String, desc: 'New password', required: true
