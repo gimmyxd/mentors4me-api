@@ -1,4 +1,6 @@
 module UsefulHelper
+  CR = Custom::Constants::Role
+
   def send_request(http_method, action, options = {}, format = nil, session = {})
     options[:format] = format if format.present?
 

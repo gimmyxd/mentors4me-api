@@ -1,9 +1,5 @@
-require 'rails_helper'
-
 RSpec.describe Proposal, type: :model do
   context 'fields' do
-    before { @proposal = FactoryGirl.build(:proposal) }
-
     it { is_expected.to respond_to(:email) }
     it { is_expected.to respond_to(:description) }
     it { is_expected.to respond_to(:status) }

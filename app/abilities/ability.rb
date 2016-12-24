@@ -3,11 +3,11 @@ class Ability
 
   def self.build_ability_for(user)
     user ||= User.new
-    if user.is? User::ADMIN
+    if user.admin?
       Admin.new(user)
-    elsif user.is? User::MENTOR
+    elsif user.mentor?
       Mentor.new(user)
-    elsif user.is? User::NORMAL
+    elsif user.organization?
       Normal.new(user)
     else
       Guest.new(user)

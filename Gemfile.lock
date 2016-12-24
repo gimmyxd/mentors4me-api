@@ -181,6 +181,8 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
+    simplecov-rcov (0.2.3)
+      simplecov (>= 0.4.1)
     slop (3.6.0)
     spring (2.0.0)
       activesupport (>= 4.2)
@@ -237,14 +239,12 @@ DEPENDENCIES
   rspec-rails
   shoulda-matchers
   simplecov
+  simplecov-rcov
   spring
   spring-watcher-listen
   timecop
   tzinfo-data
   webmock
-
-RUBY VERSION
-   ruby 2.2.2p95
 
 BUNDLED WITH
    1.13.6

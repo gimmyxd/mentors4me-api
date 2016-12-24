@@ -7,6 +7,7 @@ module Api
     # minimum required controller functionality for rendering, proper mime-type
     # setting, and rescue_from functionality
     include Authenticable
+    include SharedMethods
 
     MODULES = [
       ActionController::MimeResponds,

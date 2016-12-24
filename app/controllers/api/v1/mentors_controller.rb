@@ -13,7 +13,11 @@ module Api
       end
 
       def index
-        respond_with build_data_object(User.includes(:profile).where(role: User::MENTOR))
+        respond_with build_data_object(
+          User.includes(:profile)
+          .includes(:roles)
+          .where(roles: { slug: CR::MENTOR })
+        )
       end
 
       def show
@@ -22,7 +26,7 @@ module Api
 
       def create
         user = User.new(create_user_params)
-        user.role = User::MENTOR
+        user.assign_roles(Role.mentor.id)
         user.active  = true
         user.profile = Profile.new(profile_params)
         user.profile.skills = assign_skills(params[:skill_ids])

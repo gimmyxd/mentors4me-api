@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Api::V1::UsersController do
   let(:format) { :json }
   before :each do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryGirl.create(:user, :admin_user)
     request.headers['Authorization'] = @user.auth_token
   end
 
@@ -36,8 +36,8 @@ describe Api::V1::UsersController do
     let(:action) { :index }
 
     it 'returns the information about all users on a hash' do
-      user1 = FactoryGirl.create(:user, :admin)
-      user2 = FactoryGirl.create(:user, :admin)
+      user1 = FactoryGirl.create(:user, :mentor_user)
+      user2 = FactoryGirl.create(:user, :organization_user)
 
       expected_response = {
         success: true,
@@ -45,17 +45,31 @@ describe Api::V1::UsersController do
           {
             id: @user.id,
             email: @user.email,
-            role: @user.role
+            role: ['admin']
           },
           {
             id: user1.id,
             email: user1.email,
-            role: user1.role
+            role: ['mentor'],
+            profile_id: user1.profile.id,
+            first_name: user1.profile.first_name,
+            last_name: user1.profile.last_name,
+            phone_number: user1.profile.phone_number,
+            city: user1.profile.city,
+            description: user1.profile.description,
+            facebook: user1.profile.facebook,
+            linkedin: user1.profile.linkedin
           },
           {
             id: user2.id,
             email: user2.email,
-            role: user2.role
+            role: ['organization'],
+            organization_id: user2.organization.id,
+            name: user2.organization.name,
+            asignee: user2.organization.asignee,
+            phone_number: user2.organization.phone_number,
+            city: user2.organization.city,
+            description: user2.organization.description
           }
         ]
       }
@@ -77,7 +91,7 @@ describe Api::V1::UsersController do
         data: {
           id: @user.id,
           email: @user.email,
-          role: @user.role
+          role: ['admin']
         }
       }
 

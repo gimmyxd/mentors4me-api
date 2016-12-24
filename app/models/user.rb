@@ -1,10 +1,10 @@
 class User < ApplicationRecord
+  include SharedMethods
   devise :database_authenticatable, :registerable
 
-  validates :role, :email, :password, :password_confirmation, presence: true
+  validates :email, :password, :password_confirmation, presence: true
   validates :email, uniqueness: true
   validates_format_of :email, with: Devise.email_regexp
-  validates :role, inclusion: { in: %w(admin mentor normal) }
   validates :auth_token, uniqueness: true, allow_nil: true
 
   # Check profile errors after validation
@@ -13,6 +13,19 @@ class User < ApplicationRecord
 
   has_one :profile, dependent: :destroy
   has_one :organization, dependent: :destroy
+
+  has_many :role_assignments, dependent: :destroy
+  has_many :roles, through: :role_assignments
+
+  accepts_nested_attributes_for :role_assignments, allow_destroy: true
+
+  attr_accessor :role_id
+
+  def assign_roles(role_ids)
+    new_assignments = []
+    Array(role_ids).each { |role_id| new_assignments << { role_id: role_id } }
+    self.role_assignments_attributes = new_assignments
+  end
 
   # Public: generates an authentication token
   # returns - token for the user
@@ -24,22 +37,16 @@ class User < ApplicationRecord
     end
   end
 
-  # Type of user
-  ADMIN = 'admin'.freeze
-  MENTOR = 'mentor'.freeze
-  NORMAL = 'normal'.freeze
-
-  # Public: generates roles
-  # Returns - Array
-  def self.roles
-    [ADMIN, MENTOR, NORMAL]
+  def admin?
+    role?(CR::ADMIN)
   end
 
-  # Public: checks the role of the user
-  # requested_role - contains the role of the user
-  # returns - boolean
-  def is?(requested_role)
-    role == requested_role.to_s
+  def mentor?
+    role?(CR::MENTOR)
+  end
+
+  def organization?
+    role?(CR::ORGANIZATION)
   end
 
   # Public: models JSON representation of the object
@@ -49,21 +56,13 @@ class User < ApplicationRecord
     custom_response = {
       id: id,
       email: email,
-      role:  role
+      role:  roles.pluck(:slug)
     }
 
     add_profile_data(custom_response) if profile.present?
     add_skills_data(custom_response) if profile.present? && profile.skills.any?
     add_organization_data(custom_response) if organization .present?
     options.empty? ? custom_response : super
-  end
-
-  def normal?
-    role == NORMAL
-  end
-
-  def mentor?
-    role == MENTOR
   end
 
   def deactivate
@@ -75,6 +74,10 @@ class User < ApplicationRecord
   end
 
   private
+
+  def role?(slug)
+    Role.list_by(:slug, roles).keys.include?(slug)
+  end
 
   def add_profile_data(response)
     response[:profile_id] = profile.id
@@ -116,7 +119,7 @@ class User < ApplicationRecord
   # Private: verifies that the profile is valid. If it's not, errors are added
   # returns - hash of errors
   def validate_organization
-    return unless normal?
+    return unless organization?
     self.organization = Organization.new unless organization.present?
     return if organization.valid?
     organization.errors.each do |k, v|

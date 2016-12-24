@@ -17,6 +17,8 @@ gem 'apipie-rails'
 
 group :development, :test do
   gem 'pry-byebug'
+  gem 'factory_girl_rails'
+  gem 'faker'
 end
 
 group :development do
@@ -28,13 +30,12 @@ end
 
 group :test do
   gem 'rspec-rails'
-  gem 'factory_girl_rails'
   gem 'shoulda-matchers'
   gem 'timecop'
   gem 'fuubar'
-  gem 'faker'
   gem 'database_cleaner'
-  gem 'simplecov', require: false
+  gem 'simplecov',require: false
+  gem 'simplecov-rcov',require: false
   gem 'webmock'
   gem 'rake'
 end

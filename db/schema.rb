@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161224152124) do
+ActiveRecord::Schema.define(version: 20161224195833) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,6 +65,23 @@ ActiveRecord::Schema.define(version: 20161224152124) do
     t.index ["user_id"], name: "index_proposals_on_user_id", using: :btree
   end
 
+  create_table "role_assignments", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "role_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["role_id"], name: "index_role_assignments_on_role_id", using: :btree
+    t.index ["user_id"], name: "index_role_assignments_on_user_id", using: :btree
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.string   "slug"
+    t.string   "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["slug"], name: "index_roles_on_slug", unique: true, using: :btree
+  end
+
   create_table "skill_assignments", force: :cascade do |t|
     t.integer  "profile_id"
     t.integer  "skill_id"
@@ -85,7 +102,6 @@ ActiveRecord::Schema.define(version: 20161224152124) do
     t.string   "encrypted_password",    default: "",   null: false
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
-    t.string   "role"
     t.string   "auth_token"
     t.datetime "auth_token_created_at"
     t.boolean  "active",                default: true

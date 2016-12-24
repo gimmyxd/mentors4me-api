@@ -1,8 +1,5 @@
-require 'rails_helper'
-
 RSpec.describe Skill, type: :model do
   context 'fields' do
-    before { @skill = FactoryGirl.build(:skill) }
     it { is_expected.to respond_to(:name) }
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_uniqueness_of(:name) }

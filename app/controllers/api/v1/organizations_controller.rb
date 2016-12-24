@@ -12,12 +12,16 @@ module Api
       end
 
       def index
-        respond_with build_data_object(User.includes(:organization).where(role: User::NORMAL))
+        respond_with build_data_object(
+          User.includes(:profile)
+          .includes(:roles)
+          .where(roles: { slug: CR::ORGANIZATION })
+        )
       end
 
       def create
         user = User.new(create_user_params)
-        user.role = User::NORMAL
+        user.assign_roles(Role.organization.id)
         user.active = true
         user.organization = Organization.new(organization_params)
         if user.save

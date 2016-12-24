@@ -1,26 +1,32 @@
+require './spec/support/test_methods'
+
 FactoryGirl.define do
   factory :user do
     email { Faker::Internet.email }
     password { 'password' }
     password_confirmation { 'password' }
-    role User::ADMIN
+    role_id TestMethods.find_or_create_role(Custom::Constants::Role::ADMIN)
 
     before(:create, &:generate_authentication_token!)
+
+    before(:create) do |user|
+      new_assignments = []
+      Array(user.role_id).each { |role_id| new_assignments << { role_id: role_id } }
+      user.role_assignments_attributes = new_assignments
+    end
   end
 
-  trait :admin do |_f|
-    role User::ADMIN
+  trait :admin_user do |_f|
+    role_id TestMethods.find_or_create_role(Custom::Constants::Role::ADMIN)
   end
 
-  trait :mentor do |_f|
+  trait :mentor_user do |_f|
     association :profile
-    role User::MENTOR
-    after(:create) { |user| create(:profile, user: user) }
+    role_id TestMethods.find_or_create_role(Custom::Constants::Role::MENTOR)
   end
 
-  trait :organization do |_f|
+  trait :organization_user do |_f|
     association :organization
-    role User::NORMAL
-    after(:create) { |user| create(:organization, user: user) }
+    role_id TestMethods.find_or_create_role(Custom::Constants::Role::ORGANIZATION)
   end
 end
