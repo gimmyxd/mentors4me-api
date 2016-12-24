@@ -15,8 +15,8 @@ module Api
       def index
         respond_with build_data_object(
           User.includes(:profile)
-          .includes(:roles)
-          .where(roles: { slug: CR::MENTOR })
+            .includes(:roles)
+            .where(roles: { slug: CR::MENTOR })
         )
       end
 
@@ -29,7 +29,7 @@ module Api
         user.assign_roles(Role.mentor.id)
         user.active  = true
         user.profile = Profile.new(profile_params)
-        user.profile.skills = assign_skills(params[:skill_ids])
+        user.profile.skills = assign_skills(params[:skill_ids]) if params[:skills]
         if user.save
           render json: build_data_object(user), status: 200
         else
@@ -63,7 +63,7 @@ module Api
       end
 
       def profile_params
-        params.permit(
+        params.require(:mentor).permit(
           :first_name, :last_name, :phone_number,
           :city, :description
         )

@@ -1,18 +1,14 @@
 class User < ApplicationRecord
   include SharedMethods
-  devise :database_authenticatable, :registerable
+  devise :database_authenticatable, :registerable, :validatable
 
   validates :email, :password, :password_confirmation, presence: true
   validates :email, uniqueness: true
   validates_format_of :email, with: Devise.email_regexp
   validates :auth_token, uniqueness: true, allow_nil: true
 
-  # Check profile errors after validation
-  before_validation :validate_profile
-  before_validation :validate_organization
-
-  has_one :profile, dependent: :destroy
-  has_one :organization, dependent: :destroy
+  has_one :profile, dependent: :destroy, autosave: true
+  has_one :organization, dependent: :destroy, autosave: true
 
   has_many :role_assignments, dependent: :destroy
   has_many :roles, through: :role_assignments
@@ -38,15 +34,15 @@ class User < ApplicationRecord
   end
 
   def admin?
-    role?(CR::ADMIN)
+    self.role?(CR::ADMIN)
   end
 
   def mentor?
-    role?(CR::MENTOR)
+    self.role?(CR::MENTOR)
   end
 
   def organization?
-    role?(CR::ORGANIZATION)
+    self.role?(CR::ORGANIZATION)
   end
 
   # Public: models JSON representation of the object
@@ -103,27 +99,5 @@ class User < ApplicationRecord
 
   def add_skills_data(response)
     response[:skills] = profile.skills.pluck(:name)
-  end
-
-  # Private: verifies that the profile is valid. If it's not, errors are added
-  # returns - hash of errors
-  def validate_profile
-    return unless mentor?
-    self.profile = Profile.new unless profile.present?
-    return if profile.valid?
-    profile.errors.each do |k, v|
-      errors.add(k, v)
-    end
-  end
-
-  # Private: verifies that the profile is valid. If it's not, errors are added
-  # returns - hash of errors
-  def validate_organization
-    return unless organization?
-    self.organization = Organization.new unless organization.present?
-    return if organization.valid?
-    organization.errors.each do |k, v|
-      errors.add(k, v)
-    end
   end
 end

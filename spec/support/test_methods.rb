@@ -1,5 +1,5 @@
 module TestMethods
-  extend self
+  module_function
 
   def find_or_create_role(slug)
     role = Role.find_by(slug: slug)

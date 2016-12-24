@@ -14,8 +14,8 @@ module Api
       def index
         respond_with build_data_object(
           User.includes(:profile)
-          .includes(:roles)
-          .where(roles: { slug: CR::ORGANIZATION })
+            .includes(:roles)
+            .where(roles: { slug: CR::ORGANIZATION })
         )
       end
 
@@ -43,7 +43,7 @@ module Api
       private
 
       def organization_params
-        params.permit(
+        params.require(:organization).permit(
           :name, :asignee, :phone_number,
           :city, :description
         )

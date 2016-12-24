@@ -20,7 +20,11 @@ module Api
       end
 
       def index
-        respond_with build_data_object(User.includes(:profile).includes(:organization))
+        respond_with build_data_object(
+          User.includes(:profile)
+            .includes(:organization)
+            .includes(:roles)
+        )
       end
 
       def me
@@ -45,15 +49,15 @@ module Api
       end
 
       def create_user_params
-        params.permit(:email, :password, :password_confirmation)
+        params.require(:user).permit(:email, :password, :password_confirmation)
       end
 
       def password_params
-        params.permit(:current_password, :password, :password_confirmation)
+        params.require(:user).permit(:current_password, :password, :password_confirmation)
       end
 
       def update_user_params
-        params.permit(:email, :role, :password, :password_confirmation)
+        params.require(:user).permit(:email, :role, :password, :password_confirmation)
       end
     end
   end
