@@ -55,10 +55,12 @@ module Api
 
           resp_hash = { success: false, errors: [ex.message] }
 
-          puts "API Response #{code} is #{resp_hash.inspect} backtrace is #{ex.backtrace.inspect}"
-          resp_hash['stack_trace'] = ex.backtrace if Rails.env.development?
+          if Rails.env.development?
+            puts "API Response #{code} is #{resp_hash.inspect} backtrace is #{ex.backtrace.inspect}"
+            resp_hash['stack_trace'] = ex.backtrace
+          end
 
-          render text: resp_hash.to_json, status: code
+          render plain: resp_hash.to_json, status: code
         end
       end
     end

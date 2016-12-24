@@ -4,13 +4,13 @@ module UsefulHelper
 
     case http_method
     when :post
-      post action, { params: options }, { session: session }
+      post action, { params: options }, session: session
     when :put
-      put action, { params: options }, { session: session }
+      put action, { params: options }, session: session
     when :get
-      get action, { params: options }, { session: session }
+      get action, { params: options }, session: session
     when :delete
-      delete action, { params: options }, { session: session }
+      delete action, { params: options }, session: session
     end
   end
 
