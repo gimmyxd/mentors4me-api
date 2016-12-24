@@ -6,6 +6,9 @@ require 'simplecov'
 require 'database_cleaner'
 require 'webmock/rspec'
 
+Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+include UsefulHelper
+
 # Code coverage analysis
 SimpleCov.start do
   add_group 'Models', 'app/models'

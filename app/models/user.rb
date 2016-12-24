@@ -11,8 +11,8 @@ class User < ApplicationRecord
   before_validation :validate_profile
   before_validation :validate_organization
 
-  belongs_to :profile
-  belongs_to :organization
+  has_one :profile, dependent: :destroy
+  has_one :organization, dependent: :destroy
 
   # Public: generates an authentication token
   # returns - token for the user
@@ -52,9 +52,9 @@ class User < ApplicationRecord
       role:  role
     }
 
-    add_profile_data(custom_response) if profile_id.present?
-    add_skills_data(custom_response) if profile_id.present? && profile.skills.any?
-    add_organization_data(custom_response) if organization_id .present?
+    add_profile_data(custom_response) if profile.present?
+    add_skills_data(custom_response) if profile.present? && profile.skills.any?
+    add_organization_data(custom_response) if organization .present?
     options.empty? ? custom_response : super
   end
 

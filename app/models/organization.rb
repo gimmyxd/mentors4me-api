@@ -1,4 +1,4 @@
 class Organization < ApplicationRecord
-  has_one :user, dependent: :destroy
+  belongs_to :user
   validates :name, :asignee, :phone_number, :city, :description, presence: true
 end

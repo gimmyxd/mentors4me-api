@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161217203630) do
+ActiveRecord::Schema.define(version: 20161224152124) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,8 @@ ActiveRecord::Schema.define(version: 20161217203630) do
     t.text     "description"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.integer  "user_id"
+    t.index ["user_id"], name: "index_organizations_on_user_id", using: :btree
   end
 
   create_table "profiles", force: :cascade do |t|
@@ -46,6 +48,8 @@ ActiveRecord::Schema.define(version: 20161217203630) do
     t.string   "facebook"
     t.string   "city"
     t.text     "description"
+    t.integer  "user_id"
+    t.index ["user_id"], name: "index_profiles_on_user_id", using: :btree
   end
 
   create_table "proposals", force: :cascade do |t|
@@ -81,18 +85,16 @@ ActiveRecord::Schema.define(version: 20161217203630) do
     t.string   "encrypted_password",    default: "",   null: false
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
-    t.integer  "profile_id"
     t.string   "role"
     t.string   "auth_token"
     t.datetime "auth_token_created_at"
-    t.integer  "organization_id"
     t.boolean  "active",                default: true
     t.index ["auth_token"], name: "index_users_on_auth_token", unique: true, using: :btree
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
-    t.index ["organization_id"], name: "index_users_on_organization_id", using: :btree
-    t.index ["profile_id"], name: "index_users_on_profile_id", using: :btree
   end
 
   add_foreign_key "contexts", "organizations"
   add_foreign_key "contexts", "profiles"
+  add_foreign_key "organizations", "users"
+  add_foreign_key "profiles", "users"
 end
