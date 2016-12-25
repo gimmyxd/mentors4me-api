@@ -2,7 +2,7 @@ class User < ApplicationRecord
   include SharedMethods
   devise :database_authenticatable, :registerable, :validatable
 
-  validates :email, :password, :password_confirmation, presence: true
+  validates :email, presence: true
   validates :email, uniqueness: true
   validates_format_of :email, with: Devise.email_regexp
   validates :auth_token, uniqueness: true, allow_nil: true
@@ -76,7 +76,6 @@ class User < ApplicationRecord
   private
 
   def add_mentor_data(response)
-    response[:mentor_id] = mentor.id
     response[:first_name] = mentor.first_name
     response[:last_name] = mentor.last_name
     response[:phone_number] = mentor.phone_number
@@ -88,7 +87,6 @@ class User < ApplicationRecord
   end
 
   def add_organization_data(response)
-    response[:organization_id] = organization.id
     response[:name] = organization.name
     response[:asignee] = organization.asignee
     response[:phone_number] = organization.phone_number

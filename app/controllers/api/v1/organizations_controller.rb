@@ -11,9 +11,13 @@ module Api
         name 'Organizations'
       end
 
+      def show
+        respond_with build_data_object(@user)
+      end
+
       def index
         respond_with build_data_object(
-          User.includes(:mentor)
+          User.includes(:organization)
             .includes(:roles)
             .where(roles: { slug: CR::ORGANIZATION })
         )
@@ -25,7 +29,7 @@ module Api
         user.active = true
         user.organization = Organization.new(organization_params)
         if user.save
-          render json: build_data_object(user), status: 200
+          render json: build_data_object(user), status: 201
         else
           render json: build_error_object(user), status: 422
         end
@@ -43,7 +47,7 @@ module Api
       private
 
       def organization_params
-        params.require(:organization).permit(
+        params.permit(
           :name, :asignee, :phone_number,
           :city, :description
         )

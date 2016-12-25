@@ -63,8 +63,14 @@ module Api
 
       def validate_context
         errors = []
-        errors << 'mentor not found' unless User.where(mentor_id: params[:mentor_id]).any?
-        errors << 'organization not found' unless User.where(organization_id: params[:organization_id]).any?
+        errors << 'mentor not found' unless User.includes(:roles).where(
+          mentor_id: params[:mentor_id],
+          roles: { slug: CR::MENTOR }
+        ).any?
+        errors << 'organization not found' unless User.includes(:roles).where(
+          organization_id: params[:organization_id],
+          roles: { slug: CR::ORGANIZATION }
+        ).any?
         raise InvalidAPIRequest.new(errors.join(' & '), 404) if errors.any?
         raise InvalidAPIRequest.new('Context already exists', 422) if Context.where(
           mentor_id: params[:mentor_id],

@@ -52,12 +52,12 @@ module Api
         params.permit(:email, :password, :password_confirmation)
       end
 
-      def password_params
-        params.permit(:current_password, :password, :password_confirmation)
+      def update_user_params
+        params.permit(:email)
       end
 
-      def update_user_params
-        params.permit(:email, :role, :password, :password_confirmation)
+      def password_params
+        params.permit(:current_password, :password, :password_confirmation)
       end
     end
   end

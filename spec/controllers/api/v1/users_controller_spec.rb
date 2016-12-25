@@ -51,7 +51,6 @@ describe Api::V1::UsersController do
             id: user1.id,
             email: user1.email,
             role: ['mentor'],
-            mentor_id: user1.mentor.id,
             first_name: user1.mentor.first_name,
             last_name: user1.mentor.last_name,
             phone_number: user1.mentor.phone_number,
@@ -64,7 +63,6 @@ describe Api::V1::UsersController do
             id: user2.id,
             email: user2.email,
             role: ['organization'],
-            organization_id: user2.organization.id,
             name: user2.organization.name,
             asignee: user2.organization.asignee,
             phone_number: user2.organization.phone_number,
@@ -75,7 +73,6 @@ describe Api::V1::UsersController do
       }
 
       send_request(http_method, action, {}, format)
-
       expect(parsed_response(response).sort).to eql expected_response.sort
       expect(response.status).to eql 200
     end
