@@ -51,7 +51,7 @@ RSpec.configure do |config|
   # database_cleaner
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with :truncation, { except: %w[roles] }
+    DatabaseCleaner.clean_with :truncation, except: %w(roles)
   end
 
   config.around(:each) do |example|

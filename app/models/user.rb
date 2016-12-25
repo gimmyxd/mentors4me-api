@@ -34,15 +34,27 @@ class User < ApplicationRecord
   end
 
   def admin?
-    self.role?(CR::ADMIN)
+    role?(CR::ADMIN)
   end
 
   def mentor?
-    self.role?(CR::MENTOR)
+    role?(CR::MENTOR)
   end
 
   def organization?
-    self.role?(CR::ORGANIZATION)
+    role?(CR::ORGANIZATION)
+  end
+
+  def role?(slug)
+    Role.list_by(:slug, roles).keys.include?(slug)
+  end
+
+  def deactivate
+    update_attributes(active: false)
+  end
+
+  def activate
+    update_attributes(active: true)
   end
 
   # Public: models JSON representation of the object
@@ -61,19 +73,7 @@ class User < ApplicationRecord
     options.empty? ? custom_response : super
   end
 
-  def deactivate
-    update_attributes(active: false)
-  end
-
-  def activate
-    update_attributes(active: true)
-  end
-
   private
-
-  def role?(slug)
-    Role.list_by(:slug, roles).keys.include?(slug)
-  end
 
   def add_mentor_data(response)
     response[:mentor_id] = mentor.id

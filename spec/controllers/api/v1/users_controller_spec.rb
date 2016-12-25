@@ -115,19 +115,17 @@ describe Api::V1::UsersController do
     it 'successfully updates a user\'s password' do
       params = {
         id: @user.id,
-        user: {
-          current_password: @user.password,
-          password: 'newpassword',
-          password_confirmation: 'newpassword'
-        }
+        current_password: @user.password,
+        password: 'newpassword',
+        password_confirmation: 'newpassword'
       }
       send_request(http_method, action, params, format)
       expect(response.status).to eql 200
-      expect(@user.reload.valid_password?(params[:user][:password])).to eql true
+      expect(@user.reload.valid_password?(params[:password])).to eql true
     end
 
     it 'raises proper errors when request does not contain any password params' do
-      send_request(http_method, action, { user: { password: 'ana' }, id: @user.id }, format)
+      send_request(http_method, action, { id: @user.id }, format)
       expect(parsed_response(response)).to have_key(:errors)
       expect(response.status).to eql 422
     end
