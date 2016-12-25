@@ -1,11 +1,9 @@
-require './spec/support/test_methods'
-
 FactoryGirl.define do
   factory :user do
     email { Faker::Internet.email }
     password { 'password' }
     password_confirmation { 'password' }
-    role_id TestMethods.find_or_create_role(Custom::Constants::Role::ADMIN)
+    role_id 1
 
     before(:create, &:generate_authentication_token!)
 
@@ -17,16 +15,16 @@ FactoryGirl.define do
   end
 
   trait :admin_user do |_f|
-    role_id TestMethods.find_or_create_role(Custom::Constants::Role::ADMIN)
+    role_id 1
   end
 
   trait :mentor_user do |_f|
     association :profile
-    role_id TestMethods.find_or_create_role(Custom::Constants::Role::MENTOR)
+    role_id 2
   end
 
   trait :organization_user do |_f|
     association :organization
-    role_id TestMethods.find_or_create_role(Custom::Constants::Role::ORGANIZATION)
+    role_id 3
   end
 end

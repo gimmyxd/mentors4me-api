@@ -23,8 +23,12 @@ require 'rspec/rails'
 require 'database_cleaner'
 require 'webmock/rspec'
 require 'factory_girl'
+require 'rake'
 
 Rails.application.eager_load!
+
+Rails.application.load_tasks
+Rake::Task['generate_user_roles'].invoke
 
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
@@ -47,7 +51,7 @@ RSpec.configure do |config|
   # database_cleaner
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner.clean_with :truncation, { except: %w[roles] }
   end
 
   config.around(:each) do |example|
@@ -74,5 +78,4 @@ RSpec.configure do |config|
 
   Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
   include UsefulHelper
-  include TestMethods
 end
