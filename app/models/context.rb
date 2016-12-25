@@ -1,8 +1,8 @@
 class Context < ApplicationRecord
-  belongs_to :profile
+  belongs_to :mentor
   belongs_to :organization
   validates :description, presence: true
-  validates :profile_id, presence: true
+  validates :mentor_id, presence: true
   validates :organization_id, presence: true
 
   # context status
@@ -12,9 +12,9 @@ class Context < ApplicationRecord
 
   STATUSES = [ACCEPTED, PENDING, REJECTED].freeze
 
-  # Filer contexts by profile_id
-  # /contexts?profile_id=1
-  scope :profile_id, ->(profile_id) { where(profile_id: profile_id) }
+  # Filer contexts by mentor_id
+  # /contexts?mentor_id=1
+  scope :mentor_id, ->(mentor_id) { where(mentor_id: mentor_id) }
 
   # Filer contexts by organization_id
   # /contexts?organization_id=1
@@ -66,7 +66,7 @@ class Context < ApplicationRecord
     custom_response = {
       id: id,
       description: description,
-      profile_id:  profile_id,
+      mentor_id:  mentor_id,
       organization_id: organization_id,
       status: status
     }

@@ -4,13 +4,13 @@ class Ability
   def self.build_ability_for(user)
     user ||= User.new
     if user.admin?
-      Admin.new(user)
+      AdminFactory.new(user)
     elsif user.mentor?
-      Mentor.new(user)
+      MentorFactory.new(user)
     elsif user.organization?
-      Normal.new(user)
+      OrganizationFactory.new(user)
     else
-      Guest.new(user)
+      GuestFactory.new(user)
     end
   end
 end

@@ -1,6 +1,6 @@
 class Skill < ApplicationRecord
   has_many :skill_assignments
-  has_many :profiles, through: :skill_assignments
+  has_many :mentors, through: :skill_assignments
 
   # Name validation
   validates :name, presence: true, uniqueness: true

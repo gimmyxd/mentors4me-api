@@ -4,11 +4,11 @@ module Api
       before_action :authenticate
       before_action :set_context, only: [:show, :update, :destroy, :accept]
 
-      before_action :set_limit, :validate_limit, :validate_profile_id,
+      before_action :set_limit, :validate_limit, :validate_mentor_id,
                     :validate_start_date, :validate_end_date, :validate_status,
                     :validate_organization_id, :validate_offset, only: :index
 
-      has_scope :profile_id, :organization_id, :start_date, :end_date, :status, :offset, :limit
+      has_scope :mentor_id, :organization_id, :start_date, :end_date, :status, :offset, :limit
       has_scope :date_interval, using: [:start_date, :end_date], type: :hash
 
       respond_to :json
@@ -58,16 +58,16 @@ module Api
       end
 
       def context_params
-        params.permit(:profile_id, :organization_id, :description)
+        params.permit(:mentor_id, :organization_id, :description)
       end
 
       def validate_context
         errors = []
-        errors << 'mentor not found' unless User.where(profile_id: params[:profile_id]).any?
+        errors << 'mentor not found' unless User.where(mentor_id: params[:mentor_id]).any?
         errors << 'organization not found' unless User.where(organization_id: params[:organization_id]).any?
         raise InvalidAPIRequest.new(errors.join(' & '), 404) if errors.any?
         raise InvalidAPIRequest.new('Context already exists', 422) if Context.where(
-          profile_id: params[:profile_id],
+          mentor_id: params[:mentor_id],
           organization_id: params[:organization_id]
         ).any?
       end
@@ -78,8 +78,8 @@ module Api
         raise InvalidAPIRequest.new(error_message, 422)
       end
 
-      def validate_profile_id
-        validate_numericality(params[:profile_id], 'profile_id must be a number')
+      def validate_mentor_id
+        validate_numericality(params[:mentor_id], 'mentor_id must be a number')
       end
 
       def validate_organization_id

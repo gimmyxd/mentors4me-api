@@ -7,7 +7,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to validate_presence_of(:email) }
     it { is_expected.to validate_presence_of(:password) }
     it { is_expected.to validate_presence_of(:password_confirmation) }
-    it { is_expected.to have_one(:profile) }
+    it { is_expected.to have_one(:mentor) }
     it { is_expected.to have_one(:organization) }
     it { is_expected.to have_many(:roles) }
     it { is_expected.to have_many(:role_assignments) }

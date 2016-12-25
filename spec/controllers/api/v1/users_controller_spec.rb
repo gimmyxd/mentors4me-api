@@ -51,14 +51,14 @@ describe Api::V1::UsersController do
             id: user1.id,
             email: user1.email,
             role: ['mentor'],
-            profile_id: user1.profile.id,
-            first_name: user1.profile.first_name,
-            last_name: user1.profile.last_name,
-            phone_number: user1.profile.phone_number,
-            city: user1.profile.city,
-            description: user1.profile.description,
-            facebook: user1.profile.facebook,
-            linkedin: user1.profile.linkedin
+            mentor_id: user1.mentor.id,
+            first_name: user1.mentor.first_name,
+            last_name: user1.mentor.last_name,
+            phone_number: user1.mentor.phone_number,
+            city: user1.mentor.city,
+            description: user1.mentor.description,
+            facebook: user1.mentor.facebook,
+            linkedin: user1.mentor.linkedin
           },
           {
             id: user2.id,

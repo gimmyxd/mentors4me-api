@@ -7,7 +7,7 @@ class User < ApplicationRecord
   validates_format_of :email, with: Devise.email_regexp
   validates :auth_token, uniqueness: true, allow_nil: true
 
-  has_one :profile, dependent: :destroy, autosave: true
+  has_one :mentor, dependent: :destroy, autosave: true
   has_one :organization, dependent: :destroy, autosave: true
 
   has_many :role_assignments, dependent: :destroy
@@ -55,8 +55,8 @@ class User < ApplicationRecord
       role:  roles.pluck(:slug)
     }
 
-    add_profile_data(custom_response) if profile.present?
-    add_skills_data(custom_response) if profile.present? && profile.skills.any?
+    add_mentor_data(custom_response) if mentor.present?
+    add_skills_data(custom_response) if mentor.present? && mentor.skills.any?
     add_organization_data(custom_response) if organization .present?
     options.empty? ? custom_response : super
   end
@@ -75,15 +75,15 @@ class User < ApplicationRecord
     Role.list_by(:slug, roles).keys.include?(slug)
   end
 
-  def add_profile_data(response)
-    response[:profile_id] = profile.id
-    response[:first_name] = profile.first_name
-    response[:last_name] = profile.last_name
-    response[:phone_number] = profile.phone_number
-    response[:city] = profile.city
-    response[:description] = profile.description
-    response[:facebook] = profile.facebook
-    response[:linkedin] = profile.linkedin
+  def add_mentor_data(response)
+    response[:mentor_id] = mentor.id
+    response[:first_name] = mentor.first_name
+    response[:last_name] = mentor.last_name
+    response[:phone_number] = mentor.phone_number
+    response[:city] = mentor.city
+    response[:description] = mentor.description
+    response[:facebook] = mentor.facebook
+    response[:linkedin] = mentor.linkedin
     response
   end
 
@@ -98,6 +98,6 @@ class User < ApplicationRecord
   end
 
   def add_skills_data(response)
-    response[:skills] = profile.skills.pluck(:name)
+    response[:skills] = mentor.skills.pluck(:name)
   end
 end

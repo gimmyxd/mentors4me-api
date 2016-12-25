@@ -21,7 +21,7 @@ module Api
 
       def index
         respond_with build_data_object(
-          User.includes(:profile)
+          User.includes(:mentor)
             .includes(:organization)
             .includes(:roles)
         )

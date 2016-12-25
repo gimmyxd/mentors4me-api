@@ -16,7 +16,7 @@ module ApipieDocs
 
         doc_for :index do
           api :GET, '/contexts', 'Retrevie a list of contexts'
-          param :filter, %w(profile_id organization start_date end_date status limit offset),
+          param :filter, %w(mentor_id organization_id start_date end_date status limit offset),
                 'The filtering query:
                 - url example for filtering by organization_id:
                     .../api/contexts?organization_id=1
@@ -26,7 +26,7 @@ module ApipieDocs
 
         doc_for :create do
           api :POST, '/contexts', 'Organization creates a context with the mentor'
-          param :profile_id, Integer, desc: 'The profile of the mentor to be invited by current organization', required: true
+          param :mentor_id, Integer, desc: 'The id of the mentor to be invited by current organization', required: true
           param :organization_id, Integer, desc: 'The id of current organization', required: true
           param :description, String, desc: 'A description for the request', required: true
           error 401, 'Unauthorized'

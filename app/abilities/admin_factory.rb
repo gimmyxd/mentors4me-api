@@ -1,4 +1,4 @@
-class Admin < Ability
+class AdminFactory < Ability
   def initialize(_user)
     can :manage, :all
     can :create, :reject

@@ -1,4 +1,4 @@
-class Normal < Ability
+class OrganizationFactory < Ability
   def initialize(user)
     can :read, :all
     can [:me, :create], User

@@ -1,4 +1,4 @@
-RSpec.describe Profile, type: :model do
+RSpec.describe Mentor, type: :model do
   context 'fields' do
     it { is_expected.to respond_to(:first_name) }
     it { is_expected.to respond_to(:last_name) }

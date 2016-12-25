@@ -14,7 +14,7 @@ module Api
 
       def index
         respond_with build_data_object(
-          User.includes(:profile)
+          User.includes(:mentor)
             .includes(:roles)
             .where(roles: { slug: CR::MENTOR })
         )
@@ -27,9 +27,9 @@ module Api
       def create
         user = User.new(create_user_params)
         user.assign_roles(Role.mentor.id)
-        user.active  = true
-        user.profile = Profile.new(profile_params)
-        user.profile.skills = assign_skills(params[:skill_ids]) if params[:skills]
+        user.active = true
+        user.mentor = Mentor.new(mentor_params)
+        user.mentor.skills = assign_skills(params[:skill_ids]) if params[:skills]
         if user.save
           render json: build_data_object(user), status: 200
         else
@@ -38,7 +38,7 @@ module Api
       end
 
       def update
-        @user.profile.update(profile_params)
+        @user.mentor.update(mentor_params)
         if @user.update(update_user_params)
           render json: build_data_object(@user), status: 200
         else
@@ -62,7 +62,7 @@ module Api
         skills
       end
 
-      def profile_params
+      def mentor_params
         params.require(:mentor).permit(
           :first_name, :last_name, :phone_number,
           :city, :description

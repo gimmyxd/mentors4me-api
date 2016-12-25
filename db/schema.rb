@@ -17,13 +17,27 @@ ActiveRecord::Schema.define(version: 20161224195833) do
 
   create_table "contexts", force: :cascade do |t|
     t.text     "description"
-    t.integer  "profile_id"
+    t.integer  "mentor_id"
     t.integer  "organization_id"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.string   "status"
+    t.index ["mentor_id"], name: "index_contexts_on_mentor_id", using: :btree
     t.index ["organization_id"], name: "index_contexts_on_organization_id", using: :btree
-    t.index ["profile_id"], name: "index_contexts_on_profile_id", using: :btree
+  end
+
+  create_table "mentors", force: :cascade do |t|
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "phone_number"
+    t.string   "linkedin"
+    t.string   "facebook"
+    t.string   "city"
+    t.text     "description"
+    t.integer  "user_id"
+    t.index ["user_id"], name: "index_mentors_on_user_id", using: :btree
   end
 
   create_table "organizations", force: :cascade do |t|
@@ -36,20 +50,6 @@ ActiveRecord::Schema.define(version: 20161224195833) do
     t.datetime "updated_at",   null: false
     t.integer  "user_id"
     t.index ["user_id"], name: "index_organizations_on_user_id", using: :btree
-  end
-
-  create_table "profiles", force: :cascade do |t|
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.string   "first_name"
-    t.string   "last_name"
-    t.string   "phone_number"
-    t.string   "linkedin"
-    t.string   "facebook"
-    t.string   "city"
-    t.text     "description"
-    t.integer  "user_id"
-    t.index ["user_id"], name: "index_profiles_on_user_id", using: :btree
   end
 
   create_table "proposals", force: :cascade do |t|
@@ -83,11 +83,11 @@ ActiveRecord::Schema.define(version: 20161224195833) do
   end
 
   create_table "skill_assignments", force: :cascade do |t|
-    t.integer  "profile_id"
+    t.integer  "mentor_id"
     t.integer  "skill_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["profile_id"], name: "index_skill_assignments_on_profile_id", using: :btree
+    t.index ["mentor_id"], name: "index_skill_assignments_on_mentor_id", using: :btree
     t.index ["skill_id"], name: "index_skill_assignments_on_skill_id", using: :btree
   end
 
@@ -109,8 +109,8 @@ ActiveRecord::Schema.define(version: 20161224195833) do
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
   end
 
+  add_foreign_key "contexts", "mentors"
   add_foreign_key "contexts", "organizations"
-  add_foreign_key "contexts", "profiles"
+  add_foreign_key "mentors", "users"
   add_foreign_key "organizations", "users"
-  add_foreign_key "profiles", "users"
 end

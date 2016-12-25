@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :context do
-    association :profile
+    association :mentor
     association :organization
     description 'MyText'
   end

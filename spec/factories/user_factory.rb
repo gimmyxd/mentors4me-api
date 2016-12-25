@@ -19,7 +19,7 @@ FactoryGirl.define do
   end
 
   trait :mentor_user do |_f|
-    association :profile
+    association :mentor
     role_id 2
   end
 
