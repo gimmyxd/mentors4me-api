@@ -10,8 +10,9 @@ module ApipieDocs
 
         doc_for :show do
           api :GET, '/contexts/:id', 'Retrevie a specific context'
-          error 401, 'Unauthorized'
-          error 404, 'Not Found'
+          error 401, 'Unauthorized(error_key: unauthorized)'
+          error 403, 'Forbidden(error_key: acess_denied)'
+          error 404, 'Not Found(error_key: record_not_found)'
         end
 
         doc_for :index do
@@ -23,8 +24,9 @@ module ApipieDocs
 
                 status = [accepted, pending, rejected]
               '
-          error 401, 'Unauthorized'
-          error 422, 'Validation error'
+          error 401, 'Unauthorized(error_key: unauthorized)'
+          error 422, 'Validation error(error_keys: [mentor_id, organization_id, limit, offset].not_a_number,
+                              [start_date, end_date].invalid_format, status.not_in_list)'
         end
 
         doc_for :create do
@@ -32,20 +34,24 @@ module ApipieDocs
           param :mentor_id, Integer, desc: 'The id of the mentor to be invited by current organization', required: true
           param :organization_id, Integer, desc: 'The id of current organization', required: true
           param :description, String, desc: 'A description for the request', required: true
-          error 401, 'Unauthorized'
-          error 422, 'Validation error'
+          error 401, 'Unauthorized(error_key: unauthorized)'
+          error 403, 'Forbidden(error_key: acess_denied)'
+          error 422, 'Validation error(error_keys: description.blank,
+                            record_not_found(if mentor or organization are not found)'
         end
 
         doc_for :accept do
           api :POST, '/contexts/:id/accept', 'Mentor accepts the invitation for an organization'
-          error 401, 'Unauthorized'
-          error 404, 'Not Found'
+          error 401, 'Unauthorized(error_key: unauthorized)'
+          error 403, 'Forbidden(error_key: acess_denied)'
+          error 404, 'Not Found(error_key: record_not_found)'
         end
 
         doc_for :reject do
           api :POST, '/contexts/:id/reject', 'Mentor rejects the invitation for an organization'
-          error 401, 'Unauthorized'
-          error 404, 'Not Found'
+          error 401, 'Unauthorized(error_key: unauthorized)'
+          error 403, 'Forbidden(error_key: acess_denied)'
+          error 404, 'Not Found(error_key: record_not_found)'
         end
       end
     end

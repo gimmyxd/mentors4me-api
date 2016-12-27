@@ -35,9 +35,8 @@ class Context < ApplicationRecord
     save!
   end
 
-  def pending(save = true)
+  def pending
     self.status = CC::PENDING
-    save! if save
   end
 
   def pending?

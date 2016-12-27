@@ -3,16 +3,13 @@ module Api
     class ContextsController < Api::BaseController
       before_action :authenticate
       before_action :load_context, only: [:show, :update, :destroy, :accept]
-
       before_action :load_limit, :validate_limit, :validate_mentor_id,
                     :validate_start_date, :validate_end_date, :validate_status,
                     :validate_organization_id, :validate_offset, only: :index
-
       has_scope :mentor_id, :organization_id, :start_date, :end_date, :status, :offset, :limit
       has_scope :date_interval, using: [:start_date, :end_date], type: :hash
-
-      respond_to :json
       load_and_authorize_resource :context, parent: false
+      respond_to :json
 
       include ApipieDocs::Api::V1::ContextDoc
 
@@ -37,7 +34,7 @@ module Api
       def create
         validate_context
         context = Context.new(context_params)
-        context.pending(false)
+        context.pending
         if context.save
           render json: build_data_object(context), status: 200
         else
@@ -56,8 +53,8 @@ module Api
       end
 
       def validate_context
-        User.includes(:roles).find_by!(id: params[:mentor_id], roles: { slug: CR::MENTOR })
-        User.includes(:roles).find_by!(id: params[:organization_id], roles: { slug: CR::MENTOR })
+        Mentor.find_by!(user_id: params[:mentor_id])
+        Organization.find_by(user_id: params[:organization_id])
         raise InvalidAPIRequest.new('context_already_exists', 422) if Context.where(
           mentor_id: params[:mentor_id],
           organization_id: params[:organization_id]
