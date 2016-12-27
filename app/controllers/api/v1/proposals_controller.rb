@@ -5,10 +5,15 @@ module Api
       before_action :load_proposal, only: [:show, :accept, :reject]
       authorize_resource class: false, only: [:accept, :reject]
       respond_to :json
-      before_action :load_limit, :validate_limit, :validate_offset, only: :index
+      before_action :validate_limit, :validate_offset, only: :index
+      before_action only: :index do
+        load_limit(Proposal)
+        validate_status(CP.statuses)
+      end
       has_scope :status, :offset, :limit
 
       include ApipieDocs::Api::V1::ProposalDoc
+      include Validators::FilterValidator
 
       def show
         respond_with build_data_object(@proposal)
@@ -62,30 +67,6 @@ module Api
 
       def send_rejection_email(email)
         # TODO: send rejection email with reason
-      end
-
-      def validate_status
-        return unless params[:status].present?
-        return if CP.statuses.include? params[:status]
-        raise InvalidAPIRequest.new('status.not_in_list', 422)
-      end
-
-      def validate_numericality(field, error_message)
-        Integer(field) if field.present?
-      rescue ArgumentError
-        raise InvalidAPIRequest.new(error_message, 422)
-      end
-
-      def validate_limit
-        validate_numericality(params[:limit], 'limit.not_a_number')
-      end
-
-      def validate_offset
-        validate_numericality(params[:offset], 'offset.not_a_number')
-      end
-
-      def load_limit
-        params[:limit] = Proposal.count if params[:limit].blank?
       end
     end
   end

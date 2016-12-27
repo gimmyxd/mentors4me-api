@@ -5,6 +5,5 @@ RSpec.describe Context, type: :model do
     it { is_expected.to validate_length_of(:description).is_at_most(500) }
     it { is_expected.to belong_to(:mentor) }
     it { is_expected.to belong_to(:organization) }
-
   end
 end

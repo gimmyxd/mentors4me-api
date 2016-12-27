@@ -3,15 +3,21 @@ module Api
     class ContextsController < Api::BaseController
       before_action :authenticate
       before_action :load_context, only: [:show, :update, :destroy, :accept]
-      before_action :load_limit, :validate_limit, :validate_mentor_id,
-                    :validate_start_date, :validate_end_date, :validate_status,
+      before_action :validate_limit, :validate_mentor_id,
                     :validate_organization_id, :validate_offset, only: :index
+      before_action only: :index do
+        load_limit(Context)
+        validate_date(:start_date)
+        validate_date(:end_date)
+        validate_status(CC.statuses)
+      end
       has_scope :mentor_id, :organization_id, :start_date, :end_date, :status, :offset, :limit
       has_scope :date_interval, using: [:start_date, :end_date], type: :hash
       load_and_authorize_resource :context, parent: false
       respond_to :json
 
       include ApipieDocs::Api::V1::ContextDoc
+      include Validators::FilterValidator
 
       def show
         respond_with build_data_object(@context)
@@ -59,52 +65,6 @@ module Api
           mentor_id: params[:mentor_id],
           organization_id: params[:organization_id]
         ).any?
-      end
-
-      def validate_numericality(field, error_message)
-        Integer(field) if field.present?
-      rescue ArgumentError
-        raise InvalidAPIRequest.new(error_message, 422)
-      end
-
-      def validate_mentor_id
-        validate_numericality(params[:mentor_id], 'mentor_id.not_a_number')
-      end
-
-      def validate_organization_id
-        validate_numericality(params[:organization_id], 'organization_id.not_a_number')
-      end
-
-      def validate_limit
-        validate_numericality(params[:limit], 'limit.not_a_number')
-      end
-
-      def validate_offset
-        validate_numericality(params[:offset], 'offset.not_a_number')
-      end
-
-      def load_limit
-        params[:limit] = Context.count if params[:limit].blank?
-      end
-
-      def validate_status
-        return unless params[:status].present?
-        return if CC.statuses.include? params[:status]
-        raise InvalidAPIRequest.new('status.not_in_list', 422)
-      end
-
-      def validate_start_date
-        return unless params[:start_date]
-        valid_date?(params[:start_date])
-      rescue ArgumentError
-        raise InvalidAPIRequest.new('start_date.invalid_fromat', 422)
-      end
-
-      def validate_end_date
-        return unless params[:end_date]
-        valid_date?(params[:end_date])
-      rescue ArgumentError
-        raise InvalidAPIRequest.new('end_date.invalid_fromat', 422)
       end
     end
   end
