@@ -1,8 +1,10 @@
 module Api
   module V1
     class OrganizationsController < UsersController
-      before_action :set_user, only: [:show, :update, :destroy, :password]
       before_action :authenticate, only: :update
+      before_action only: [:show, :update, :destroy, :password] do
+        set_user(CR::ORGANIZATION)
+      end
       respond_to :json
 
       include ApipieDocs::Api::V1::OrganizationDoc

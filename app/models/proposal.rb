@@ -2,11 +2,6 @@ class Proposal < ApplicationRecord
   validates :email, :description, :status, presence: true
   validates :invitation_token, uniqueness: true, allow_nil: true
 
-  # proposals status
-  ACCEPTED = 'accepted'.freeze
-  REJECTED = 'rejected'.freeze
-  PENDING = 'pending'.freeze
-
   # Filer proposals by status
   # /proposals?status='status'
   scope :status, ->(status) { where(status: status) }
@@ -14,31 +9,31 @@ class Proposal < ApplicationRecord
   def accept
     return false unless pending?
     generate_invitation_token!
-    self.status = ACCEPTED
+    self.status = CP::ACCEPTED
     save!
   end
 
   def reject
     return false unless pending?
-    self.status = REJECTED
+    self.status = CP::REJECTED
     save!
   end
 
   def pending(save = true)
-    self.status = PENDING
+    self.status = CP::PENDING
     save! if save
   end
 
   def pending?
-    status == PENDING
+    status == CP::PENDING
   end
 
   def accepted?
-    status == ACCEPTED
+    status == CP::ACCEPTED
   end
 
   def rejected?
-    status == REJECTED
+    status == CP::REJECTED
   end
 
   # Public: generates an invitation token

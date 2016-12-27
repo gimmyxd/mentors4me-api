@@ -5,13 +5,6 @@ class Context < ApplicationRecord
   validates :mentor_id, presence: true
   validates :organization_id, presence: true
 
-  # context status
-  ACCEPTED = 'accepted'.freeze
-  REJECTED = 'rejected'.freeze
-  PENDING = 'pending'.freeze
-
-  STATUSES = [ACCEPTED, PENDING, REJECTED].freeze
-
   # Filer contexts by mentor_id
   # /contexts?mentor_id=1
   scope :mentor_id, ->(mentor_id) { where(mentor_id: mentor_id) }
@@ -33,30 +26,30 @@ class Context < ApplicationRecord
   scope :end_date, ->(end_date) { where('created_at <= ?', end_date.to_date) }
 
   def accept
-    self.status = ACCEPTED
+    self.status = CC::ACCEPTED
     save!
   end
 
   def reject
-    self.status = REJECTED
+    self.status = CC::REJECTED
     save!
   end
 
   def pending(save = true)
-    self.status = PENDING
+    self.status = CC::PENDING
     save! if save
   end
 
   def pending?
-    status == PENDING
+    status == CC::PENDING
   end
 
   def accepted?
-    status == ACCEPTED
+    status == CC::ACCEPTED
   end
 
   def rejected?
-    status == REJECTED
+    status == CC::REJECTED
   end
 
   # Public: models JSON representation of the object

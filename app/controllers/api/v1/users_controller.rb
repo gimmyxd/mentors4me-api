@@ -2,7 +2,9 @@ module Api
   module V1
     class UsersController < Api::BaseController
       before_action :authenticate
-      before_action :set_user, only: [:show, :update, :destroy, :password]
+      before_action only: [:show, :update, :destroy, :password] do
+        set_user(CR.roles)
+      end
       load_and_authorize_resource :user, parent: false, only: :update
       respond_to :json
 
@@ -42,10 +44,9 @@ module Api
 
       private
 
-      def set_user
-        @user = User.find(params[:id])
-      rescue ActiveRecord::RecordNotFound
-        raise InvalidAPIRequest.new(I18n.t('User not found', id: params[:id]), 404)
+      def set_user(roles)
+        @user = User.includes(:roles).where(id: params[:id], roles: { slug: Array(roles) }).first
+        raise InvalidAPIRequest.new(I18n.t('User not found', id: params[:id]), 404) unless @user.present?
       end
 
       def create_user_params

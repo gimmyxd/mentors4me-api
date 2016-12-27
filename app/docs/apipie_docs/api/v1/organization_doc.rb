@@ -8,7 +8,8 @@ module ApipieDocs
           Api::V1::OrganizationsController
         end
 
-        def_param_group :user do
+        def_param_group :organization do
+          param :email, String, desc: 'Email', required: true, action_aware: true
           param :name, String, desc: 'Name of the organization', required: true, action_aware: true
           param :asignee, String, desc: 'Name of the responsable person', required: true, action_aware: true
           param :phone_number, String, desc: 'Must be a valid phone number', required: true, action_aware: true
@@ -31,12 +32,12 @@ module ApipieDocs
 
         doc_for :create do
           api :POST, '/organizations', 'Create a organization'
-          param_group :user, as: :create
+          param_group :organization, as: :create
         end
 
         doc_for :update do
           api :PUT, '/organizations/:id', 'Update a specific organization'
-          param_group :user, as: :update
+          param_group :organization, as: :update
           error 404, 'Not Found'
         end
 

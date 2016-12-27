@@ -20,8 +20,11 @@ module ApipieDocs
                 'The filtering query:
                 - url example for filtering by organization_id:
                     .../api/contexts?organization_id=1
+
+                status = [accepted, pending, rejected]
               '
           error 401, 'Unauthorized'
+          error 422, 'Validation error'
         end
 
         doc_for :create do

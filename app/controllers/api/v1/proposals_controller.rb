@@ -72,6 +72,12 @@ module Api
         User.find_by(email: params[:email]).present? || Proposal.find_by(email: params[:email]).present?
       end
 
+      def validate_status
+        return unless params[:status].present?
+        return if CP.statuses.include? params[:status]
+        raise InvalidAPIRequest.new('status must be one of [accepted, rejected, pending]', 422)
+      end
+
       def validate_numericality(field, error_message)
         Integer(field) if field.present?
       rescue ArgumentError

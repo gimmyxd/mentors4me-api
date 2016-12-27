@@ -3,7 +3,9 @@ module Api
     class MentorsController < UsersController
       before_action :validate_request, only: :create
       before_action :authenticate, only: :update
-      before_action :set_user, only: [:show, :update, :destroy, :password]
+      before_action only: [:show, :update, :destroy, :password] do
+        set_user(CR::MENTOR)
+      end
       respond_to :json
 
       include ApipieDocs::Api::V1::MentorDoc
@@ -63,7 +65,7 @@ module Api
       end
 
       def mentor_params
-        params.require(:mentor).permit(
+        params.permit(
           :first_name, :last_name, :phone_number,
           :city, :description
         )

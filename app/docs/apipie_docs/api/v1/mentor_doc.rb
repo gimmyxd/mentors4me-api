@@ -8,7 +8,8 @@ module ApipieDocs
           Api::V1::MentorsController
         end
 
-        def_param_group :user do
+        def_param_group :mentor do
+          param :email, String, desc: 'Email', required: true, action_aware: true
           param :first_name, String, desc: 'First Name', required: true, action_aware: true
           param :last_name, String, desc: 'Last Name', required: true, action_aware: true
           param :phone_number, String, desc: 'Must be a valid phone number', required: true, action_aware: true
@@ -31,12 +32,12 @@ module ApipieDocs
 
         doc_for :create do
           api :POST, '/mentors', 'Create a mentor'
-          param_group :user, as: :create
+          param_group :mentor, as: :create
         end
 
         doc_for :update do
           api :PUT, '/mentors/:id', 'Update a specific mentor'
-          param_group :user, as: :update
+          param_group :mentor, as: :update
           error 404, 'Not Found'
         end
 

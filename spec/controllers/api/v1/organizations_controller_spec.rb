@@ -161,7 +161,7 @@ describe Api::V1::OrganizationsController do
       send_request(http_method, action, { id: 'invalid_id' }, format)
       json_response = parsed_response(response)
       expect(response.status).to eq 404
-      expect(json_response[:errors].first).to eql("Couldn't find User with 'id'=invalid_id")
+      expect(json_response[:errors].first).to eql(I18n.t('User not found', id: 'invalid_id'))
     end
 
     it 'returns 403 when trying to update another' do
