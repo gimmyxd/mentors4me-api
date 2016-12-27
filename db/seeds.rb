@@ -7,6 +7,3 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 FactoryGirl.create(:user, email: 'admin@example.com')
-
-skill = Skill.create(name: 'IT')
-skill.save!

@@ -1,6 +1,5 @@
 module Validators
   module FilterValidator
-
     private
 
     def validate_numericality(field, error_message)
