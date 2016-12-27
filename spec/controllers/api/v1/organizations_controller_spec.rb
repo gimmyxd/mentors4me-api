@@ -106,8 +106,6 @@ describe Api::V1::OrganizationsController do
 
     it 'renders proper errors' do
       allow_any_instance_of(User).to receive(:create).and_return(false)
-      user = FactoryGirl.create(:user)
-
       send_request(http_method, action, {}, format)
       expect(parsed_response(response)).to have_key(:errors)
       expect(response.status).to eql 422
@@ -161,7 +159,7 @@ describe Api::V1::OrganizationsController do
       send_request(http_method, action, { id: 'invalid_id' }, format)
       json_response = parsed_response(response)
       expect(response.status).to eq 404
-      expect(json_response[:errors].first).to eql(I18n.t('User not found', id: 'invalid_id'))
+      expect(json_response[:errors].first).to eql('record_not_found')
     end
 
     it 'returns 403 when trying to update another' do
@@ -169,7 +167,7 @@ describe Api::V1::OrganizationsController do
       send_request(http_method, action, { id: user.id }, format)
       json_response = parsed_response(response)
       expect(response.status).to eq 403
-      expect(json_response[:errors].first).to eql('You are not authorized to access this page.')
+      expect(json_response[:errors].first).to eql('access_denied')
     end
   end
 end

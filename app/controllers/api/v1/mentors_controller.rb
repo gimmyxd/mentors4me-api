@@ -4,15 +4,11 @@ module Api
       before_action :validate_request, only: :create
       before_action :authenticate, only: :update
       before_action only: [:show, :update, :destroy, :password] do
-        set_user(CR::MENTOR)
+        load_user(CR::MENTOR)
       end
       respond_to :json
 
       include ApipieDocs::Api::V1::MentorDoc
-
-      resource_description do
-        name 'Mentors'
-      end
 
       def index
         respond_with build_data_object(
@@ -53,14 +49,14 @@ module Api
       def validate_request
         token = request.headers['Authorization']
         return if token.present? && Proposal.where(invitation_token: token).any?
-        raise InvalidAPIRequest.new('Invalid invitation token', 401)
+        raise InvalidAPIRequest.new('unauthorized', 401)
       end
 
       def assign_skills(skill_ids)
-        raise InvalidAPIRequest.new('skill_ids must be string', 401) unless skill_ids.is_a? String
-        raise InvalidAPIRequest.new('Skill is needed', 401) if skill_ids.blank?
+        raise InvalidAPIRequest.new('skill_ids.must_be_string', 422) unless skill_ids.is_a? String
+        raise InvalidAPIRequest.new('skill_ids.blank', 422) if skill_ids.blank?
         skills = Skill.where(id: skill_ids.split(',').map(&:to_i))
-        raise InvalidAPIRequest.new('Skill is needed', 401) unless skills.any?
+        raise InvalidAPIRequest.new('skill_ids.required', 422) unless skills.any?
         skills
       end
 

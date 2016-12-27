@@ -10,8 +10,8 @@ class Skill < ApplicationRecord
   # returns - hash with team data
   def as_json(_options = {})
     {
-      'id'   => id,
-      'name' => name
+      id: id,
+      name: name
     }
   end
 end

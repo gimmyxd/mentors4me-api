@@ -2,9 +2,9 @@ module Api
   module V1
     class ContextsController < Api::BaseController
       before_action :authenticate
-      before_action :set_context, only: [:show, :update, :destroy, :accept]
+      before_action :load_context, only: [:show, :update, :destroy, :accept]
 
-      before_action :set_limit, :validate_limit, :validate_mentor_id,
+      before_action :load_limit, :validate_limit, :validate_mentor_id,
                     :validate_start_date, :validate_end_date, :validate_status,
                     :validate_organization_id, :validate_offset, only: :index
 
@@ -15,10 +15,6 @@ module Api
       load_and_authorize_resource :context, parent: false
 
       include ApipieDocs::Api::V1::ContextDoc
-
-      resource_description do
-        name 'Contexts'
-      end
 
       def show
         respond_with build_data_object(@context)
@@ -51,10 +47,8 @@ module Api
 
       private
 
-      def set_context
+      def load_context
         @context = Context.find(params[:id])
-      rescue ActiveRecord::RecordNotFound
-        raise InvalidAPIRequest.new('context not found', 404)
       end
 
       def context_params
@@ -62,17 +56,9 @@ module Api
       end
 
       def validate_context
-        errors = []
-        errors << 'mentor not found' unless User.includes(:roles).where(
-          mentor_id: params[:mentor_id],
-          roles: { slug: CR::MENTOR }
-        ).any?
-        errors << 'organization not found' unless User.includes(:roles).where(
-          organization_id: params[:organization_id],
-          roles: { slug: CR::ORGANIZATION }
-        ).any?
-        raise InvalidAPIRequest.new(errors.join(' & '), 404) if errors.any?
-        raise InvalidAPIRequest.new('Context already exists', 422) if Context.where(
+        User.includes(:roles).find_by!(id: params[:mentor_id], roles: { slug: CR::MENTOR })
+        User.includes(:roles).find_by!(id: params[:organization_id], roles: { slug: CR::MENTOR })
+        raise InvalidAPIRequest.new('context_already_exists', 422) if Context.where(
           mentor_id: params[:mentor_id],
           organization_id: params[:organization_id]
         ).any?
@@ -85,43 +71,43 @@ module Api
       end
 
       def validate_mentor_id
-        validate_numericality(params[:mentor_id], 'mentor_id must be a number')
+        validate_numericality(params[:mentor_id], 'mentor_id.not_a_number')
       end
 
       def validate_organization_id
-        validate_numericality(params[:organization_id], 'organization_id must be a number')
+        validate_numericality(params[:organization_id], 'organization_id.not_a_number')
       end
 
       def validate_limit
-        validate_numericality(params[:limit], 'limit must be a number')
+        validate_numericality(params[:limit], 'limit.not_a_number')
       end
 
       def validate_offset
-        validate_numericality(params[:offset], 'offset must be a number')
+        validate_numericality(params[:offset], 'offset.not_a_number')
       end
 
-      def set_limit
+      def load_limit
         params[:limit] = Context.count if params[:limit].blank?
       end
 
       def validate_status
         return unless params[:status].present?
         return if CC.statuses.include? params[:status]
-        raise InvalidAPIRequest.new('status must be one of [accepted, rejected, pending]', 422)
+        raise InvalidAPIRequest.new('status.not_in_list', 422)
       end
 
       def validate_start_date
         return unless params[:start_date]
         valid_date?(params[:start_date])
       rescue ArgumentError
-        raise InvalidAPIRequest.new('start date has invalid format', 422)
+        raise InvalidAPIRequest.new('start_date.invalid_fromat', 422)
       end
 
       def validate_end_date
         return unless params[:end_date]
         valid_date?(params[:end_date])
       rescue ArgumentError
-        raise InvalidAPIRequest.new('end date has invalid format', 422)
+        raise InvalidAPIRequest.new('end_date.invalid_fromat', 422)
       end
     end
   end

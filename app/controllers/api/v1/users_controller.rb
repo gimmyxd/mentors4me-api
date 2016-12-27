@@ -3,19 +3,12 @@ module Api
     class UsersController < Api::BaseController
       before_action :authenticate
       before_action only: [:show, :update, :destroy, :password] do
-        set_user(CR.roles)
+        load_user(CR.roles)
       end
       load_and_authorize_resource :user, parent: false, only: :update
       respond_to :json
 
       include ApipieDocs::Api::V1::UserDoc
-
-      resource_description do
-        name 'Users'
-        description <<-EOS
-             General endpoint for managing all types of users.
-          EOS
-      end
 
       def show
         respond_with build_data_object(@user)
@@ -30,7 +23,7 @@ module Api
       end
 
       def me
-        raise InvalidAPIRequest.new('Invalid token', 404) unless current_user
+        raise InvalidAPIRequest.new('unauthorized', 401) unless current_user
         respond_with build_data_object(current_user)
       end
 
@@ -44,9 +37,8 @@ module Api
 
       private
 
-      def set_user(roles)
-        @user = User.includes(:roles).where(id: params[:id], roles: { slug: Array(roles) }).first
-        raise InvalidAPIRequest.new(I18n.t('User not found', id: params[:id]), 404) unless @user.present?
+      def load_user(roles)
+        @user = User.includes(:roles).find_by!(id: params[:id], roles: { slug: Array(roles) })
       end
 
       def create_user_params

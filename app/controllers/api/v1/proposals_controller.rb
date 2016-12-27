@@ -1,18 +1,14 @@
 module Api
   module V1
     class ProposalsController < Api::BaseController
-      before_action :authenticate
-      before_action :set_proposal, only: [:show, :accept, :reject]
-      authorize_resource class: false
+      before_action :authenticate, only: [:show, :index, :accept, :reject]
+      before_action :load_proposal, only: [:show, :accept, :reject]
+      authorize_resource class: false, only: [:accept, :reject]
       respond_to :json
-      before_action :set_limit, :validate_limit, :validate_offset, only: :index
+      before_action :load_limit, :validate_limit, :validate_offset, only: :index
       has_scope :status, :offset, :limit
 
       include ApipieDocs::Api::V1::ProposalDoc
-
-      resource_description do
-        name 'Proposals'
-      end
 
       def show
         respond_with build_data_object(@proposal)
@@ -23,12 +19,8 @@ module Api
       end
 
       def create
-        if exsisting_user?
-          render json: { errors: 'User already exists' }, status: 422
-          return
-        end
         proposal = Proposal.new(proposal_params)
-        proposal.pending(false)
+        proposal.pending
         if proposal.save
           render json: build_data_object(proposal), status: 201
         else
@@ -37,15 +29,21 @@ module Api
       end
 
       def accept
-        raise InvalidAPIRequest.new('only pending proposals can be accepted', 404) unless @proposal.accept
-        send_invitation_email(@proposal.email, @proposal.invitation_token)
-        render json: build_data_object(@proposal), status: 200
+        if @proposal.accept
+          send_invitation_email(@proposal.email, @proposal.invitation_token)
+          render json: build_data_object(@proposal), status: 200
+        else
+          render json: build_error_object(@proposal), status: 422
+        end
       end
 
       def reject
-        raise InvalidAPIRequest.new('only pending proposals can be rejected', 404) unless @proposal.reject
-        send_rejection_email(@proposal.email)
-        render json: build_data_object(@proposal), status: 200
+        if @proposal.reject
+          send_rejection_email(@proposal.email)
+          render json: build_data_object(@proposal), status: 200
+        else
+          render json: build_error_object(@proposal), status: 422
+        end
       end
 
       private
@@ -54,10 +52,8 @@ module Api
         params.permit(:email, :description)
       end
 
-      def set_proposal
+      def load_proposal
         @proposal = Proposal.find(params[:id])
-      rescue ActiveRecord::RecordNotFound
-        raise InvalidAPIRequest.new('proposal not found', 404)
       end
 
       def send_invitation_email(email, invitation_token)
@@ -68,14 +64,10 @@ module Api
         # TODO: send rejection email with reason
       end
 
-      def exsisting_user?
-        User.find_by(email: params[:email]).present? || Proposal.find_by(email: params[:email]).present?
-      end
-
       def validate_status
         return unless params[:status].present?
         return if CP.statuses.include? params[:status]
-        raise InvalidAPIRequest.new('status must be one of [accepted, rejected, pending]', 422)
+        raise InvalidAPIRequest.new('status.not_in_list', 422)
       end
 
       def validate_numericality(field, error_message)
@@ -85,14 +77,14 @@ module Api
       end
 
       def validate_limit
-        validate_numericality(params[:limit], 'limit must be a number')
+        validate_numericality(params[:limit], 'limit.not_a_number')
       end
 
       def validate_offset
-        validate_numericality(params[:offset], 'offset must be a number')
+        validate_numericality(params[:offset], 'offset.not_a_number')
       end
 
-      def set_limit
+      def load_limit
         params[:limit] = Proposal.count if params[:limit].blank?
       end
     end

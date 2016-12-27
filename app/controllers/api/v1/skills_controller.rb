@@ -2,15 +2,11 @@ module Api
   module V1
     class SkillsController < Api::BaseController
       before_action :authenticate, only: [:create, :update, :destroy]
-      before_action :set_skill, only: [:show, :update, :destroy]
+      before_action :load_skill, only: [:show, :update, :destroy]
       load_and_authorize_resource :skill, parent: false
       respond_to :json
 
       include ApipieDocs::Api::V1::SkillDoc
-
-      resource_description do
-        name 'Skills'
-      end
 
       def show
         respond_with build_data_object(@skill)
@@ -47,10 +43,8 @@ module Api
 
       private
 
-      def set_skill
+      def load_skill
         @skill = Skill.find(params[:id])
-      rescue ActiveRecord::RecordNotFound
-        raise InvalidAPIRequest.new('Skill not found', 404)
       end
 
       def skill_params

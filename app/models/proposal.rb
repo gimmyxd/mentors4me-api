@@ -1,5 +1,7 @@
 class Proposal < ApplicationRecord
   validates :email, :description, :status, presence: true
+  validates :email, uniqueness: true
+  validate :validate_uniqueness_of_user
   validates :invitation_token, uniqueness: true, allow_nil: true
 
   # Filer proposals by status
@@ -10,18 +12,17 @@ class Proposal < ApplicationRecord
     return false unless pending?
     generate_invitation_token!
     self.status = CP::ACCEPTED
-    save!
+    save
   end
 
   def reject
     return false unless pending?
     self.status = CP::REJECTED
-    save!
+    save
   end
 
-  def pending(save = true)
+  def pending
     self.status = CP::PENDING
-    save! if save
   end
 
   def pending?
@@ -44,5 +45,25 @@ class Proposal < ApplicationRecord
       self.invitation_token_created_at = Time.now
       break invitation_token unless self.class.exists?(invitation_token: invitation_token)
     end
+  end
+
+  # Public: models JSON representation of the object
+  # _options - parameter that is provided by the standard method
+  # returns - hash with user data
+  def as_json(options = {})
+    custom_response = {
+      id: id,
+      email: email,
+      description: description,
+      status: status,
+      invitation_token: invitation_token
+    }
+    options.empty? ? custom_response : super
+  end
+
+  private
+
+  def validate_uniqueness_of_user
+    errors.add(:email, 'taken') if User.find_by(email: email).present?
   end
 end

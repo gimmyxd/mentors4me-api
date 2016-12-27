@@ -16,7 +16,7 @@ describe Authenticable, type: :controller do
       allow(response).to receive(:body).and_return(
         {
           success: false,
-          errors: I18n.t('api.response.unauthorized')
+          errors: 'unauthorized'
         }.to_json
       )
       allow(authentication).to receive(:response).and_return(response)
@@ -25,7 +25,7 @@ describe Authenticable, type: :controller do
     it 'renders a json error message' do
       json_response = JSON.parse(response.body, symbolize_names: true)
       expect(json_response[:success]).to eql false
-      expect(json_response[:errors]).to eql I18n.t('api.response.unauthorized')
+      expect(json_response[:errors]).to eql('unauthorized')
     end
 
     it { is_expected.to respond_with 401 }

@@ -3,15 +3,11 @@ module Api
     class OrganizationsController < UsersController
       before_action :authenticate, only: :update
       before_action only: [:show, :update, :destroy, :password] do
-        set_user(CR::ORGANIZATION)
+        load_user(CR::ORGANIZATION)
       end
       respond_to :json
 
       include ApipieDocs::Api::V1::OrganizationDoc
-
-      resource_description do
-        name 'Organizations'
-      end
 
       def show
         respond_with build_data_object(@user)

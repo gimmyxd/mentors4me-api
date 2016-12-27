@@ -11,15 +11,14 @@ module Api
 
       def create
         user = User.find_by(email: params[:email])
-        raise InvalidAPIRequest.new('Invalid username or password', 401) unless valid_sign_in?(user)
+        raise InvalidAPIRequest.new('session.invalid', 401) unless valid_sign_in?(user)
         user.generate_authentication_token!
         user.save
         render json: { success: true, data: user.as_json(only: :auth_token) }, status: 200
       end
 
       def destroy
-        user = User.find_by(auth_token: params[:id])
-        raise InvalidAPIRequest.new('User not found', 404) unless user.present?
+        user = User.find_by!(auth_token: params[:id])
         user.generate_authentication_token!
         user.save
         head 204

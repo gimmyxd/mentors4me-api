@@ -36,25 +36,18 @@ module Api
       @current_ability ||= Ability.build_ability_for(current_user)
     end
 
-    # Hash with exception types and status codes
-    EXCEPTIONS = {
-      CanCan::AccessDenied => 403,
-      ActiveRecord::RecordNotFound => 404,
-      ActiveRecord::RecordInvalid => 422,
-      ActiveRecord::DeleteRestrictionError => 422,
-      ArgumentError => 422
-    }.freeze
-
-    # Exception handler for invalid api requests, forms a message like
-    # in the same way as our services do
+    # Exception handler for invalid api requests
     rescue_from Exception do |ex|
       respond_to do |format|
         format.json do
           err_code = 500
           code = ex.respond_to?(:code) ? ex.code : err_code
-          code = EXCEPTIONS[ex.class] if EXCEPTIONS.key?(ex.class)
-
-          resp_hash = { success: false, errors: [ex.message] }
+          code = CD::EXCEPTIONS[ex.class] if CD::EXCEPTIONS.key?(ex.class)
+          resp_hash = if CD::EXCEPTIONS.key?(ex.class)
+                        { success: false, errors: Array(CD::EXCEPTIONS_KEYS[ex.class]) }
+                      else
+                        { success: false, errors: Array(ex.message) }
+                      end
 
           if Rails.env.development?
             puts "API Response #{code} is #{resp_hash.inspect} backtrace is #{ex.backtrace.inspect}"
@@ -77,7 +70,12 @@ module Api
     # obj - object that contains the data sent in a request
     # returns json
     def build_error_object(obj)
-      { success: false, errors: obj.errors.full_messages }.to_json
+      keys = obj.errors.details.keys.map(&:to_s).collect do |key|
+        key.remove("#{controller_name.singularize}.")
+      end
+      values = obj.errors.details.values.collect { |value| value.first[:error] }.map(&:to_s)
+      error_response = keys.zip(values).map { |arr| arr.join('.') }
+      { success: false, errors: error_response }.to_json
     end
 
     def valid_date?(date, format = '%Y-%m-%d')
