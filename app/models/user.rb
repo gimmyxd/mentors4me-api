@@ -2,8 +2,6 @@ class User < ApplicationRecord
   include SharedMethods
   devise :database_authenticatable, :registerable, :validatable
 
-  validates :email, presence: true, uniqueness: true
-  validates_format_of :email, with: Devise.email_regexp
   validates :auth_token, uniqueness: true, allow_nil: true
 
   has_one :mentor, dependent: :destroy, autosave: true

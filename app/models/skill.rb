@@ -3,7 +3,7 @@ class Skill < ApplicationRecord
   has_many :mentors, through: :skill_assignments
 
   # Name validation
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: true, length: { maximum: 100 }
 
   # Public: models JSON representation of the object
   # _options - parameter that is provided by the standard method

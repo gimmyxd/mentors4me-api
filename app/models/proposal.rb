@@ -1,5 +1,6 @@
 class Proposal < ApplicationRecord
   validates :email, :description, :status, presence: true
+  validates :description, presence: true, length: { maximum: 500 }
   validates :email, uniqueness: true
   validate :validate_uniqueness_of_user
   validates :invitation_token, uniqueness: true, allow_nil: true

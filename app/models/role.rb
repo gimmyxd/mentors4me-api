@@ -1,8 +1,7 @@
 class Role < ApplicationRecord
   include SharedMethods
 
-  validates :slug, presence: true, uniqueness: true
-
+  validates :slug, presence: true, uniqueness: true, length: { maximum: 50 }
   has_many :role_assignments
   has_many :users, through: :role_assignments
 
