@@ -1,6 +1,6 @@
 class Context < ApplicationRecord
-  belongs_to :mentor
-  belongs_to :organization
+  belongs_to :mentor, class_name: 'User', foreign_key: 'mentor_id'
+  belongs_to :organization, class_name: 'User', foreign_key: 'organization_id'
   validates :description, presence: true, length: { maximum: 500 }
   validates :mentor_id, presence: true
   validates :organization_id, presence: true
