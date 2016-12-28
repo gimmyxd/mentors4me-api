@@ -29,7 +29,7 @@ module Api
         user.mentor = Mentor.new(mentor_params)
         user.mentor.skills = assign_skills(params[:skill_ids]) if params[:skills]
         if user.save
-          render json: build_data_object(user), status: 200
+          render json: build_data_object(user), status: 201
         else
           render json: build_error_object(user), status: 422
         end
@@ -63,7 +63,7 @@ module Api
       def mentor_params
         params.permit(
           :first_name, :last_name, :phone_number,
-          :city, :description
+          :city, :description, :facebook, :linkedin
         )
       end
     end

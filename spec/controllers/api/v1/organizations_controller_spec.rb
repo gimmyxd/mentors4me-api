@@ -31,6 +31,8 @@ describe Api::V1::OrganizationsController do
     it 'returns the information about all users on a hash' do
       user1 = FactoryGirl.create(:user, :organization_user)
       user2 = FactoryGirl.create(:user, :organization_user)
+      FactoryGirl.create(:user, :mentor_user)
+      FactoryGirl.create(:user, :admin_user)
 
       expected_response = {
         success: true,
