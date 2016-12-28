@@ -12,7 +12,9 @@ module Api
 
       def index
         respond_with build_data_object(
-          User.includes(:mentor)
+          User.includes(mentor: :skills)
+            .includes(:organization)
+            .includes(:role_assignments)
             .includes(:roles)
             .where(roles: { slug: CR::MENTOR })
         )

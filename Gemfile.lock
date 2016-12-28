@@ -45,6 +45,9 @@ GEM
     arel (7.1.4)
     bcrypt (3.1.11)
     builder (3.2.2)
+    bullet (5.4.3)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.10.0)
     byebug (9.0.6)
     cancancan (1.15.0)
     coderay (1.1.1)
@@ -201,6 +204,7 @@ GEM
     timecop (0.8.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    uniform_notifier (1.10.0)
     warden (1.2.6)
       rack (>= 1.0)
     webmock (2.3.1)
@@ -216,6 +220,7 @@ PLATFORMS
 
 DEPENDENCIES
   apipie-rails
+  bullet
   cancancan
   database_cleaner
   devise

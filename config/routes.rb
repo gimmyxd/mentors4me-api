@@ -18,14 +18,14 @@ Rails.application.routes.draw do
           post :reject
         end
       end
-      resources :mentors, only: [:index, :show, :create, :update]
-      resources :organizations, only: [:index, :show, :create, :update]
       resources :users, only: [:index, :show, :destroy] do
         get :me, on: :collection
         member do
           put :password
         end
       end
+      resources :mentors, only: [:index, :show, :create, :update]
+      resources :organizations, only: [:index, :show, :create, :update]
     end
   end
 end

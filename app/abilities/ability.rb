@@ -3,14 +3,14 @@ class Ability
 
   def self.build_ability_for(user)
     user ||= User.new
-    if user.admin?
-      AdminFactory.new(user)
-    elsif user.mentor?
-      MentorFactory.new(user)
-    elsif user.organization?
-      OrganizationFactory.new(user)
-    else
-      GuestFactory.new(user)
+    ability = GuestFactory.new(user)
+    klasses = user.roles.pluck(:slug)
+                  .map { |role| "#{role}_factory" }
+                  .map(&:classify)
+                  .map(&:constantize)
+    klasses.each do |klass|
+      ability = ability.merge(klass.new(user))
     end
+    ability
   end
 end
