@@ -7,3 +7,8 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 FactoryGirl.create(:user, email: 'admin@example.com')
+FactoryGirl.create_list(:skill, 10)
+FactoryGirl.create_list(:user, 10, :mentor_user)
+FactoryGirl.create_list(:user, 10, :organization_user)
+FactoryGirl.create_list(:proposal, 10)
+FactoryGirl.create_list(:context, 10)

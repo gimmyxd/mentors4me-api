@@ -13,12 +13,12 @@ gem 'figaro'
 gem 'has_scope'
 gem 'newrelic_rpm'
 gem 'apipie-rails'
+gem 'factory_girl_rails'
+gem 'faker'
 
 
 group :development, :test do
   gem 'pry-byebug'
-  gem 'factory_girl_rails'
-  gem 'faker'
 end
 
 group :development do
