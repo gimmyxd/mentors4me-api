@@ -5,7 +5,7 @@ module Api
       before_action only: [:show, :update, :destroy, :password] do
         load_user(CR.roles)
       end
-      load_and_authorize_resource :user, parent: false, only: :update
+      load_and_authorize_resource :user, parent: false, only: [:update, :password]
       respond_to :json
 
       include ApipieDocs::Api::V1::UserDoc

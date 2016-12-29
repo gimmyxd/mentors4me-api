@@ -108,23 +108,85 @@ describe Api::V1::UsersController do
   describe 'PUT/PATCH password' do
     let(:http_method) { :put }
     let(:action) { :password }
+    context 'admin' do
+      let(:admin) { FactoryGirl.create(:user) }
+      it 'successfully updates a user\'s password' do
+        params = {
+          id: admin.id,
+          current_password: admin.password,
+          password: 'newpassword',
+          password_confirmation: 'newpassword'
+        }
+        send_request(http_method, action, params, format)
+        expect(response.status).to eql 200
+        expect(admin.reload.valid_password?(params[:password])).to eql true
+      end
 
-    it 'successfully updates a user\'s password' do
-      params = {
-        id: @user.id,
-        current_password: @user.password,
-        password: 'newpassword',
-        password_confirmation: 'newpassword'
-      }
-      send_request(http_method, action, params, format)
-      expect(response.status).to eql 200
-      expect(@user.reload.valid_password?(params[:password])).to eql true
+      it 'raises proper errors when request does not contain any password params' do
+        send_request(http_method, action, { id: admin.id }, format)
+        expect(parsed_response(response)).to have_key(:errors)
+        expect(response.status).to eql 422
+      end
     end
 
-    it 'raises proper errors when request does not contain any password params' do
-      send_request(http_method, action, { id: @user.id }, format)
-      expect(parsed_response(response)).to have_key(:errors)
-      expect(response.status).to eql 422
+    context 'mentor' do
+      let(:mentor) { FactoryGirl.create(:user, :mentor_user) }
+      let(:another_mentor) { FactoryGirl.create(:user, :mentor_user) }
+      before do
+        request.headers['Authorization'] = mentor.auth_token
+      end
+      it 'successfully updates a user\'s password' do
+        params = {
+          id: mentor.id,
+          current_password: mentor.password,
+          password: 'newpassword',
+          password_confirmation: 'newpassword'
+        }
+        send_request(http_method, action, params, format)
+        expect(response.status).to eql 200
+        expect(mentor.reload.valid_password?(params[:password])).to eql true
+      end
+
+      it 'does not allow changing password of other user' do
+        send_request(http_method, action, { id: another_mentor.id }, format)
+        expect(response.status).to eql 403
+      end
+
+      it 'raises proper errors when request does not contain any password params' do
+        send_request(http_method, action, { id: mentor.id }, format)
+        expect(parsed_response(response)).to have_key(:errors)
+        expect(response.status).to eql 422
+      end
+    end
+
+    context 'organization' do
+      let(:organization) { FactoryGirl.create(:user, :organization_user) }
+      let(:another_organization) { FactoryGirl.create(:user, :organization_user) }
+      before do
+        request.headers['Authorization'] = organization.auth_token
+      end
+      it 'successfully updates a user\'s password' do
+        params = {
+          id: organization.id,
+          current_password: organization.password,
+          password: 'newpassword',
+          password_confirmation: 'newpassword'
+        }
+        send_request(http_method, action, params, format)
+        expect(response.status).to eql 200
+        expect(organization.reload.valid_password?(params[:password])).to eql true
+      end
+
+      it 'does not allow changing password of other user' do
+        send_request(http_method, action, { id: another_organization.id }, format)
+        expect(response.status).to eql 403
+      end
+
+      it 'raises proper errors when request does not contain any password params' do
+        send_request(http_method, action, { id: organization.id }, format)
+        expect(parsed_response(response)).to have_key(:errors)
+        expect(response.status).to eql 422
+      end
     end
   end
 end
