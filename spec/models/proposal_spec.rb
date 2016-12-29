@@ -10,4 +10,123 @@ RSpec.describe Proposal, type: :model do
     it { is_expected.to validate_length_of(:description).is_at_most(500) }
     it { is_expected.to validate_uniqueness_of(:auth_token) }
   end
+
+  context 'validations' do
+    context 'uniqueness of proposed user' do
+      let!(:proposal1) { FactoryGirl.create(:proposal, email: 'test@example.com') }
+      let!(:proposal2) { FactoryGirl.build(:proposal, email: 'test@example.com') }
+
+      it 'returns valid for unique user' do
+        expect(proposal1).to be_valid
+      end
+
+      it 'returns email validation error for used email' do
+        expect(proposal2).not_to be_valid
+        expect(proposal2.errors.details[:email].first).to eql(error: :taken, value: 'test@example.com')
+      end
+    end
+  end
+
+  context 'scopes' do
+    let!(:pending_proposals) { FactoryGirl.create_list(:proposal, 3, status: CP::PENDING) }
+    let!(:accepted_proposals) { FactoryGirl.create_list(:proposal, 4, status: CP::ACCEPTED) }
+    let!(:rejected_proposals) { FactoryGirl.create_list(:proposal, 5, status: CP::REJECTED) }
+
+    it 'returns the pending proposals' do
+      expect(Proposal.status(CP::PENDING).sort).to eql(pending_proposals.sort)
+    end
+
+    it 'returns the accepted proposals' do
+      expect(Proposal.status(CP::ACCEPTED).sort).to eql(accepted_proposals.sort)
+    end
+
+    it 'returns the rejected proposals' do
+      expect(Proposal.status(CP::REJECTED).sort).to eql(rejected_proposals.sort)
+    end
+  end
+
+  context 'instance methods' do
+    let!(:pending_proposal) { FactoryGirl.create(:proposal, status: CP::PENDING) }
+    let!(:accepted_proposal) { FactoryGirl.create(:proposal, status: CP::ACCEPTED) }
+    let!(:rejected_proposal) { FactoryGirl.create(:proposal, status: CP::REJECTED) }
+    context 'accept' do
+      it 'returns false for already accepted proposal' do
+        expect(accepted_proposal.accept).to eq(false)
+      end
+
+      it 'returns false for already rejected proposal' do
+        expect(rejected_proposal.accept).to eq(false)
+      end
+
+      it 'returns change the status of pending proposal to accepted' do
+        pending_proposal.accept
+        expect(pending_proposal.reload.status).to eq(CP::ACCEPTED)
+      end
+    end
+
+    context 'reject' do
+      it 'returns false for already accepted proposal' do
+        expect(accepted_proposal.accept).to eq(false)
+      end
+
+      it 'returns false for already rejected proposal' do
+        expect(rejected_proposal.accept).to eq(false)
+      end
+
+      it 'returns change the status of pending proposal to accepted' do
+        pending_proposal.reject
+        expect(pending_proposal.reload.status).to eq(CP::REJECTED)
+      end
+    end
+
+    context 'pending' do
+      it 'sets status of proposal to pending' do
+        accepted_proposal.pending
+        accepted_proposal.save
+        expect(accepted_proposal.reload.status).to eq(CP::PENDING)
+      end
+    end
+
+    context 'pending?' do
+      it 'returns false accepted proposal' do
+        expect(accepted_proposal.pending?).to eq(false)
+      end
+
+      it 'returns false for rejected proposal' do
+        expect(rejected_proposal.pending?).to eq(false)
+      end
+
+      it 'returns true for pending proposal' do
+        expect(pending_proposal.pending?).to eq(true)
+      end
+    end
+
+    context 'accepted?' do
+      it 'returns false pending proposal' do
+        expect(pending_proposal.accepted?).to eq(false)
+      end
+
+      it 'returns false for rejected proposal' do
+        expect(rejected_proposal.accepted?).to eq(false)
+      end
+
+      it 'returns true for accepted proposal' do
+        expect(accepted_proposal.accepted?).to eq(true)
+      end
+    end
+
+    context 'rejected?' do
+      it 'returns false accepted proposal' do
+        expect(accepted_proposal.rejected?).to eq(false)
+      end
+
+      it 'returns false for pending proposal' do
+        expect(pending_proposal.rejected?).to eq(false)
+      end
+
+      it 'returns true for rejected proposal' do
+        expect(rejected_proposal.rejected?).to eq(true)
+      end
+    end
+  end
 end

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Api::V1::MentorsController do
   let(:format) { :json }
 
@@ -88,6 +86,7 @@ describe Api::V1::MentorsController do
       end
     end
   end
+
   describe 'POST #create' do
     let(:http_method) { :post }
     let(:action) { :create }

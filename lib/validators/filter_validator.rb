@@ -5,7 +5,7 @@ module Validators
     def validate_numericality(field, error_message)
       Integer(field) if field.present?
     rescue ArgumentError
-      raise InvalidAPIRequest.new(error_message, 422)
+      raise Api::BaseController::InvalidAPIRequest.new(error_message, 422)
     end
 
     def valid_date?(date, format = '%Y-%m-%d')
@@ -37,14 +37,14 @@ module Validators
     def validate_status(list)
       return unless params[:status].present?
       return if list.include? params[:status]
-      raise InvalidAPIRequest.new('status.not_in_list', 422)
+      raise Api::BaseController::InvalidAPIRequest.new('status.not_in_list', 422)
     end
 
     def validate_date(margin)
       return unless params[margin]
       valid_date?(params[margin])
     rescue ArgumentError
-      raise InvalidAPIRequest.new("#{margin}.invalid_fromat", 422)
+      raise Api::BaseController::InvalidAPIRequest.new("#{margin}.invalid_fromat", 422)
     end
   end
 end

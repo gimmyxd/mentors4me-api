@@ -1,5 +1,8 @@
 module UsefulHelper
+  CD = Custom::Constants::Default
   CR = Custom::Constants::Role
+  CP = Custom::Constants::Proposal
+  CC = Custom::Constants::Context
 
   def send_request(http_method, action, options = {}, format = nil, session = {})
     options[:format] = format if format.present?
