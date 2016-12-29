@@ -5,5 +5,5 @@ class AddAuthTokenToProposal < ActiveRecord::Migration[5.0]
     add_column :proposals, :auth_token, :string
     add_column :proposals, :auth_token_created_at, :datetime
     add_index :proposals, :auth_token, unique: true
-   end
+  end
 end

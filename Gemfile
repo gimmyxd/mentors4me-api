@@ -13,6 +13,7 @@ gem 'figaro'
 gem 'has_scope'
 gem 'newrelic_rpm'
 gem 'apipie-rails'
+gem 'sendgrid-ruby'
 gem 'factory_girl_rails'
 gem 'faker'
 
