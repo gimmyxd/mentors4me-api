@@ -1,8 +1,6 @@
 module Api
   module V1
     class SessionsController < Api::BaseController
-      respond_to :json
-
       include ApipieDocs::Api::V1::SessionDoc
 
       resource_description do

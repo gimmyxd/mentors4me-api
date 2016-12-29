@@ -10,6 +10,11 @@ module ApipieDocs
 
         doc_for :index do
           api :GET, '/users', 'Retrevie a list of users'
+          param :filter, %w(limit offset),
+                'The filtering query:
+                - url example for filtering by limit and offset:
+                    .../api/users?limit=10&offset=2
+              '
           error 401, 'Unauthorized'
         end
 

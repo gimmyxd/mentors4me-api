@@ -23,6 +23,11 @@ module ApipieDocs
 
         doc_for :index do
           api :GET, '/organizations', 'Retrevie a list of organizations'
+          param :filter, %w(limit offset),
+                'The filtering query:
+                - url example for filtering by limit and offset:
+                    .../api/organizations?limit=10&offset=2
+              '
         end
 
         doc_for :show do

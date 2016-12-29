@@ -1,6 +1,7 @@
 module Api
   module V1
     class ContextsController < Api::BaseController
+      load_and_authorize_resource :context, parent: false
       before_action :authenticate
       before_action :load_context, only: [:show, :update, :destroy, :accept]
       before_action :validate_limit, :validate_mentor_id,
@@ -13,8 +14,6 @@ module Api
       end
       has_scope :mentor_id, :organization_id, :start_date, :end_date, :status, :offset, :limit
       has_scope :date_interval, using: [:start_date, :end_date], type: :hash
-      load_and_authorize_resource :context, parent: false
-      respond_to :json
 
       include ApipieDocs::Api::V1::ContextDoc
       include Validators::FilterValidator

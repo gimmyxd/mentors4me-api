@@ -1,10 +1,9 @@
 module Api
   module V1
     class ProposalsController < Api::BaseController
+      load_and_authorize_resource :proposal, parent: false, only: [:accept, :reject]
       before_action :authenticate, only: [:show, :index, :accept, :reject]
       before_action :load_proposal, only: [:show, :accept, :reject]
-      authorize_resource class: false, only: [:accept, :reject]
-      respond_to :json
       before_action :validate_limit, :validate_offset, only: :index
       before_action only: :index do
         load_limit(Proposal)

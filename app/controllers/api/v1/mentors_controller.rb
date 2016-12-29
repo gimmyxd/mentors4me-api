@@ -6,17 +6,18 @@ module Api
       before_action only: [:show, :update, :destroy, :password] do
         load_user(CR::MENTOR)
       end
-      respond_to :json
 
       include ApipieDocs::Api::V1::MentorDoc
 
       def index
         respond_with build_data_object(
-          User.includes(mentor: :skills)
-            .includes(:organization)
-            .includes(:role_assignments)
-            .includes(:roles)
-            .where(roles: { slug: CR::MENTOR })
+          apply_scopes(
+            User.includes(mentor: :skills)
+              .includes(:organization)
+              .includes(:role_assignments)
+              .includes(:roles)
+              .where(roles: { slug: CR::MENTOR })
+          )
         )
       end
 

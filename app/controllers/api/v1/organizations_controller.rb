@@ -5,7 +5,6 @@ module Api
       before_action only: [:show, :update, :destroy, :password] do
         load_user(CR::ORGANIZATION)
       end
-      respond_to :json
 
       include ApipieDocs::Api::V1::OrganizationDoc
 
@@ -15,11 +14,13 @@ module Api
 
       def index
         respond_with build_data_object(
-          User.includes(:organization)
-            .includes(:mentor)
-            .includes(:role_assignments)
-            .includes(:roles)
-            .where(roles: { slug: CR::ORGANIZATION })
+          apply_scopes(
+            User.includes(:organization)
+              .includes(:mentor)
+              .includes(:role_assignments)
+              .includes(:roles)
+              .where(roles: { slug: CR::ORGANIZATION })
+          )
         )
       end
 

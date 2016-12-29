@@ -10,6 +10,8 @@ module Api
     include SharedMethods
     include Builders::ResponseBuilder
 
+    respond_to :json
+
     MODULES = [
       ActionController::MimeResponds,
       CanCan::ControllerAdditions,
