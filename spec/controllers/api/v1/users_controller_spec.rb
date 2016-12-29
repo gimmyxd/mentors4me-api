@@ -56,6 +56,7 @@ describe Api::V1::UsersController do
             phone_number: user1.mentor.phone_number,
             city: user1.mentor.city,
             description: user1.mentor.description,
+            skills: user1.mentor.skills.pluck(:name).sort,
             facebook: user1.mentor.facebook,
             linkedin: user1.mentor.linkedin
           },

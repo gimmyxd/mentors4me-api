@@ -93,6 +93,6 @@ class User < ApplicationRecord
   end
 
   def add_skills_data(response)
-    response[:skills] = mentor.skills.pluck(:name)
+    response[:skills] = mentor.skills.pluck(:name).sort
   end
 end

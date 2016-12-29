@@ -65,6 +65,7 @@ describe Api::V1::MentorsController do
               phone_number: user1.mentor.phone_number,
               city: user1.mentor.city,
               description: user1.mentor.description,
+              skills: user1.mentor.skills.pluck(:name).sort,
               facebook: nil,
               linkedin: nil
             },
@@ -77,6 +78,7 @@ describe Api::V1::MentorsController do
               phone_number: user2.mentor.phone_number,
               city: user2.mentor.city,
               description: user2.mentor.description,
+              skills: user2.mentor.skills.pluck(:name).sort,
               facebook: nil,
               linkedin: nil
             }
@@ -163,6 +165,7 @@ describe Api::V1::MentorsController do
         mentor_params = FactoryGirl.attributes_for(:mentor)
         mentor_params[:facebook] = 'nelu santinelu'
         mentor_params[:id] = user.id
+        mentor_params[:skill_ids] = Skill.last.id.to_s
         request.headers['Authorization'] = user.auth_token
         send_request(http_method, action, mentor_params, format)
         @expected_response = {
@@ -177,6 +180,7 @@ describe Api::V1::MentorsController do
               phone_number: mentor_params[:phone_number],
               city: mentor_params[:city],
               description: mentor_params[:description],
+              skills: Array(Skill.last.name),
               facebook: 'nelu santinelu',
               linkedin: nil
             }
