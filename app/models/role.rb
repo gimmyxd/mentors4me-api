@@ -3,7 +3,7 @@ class Role < ApplicationRecord
 
   validates :slug, presence: true, uniqueness: true, length: { maximum: 50 }
   has_many :role_assignments
-  has_many :users, through: :role_assignments
+  has_many :users, through: :role_assignments, dependent: :restrict_with_exception
 
   def self.admin
     Role.find_by(slug: CR::ADMIN)

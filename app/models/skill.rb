@@ -1,6 +1,6 @@
 class Skill < ApplicationRecord
   has_many :skill_assignments
-  has_many :mentors, through: :skill_assignments
+  has_many :mentors, through: :skill_assignments, dependent: :restrict_with_exception
 
   # Name validation
   validates :name, presence: true, uniqueness: true, length: { maximum: 100 }

@@ -5,5 +5,8 @@ FactoryGirl.define do
     phone_number { Faker::PhoneNumber.cell_phone }
     city { Faker::Address.city }
     description 'some description'
+    before(:create) do |mentor|
+      mentor.skills = FactoryGirl.create_list(:skill, 4)
+    end
   end
 end
