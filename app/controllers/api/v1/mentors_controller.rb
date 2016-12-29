@@ -1,7 +1,7 @@
 module Api
   module V1
     class MentorsController < UsersController
-      before_action :validate_request, only: :create
+      before_action :authenticate_create, only: :create
       before_action :authenticate, only: :update
       before_action only: [:show, :update, :destroy, :password] do
         load_user(CR::MENTOR)
@@ -50,12 +50,6 @@ module Api
       end
 
       private
-
-      def validate_request
-        token = request.headers['Authorization']
-        return if token.present? && Proposal.where(invitation_token: token).any?
-        raise InvalidAPIRequest.new('unauthorized', 401)
-      end
 
       def validate_skills(skill_ids)
         raise InvalidAPIRequest.new('skill_ids.must_be_string', 422) unless skill_ids.is_a? String

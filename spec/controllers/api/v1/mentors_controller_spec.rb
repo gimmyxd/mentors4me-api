@@ -108,7 +108,7 @@ describe Api::V1::MentorsController do
       let(:proposal) { FactoryGirl.create(:proposal) }
       before do
         proposal.accept
-        request.headers['Authorization'] = proposal.invitation_token
+        request.headers['Authorization'] = proposal.auth_token
         user_params = FactoryGirl.attributes_for(:user)
         mentor_params = FactoryGirl.attributes_for(:mentor)
         user_params.merge!(mentor_params)

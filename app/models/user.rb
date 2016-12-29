@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include SharedMethods
+  include TokenGenerator
   devise :database_authenticatable, :registerable, :validatable
 
   validates :auth_token, uniqueness: true, allow_nil: true
@@ -18,16 +19,6 @@ class User < ApplicationRecord
     new_assignments = []
     Array(role_ids).each { |role_id| new_assignments << { role_id: role_id } }
     self.role_assignments_attributes = new_assignments
-  end
-
-  # Public: generates an authentication token
-  # returns - token for the user
-  def generate_authentication_token!
-    loop do
-      self.auth_token = Devise.friendly_token
-      self.auth_token_created_at = Time.now
-      break auth_token unless self.class.exists?(auth_token: auth_token)
-    end
   end
 
   def admin?

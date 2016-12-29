@@ -13,7 +13,7 @@ module Authenticable
   end
 
   # Public: verifies validation of token
-  # token - token of the user
+  # token - authentication_token
   # returns - boolean
   def validate_token(token = nil)
     token ||= request.headers['Authorization']
@@ -21,6 +21,15 @@ module Authenticable
     user = User.find_by(auth_token: token)
     return unless user.present?
     user[:auth_token_created_at] + 24.hours > Time.now
+  end
+
+  # Public: verifies validation of token
+  # token - authentication_token
+  # returns - boolean
+  def authenticate_create(token = nil)
+    token ||= request.headers['Authorization']
+    return if token.present? && Proposal.where(auth_token: token).any?
+    raise Api::BaseController::InvalidAPIRequest.new('unauthorized', 401)
   end
 
   # Public: Devise methods overwrites

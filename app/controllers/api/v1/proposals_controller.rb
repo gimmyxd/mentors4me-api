@@ -34,7 +34,7 @@ module Api
 
       def accept
         if @proposal.accept
-          send_invitation_email(@proposal.email, @proposal.invitation_token)
+          send_invitation_email(@proposal.email, @proposal.auth_token)
           render json: build_data_object(@proposal), status: 200
         else
           render json: build_error_object(@proposal), status: 422
@@ -60,8 +60,8 @@ module Api
         @proposal = Proposal.find(params[:id])
       end
 
-      def send_invitation_email(email, invitation_token)
-        InvitationsMailer.send_invitation(email, invitation_token).deliver_later
+      def send_invitation_email(email, auth_token)
+        InvitationsMailer.send_invitation(email, auth_token).deliver_later
       end
 
       def send_rejection_email(email)

@@ -1,9 +1,11 @@
 class Proposal < ApplicationRecord
+  include TokenGenerator
+
   validates :email, :description, :status, presence: true
   validates :description, presence: true, length: { maximum: 500 }
   validates :email, uniqueness: true
   validate :validate_uniqueness_of_user
-  validates :invitation_token, uniqueness: true, allow_nil: true
+  validates :auth_token, uniqueness: true, allow_nil: true
 
   # Filer proposals by status
   # /proposals?status='status'
@@ -11,7 +13,7 @@ class Proposal < ApplicationRecord
 
   def accept
     return false unless pending?
-    generate_invitation_token!
+    generate_authentication_token!
     self.status = CP::ACCEPTED
     save
   end
@@ -38,16 +40,6 @@ class Proposal < ApplicationRecord
     status == CP::REJECTED
   end
 
-  # Public: generates an invitation token
-  # returns - token for the user
-  def generate_invitation_token!
-    loop do
-      self.invitation_token = Devise.friendly_token
-      self.invitation_token_created_at = Time.now
-      break invitation_token unless self.class.exists?(invitation_token: invitation_token)
-    end
-  end
-
   # Public: models JSON representation of the object
   # _options - parameter that is provided by the standard method
   # returns - hash with user data
@@ -57,7 +49,7 @@ class Proposal < ApplicationRecord
       email: email,
       description: description,
       status: status,
-      invitation_token: invitation_token
+      auth_token: auth_token
     }
     options.empty? ? custom_response : super
   end

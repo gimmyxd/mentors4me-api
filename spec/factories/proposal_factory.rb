@@ -4,6 +4,6 @@ FactoryGirl.define do
     description 'MyText'
     status Custom::Constants::Proposal::PENDING
 
-    after(:create, &:generate_invitation_token!)
+    after(:create, &:generate_authentication_token!)
   end
 end
