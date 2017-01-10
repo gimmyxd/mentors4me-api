@@ -15,6 +15,10 @@ class User < ApplicationRecord
 
   attr_accessor :role_id
 
+  def contexts
+    Context.where('mentor_id = ? OR organization_id = ?', id, id)
+  end
+
   def assign_roles(role_ids)
     new_assignments = []
     Array(role_ids).each { |role_id| new_assignments << { role_id: role_id } }

@@ -23,7 +23,7 @@ module Api
       end
 
       def index
-        respond_with build_data_object(apply_scopes(Context))
+        respond_with build_data_object(apply_scopes(current_user.contexts))
       end
 
       def accept
