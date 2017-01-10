@@ -16,7 +16,11 @@ class User < ApplicationRecord
   attr_accessor :role_id
 
   def contexts
-    Context.where('mentor_id = ? OR organization_id = ?', id, id)
+    if admin?
+      Context.all
+    else
+      Context.where('mentor_id = ? OR organization_id = ?', id, id)
+    end
   end
 
   def assign_roles(role_ids)
