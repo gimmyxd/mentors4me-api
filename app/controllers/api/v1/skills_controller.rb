@@ -1,8 +1,8 @@
 module Api
   module V1
     class SkillsController < Api::BaseController
-      load_and_authorize_resource :skill, parent: false
       before_action :authenticate, only: [:create, :update, :destroy]
+      load_and_authorize_resource :skill, parent: false
       before_action :load_skill, only: [:show, :update, :destroy]
 
       include ApipieDocs::Api::V1::SkillDoc

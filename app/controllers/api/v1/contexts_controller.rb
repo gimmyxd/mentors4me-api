@@ -1,8 +1,8 @@
 module Api
   module V1
     class ContextsController < Api::BaseController
-      load_and_authorize_resource :context, parent: false
       before_action :authenticate
+      load_and_authorize_resource :context, parent: false
       before_action :load_context, only: [:show, :update, :destroy, :accept]
       before_action :validate_limit, :validate_mentor_id,
                     :validate_organization_id, :validate_offset, only: :index

@@ -32,6 +32,7 @@ module Api
         user.mentor = Mentor.new(mentor_params)
         user.mentor.assign_skills(params[:skills])
         if user.save
+          reset_auth_token
           render json: build_data_object(user), status: 201
         else
           render json: build_error_object(user), status: 422
@@ -49,6 +50,11 @@ module Api
       end
 
       private
+
+      def reset_auth_token
+        proposal = Proposal.find_by(auth_token: request.headers['Authorization'])
+        proposal.update_attribute(:auth_token, nil)
+      end
 
       def mentor_params
         params.permit(
