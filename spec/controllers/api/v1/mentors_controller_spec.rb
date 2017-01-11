@@ -111,6 +111,8 @@ describe Api::V1::MentorsController do
         user_params = FactoryGirl.attributes_for(:user)
         mentor_params = FactoryGirl.attributes_for(:mentor)
         user_params.merge!(mentor_params)
+        FactoryGirl.create(:skill)
+        user_params[:skills] = Skill.pluck(:id)
         send_request(http_method, action, user_params, format)
         @expected_response = {
           success: true,
@@ -124,7 +126,8 @@ describe Api::V1::MentorsController do
               city: user_params[:city],
               description: user_params[:description],
               facebook: nil,
-              linkedin: nil
+              linkedin: nil,
+              skills: Skill.pluck(:name)
             }
         }
       end
@@ -164,7 +167,7 @@ describe Api::V1::MentorsController do
         mentor_params = FactoryGirl.attributes_for(:mentor)
         mentor_params[:facebook] = 'nelu santinelu'
         mentor_params[:id] = user.id
-        mentor_params[:skill_ids] = Skill.last.id.to_s
+        mentor_params[:skills] = Skill.last.id.to_s
         request.headers['Authorization'] = user.auth_token
         send_request(http_method, action, mentor_params, format)
         @expected_response = {

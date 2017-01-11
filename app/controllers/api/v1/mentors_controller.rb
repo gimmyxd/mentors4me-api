@@ -30,7 +30,7 @@ module Api
         user.assign_roles(Role.mentor.id)
         user.active = true
         user.mentor = Mentor.new(mentor_params)
-        user.mentor.assign_skills(mentor_params[:skill_ids])
+        user.mentor.assign_skills(params[:skills])
         if user.save
           render json: build_data_object(user), status: 201
         else
@@ -39,9 +39,8 @@ module Api
       end
 
       def update
-        validate_skills(mentor_params[:skill_ids])
         @user.mentor.update(mentor_params)
-        @user.mentor.assign_skills(mentor_params[:skill_ids])
+        @user.mentor.assign_skills(params[:skills])
         if @user.update(update_user_params)
           render json: build_data_object(@user), status: 200
         else
@@ -51,17 +50,10 @@ module Api
 
       private
 
-      def validate_skills(skill_ids)
-        raise InvalidAPIRequest.new('skill_ids.must_be_string', 422) unless skill_ids.is_a? String
-        raise InvalidAPIRequest.new('skill_ids.blank', 422) if skill_ids.blank?
-        return if Skill.where(id: mentor_params[:skill_ids]).any?
-        raise InvalidAPIRequest.new('skill_ids.record_not_found', 422)
-      end
-
       def mentor_params
         params.permit(
           :first_name, :last_name, :phone_number,
-          :city, :description, :skill_ids, :facebook, :linkedin
+          :city, :description, :facebook, :linkedin
         )
       end
     end

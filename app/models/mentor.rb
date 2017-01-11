@@ -6,10 +6,15 @@ class Mentor < ApplicationRecord
   validates :description, presence: true, length: { maximum: 500 }
   accepts_nested_attributes_for :skill_assignments, allow_destroy: true
   attr_accessor :skill_id
+  after_validation :validate_skills
 
   def assign_skills(skill_ids)
-    new_assignments = []
-    Array(skill_ids).each { |skill_id| new_assignments << { skill_id: skill_id } }
-    self.skill_assignments_attributes = new_assignments
+    self.skills = Skill.where(id: skill_ids)
+  end
+
+  private
+
+  def validate_skills
+    errors.add(:skills, :blank) if skills.empty?
   end
 end

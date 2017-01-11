@@ -64,7 +64,7 @@ class User < ApplicationRecord
     }
 
     add_mentor_data(custom_response) if mentor.present?
-    add_skills_data(custom_response) if mentor.present? && mentor.skills.any?
+    add_skills_data(custom_response) if mentor.present?
     add_organization_data(custom_response) if organization .present?
     options.empty? ? custom_response : super
   end
