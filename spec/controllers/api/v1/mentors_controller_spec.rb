@@ -104,8 +104,8 @@ describe Api::V1::MentorsController do
     end
 
     context 'authorized' do
-      let(:proposal) { FactoryGirl.create(:proposal) }
       before do
+        proposal = FactoryGirl.create(:proposal)
         proposal.accept
         request.headers['Authorization'] = proposal.auth_token
         user_params = FactoryGirl.attributes_for(:user)
@@ -142,8 +142,16 @@ describe Api::V1::MentorsController do
         expect(json_response).to eql(@expected_response)
       end
 
+      it 'returns 401 if token is used again' do
+        send_request(http_method, action, {}, format)
+        expect(response.status).to eql(401)
+      end
+
       context 'validation error' do
         before do
+          proposal = FactoryGirl.create(:proposal)
+          proposal.accept
+          request.headers['Authorization'] = proposal.auth_token
           allow_any_instance_of(User).to receive(:create).and_return(false)
           send_request(http_method, action, {}, format)
         end
