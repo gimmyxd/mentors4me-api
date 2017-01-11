@@ -1,6 +1,6 @@
 class InvitationsMailer < ApplicationMailer
   def send_invitation(email, auth_token)
-    url = "#{ENV['FRONTEND_URL']}/#{auth_token}"
+    url = "#{ENV['FRONTEND_URL']}/#!/mentors/register/#{auth_token}"
 
     mail = Mail.new
     mail.from = Email.new(email: ENV['EMAIL_FROM'])
