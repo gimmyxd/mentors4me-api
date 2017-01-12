@@ -24,8 +24,8 @@ Rails.application.routes.draw do
           put :password
         end
       end
-      resources :mentors, only: [:index, :show, :create, :update]
-      resources :organizations, only: [:index, :show, :create, :update]
+      resources :mentors, only: [:index, :show, :create, :update, :destroy]
+      resources :organizations, only: [:index, :show, :create, :update, :destroy]
     end
   end
 end

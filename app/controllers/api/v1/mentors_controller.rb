@@ -49,6 +49,16 @@ module Api
         end
       end
 
+      def destroy
+        @user.active = false
+        @user.generate_authentication_token!
+        if @user.destroy
+          render json: { success: true }, status: 201
+        else
+          render json: build_error_object(@user), status: 422
+        end
+       end
+
       private
 
       def reset_auth_token
