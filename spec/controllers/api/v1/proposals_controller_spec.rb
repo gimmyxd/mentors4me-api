@@ -152,7 +152,8 @@ describe Api::V1::ProposalsController do
       let(:action) { :accept }
       let!(:proposal) { FactoryGirl.create(:proposal) }
       before do
-        stub_request(:post, 'https://api.sendgrid.com/v3/mail/send').to_return(status: 200, body: '', headers: {})
+        stub_request(:post, 'https://api.sendgrid.com/v3/mail/send')
+          .to_return(status: 200, body: '', headers: {})
       end
 
       context 'success' do

@@ -18,6 +18,7 @@ module Custom
         ArgumentError => 'argument_error'
       }.freeze
     end
+
     class Role
       ADMIN = 'admin'.freeze
       MENTOR = 'mentor'.freeze

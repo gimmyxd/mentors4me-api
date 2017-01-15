@@ -1,7 +1,6 @@
 module Api
   module V1
     class OrganizationsController < UsersController
-      before_action :authenticate, only: :update
       before_action only: [:show, :update, :destroy, :password] do
         load_user(CR::ORGANIZATION)
       end
@@ -19,7 +18,8 @@ module Api
               .includes(:mentor)
               .includes(:role_assignments)
               .includes(:roles)
-              .where(roles: { slug: CR::ORGANIZATION })
+              .organization
+              .active
           )
         )
       end
@@ -46,13 +46,7 @@ module Api
       end
 
       def destroy
-        @user.active = false
-        @user.generate_authentication_token!
-        if @user.destroy
-          render json: { success: true }, status: 201
-        else
-          render json: build_error_object(@user), status: 422
-        end
+        perform_destroy(@user)
       end
 
       private

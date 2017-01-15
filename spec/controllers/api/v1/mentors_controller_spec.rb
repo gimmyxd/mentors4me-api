@@ -247,4 +247,63 @@ describe Api::V1::MentorsController do
       end
     end
   end
+
+  describe '#DELETE destroy' do
+    let(:http_method) { :delete }
+    let(:action) { :destroy }
+    context 'successful deletion' do
+      let(:user) { FactoryGirl.create(:user, :mentor_user) }
+      before do
+        request.headers['Authorization'] = user.auth_token
+        send_request(:delete, :destroy, { id: user.id }, format)
+      end
+      it 'response status is 201' do
+        expect(response.status).to eql 201
+      end
+
+      it 'deactivates user' do
+        expect(user.reload.active).to eq(false)
+      end
+    end
+
+    context 'validation error' do
+      before do
+        allow_any_instance_of(User).to receive(:save).and_return(false)
+        user = FactoryGirl.create(:user, :mentor_user)
+        request.headers['Authorization'] = user.auth_token
+        send_request(http_method, action, { id: user.id }, format)
+      end
+      it 'returns 422' do
+        expect(response.status).to eql(422)
+      end
+
+      it 'returns proper errors' do
+        expect(parsed_response(response)).to have_key(:errors)
+      end
+    end
+
+    context 'mentor not found' do
+      before(:each) do
+        send_request(http_method, action, { id: 'invalid_id' }, format)
+      end
+      it 'return 404' do
+        expect(response.status).to eq 404
+      end
+
+      it 'returns the error key' do
+        expect(parsed_response(response)[:errors].first).to eq('record_not_found')
+      end
+    end
+
+    context 'forrbiden' do
+      before do
+        user = FactoryGirl.create(:user, :mentor_user)
+        send_request(http_method, action, { id: user.id }, format)
+      end
+
+      it 'returns 403' do
+        expect(response.status).to eq 403
+      end
+    end
+  end
 end

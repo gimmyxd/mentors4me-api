@@ -15,6 +15,10 @@ class User < ApplicationRecord
 
   attr_accessor :role_id
 
+  scope :active, -> { where(active: true) }
+  scope :mentor, -> { includes(:roles).where(roles: { slug: CR::MENTOR }) }
+  scope :organization, -> { includes(:roles).where(roles: { slug: CR::ORGANIZATION }) }
+
   def contexts
     if admin?
       Context.all

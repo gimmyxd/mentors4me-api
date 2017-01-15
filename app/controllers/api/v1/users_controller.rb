@@ -2,7 +2,7 @@ module Api
   module V1
     class UsersController < Api::BaseController
       before_action :authenticate
-      load_and_authorize_resource :user, parent: false, only: [:update, :password]
+      load_and_authorize_resource :user, parent: false, only: [:update, :password, :destroy]
       before_action only: [:show, :update, :destroy, :password] do
         load_user(CR.roles)
       end
@@ -18,7 +18,7 @@ module Api
 
       def index
         respond_with build_data_object(
-          apply_scopes(User.includes(mentor: :skills).includes(:organization).includes(:roles))
+          apply_scopes(User.includes(mentor: :skills).includes(:organization).includes(:roles).active)
         )
       end
 
@@ -39,6 +39,17 @@ module Api
 
       def load_user(roles)
         @user = User.includes(:roles).find_by!(id: params[:id], roles: { slug: Array(roles) })
+        raise ActiveRecord::RecordNotFound unless @user.active?
+      end
+
+      def perform_destroy(user)
+        user.active = false
+        user.generate_authentication_token!
+        if user.save
+          render json: { success: true }, status: 201
+        else
+          render json: build_error_object(user), status: 422
+        end
       end
 
       def create_user_params
