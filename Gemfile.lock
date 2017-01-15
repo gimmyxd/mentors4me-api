@@ -50,6 +50,8 @@ GEM
       uniform_notifier (~> 1.10.0)
     byebug (9.0.6)
     cancancan (1.15.0)
+    codeclimate-test-reporter (1.0.4)
+      simplecov
     coderay (1.1.1)
     concurrent-ruby (1.0.3)
     crack (0.4.3)
@@ -225,6 +227,7 @@ DEPENDENCIES
   apipie-rails
   bullet
   cancancan
+  codeclimate-test-reporter
   database_cleaner
   devise
   factory_girl_rails
