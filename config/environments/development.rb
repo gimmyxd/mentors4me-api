@@ -51,4 +51,7 @@ Rails.application.configure do
     Bullet.rails_logger = true
     Bullet.bullet_logger = true
   end
+
+  # Rails.application.config.action_cable.allowed_request_origins = ['http://localhost:3000']
+  config.action_cable.disable_request_forgery_protection = true
 end

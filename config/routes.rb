@@ -1,6 +1,13 @@
 Rails.application.routes.draw do
+  #apipie documentation endpoint
   apipie
+
+  #devise
   devise_for :users
+
+  # Serve websocket cable requests in-process
+  mount ActionCable.server => '/cable'
+
   # Api definition
   namespace :api, defaults: { format: :json } do
     namespace :v1, path: '/' do
