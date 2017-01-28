@@ -33,6 +33,10 @@ class User < ApplicationRecord
     self.role_assignments_attributes = new_assignments
   end
 
+  def full_name
+    mentor.try(:full_name) || organization.try(:asignee)
+  end
+
   def admin?
     role?(CR::ADMIN)
   end

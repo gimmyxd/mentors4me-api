@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
-  #apipie documentation endpoint
+  # apipie documentation endpoint
   apipie
 
-  #devise
+  # devise
   devise_for :users
 
   # Serve websocket cable requests in-process

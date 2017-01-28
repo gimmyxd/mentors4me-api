@@ -12,6 +12,10 @@ class Mentor < ApplicationRecord
     self.skills = Skill.where(id: skill_ids)
   end
 
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
   private
 
   def validate_skills
