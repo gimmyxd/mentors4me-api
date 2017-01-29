@@ -1,6 +1,7 @@
 class Message < ApplicationRecord
   belongs_to :context
   validates :message, presence: true, length: { maximum: 10_000 }
+  validates :sender_id, :receiver_id, presence: true
   after_create_commit do
     MessageBroadcastJob.perform_later(stream_name, Array(self).to_json)
   end

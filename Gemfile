@@ -16,6 +16,7 @@ gem 'apipie-rails'
 gem 'sendgrid-ruby'
 gem 'factory_girl_rails'
 gem 'faker'
+gem 'redis'
 
 
 group :development, :test do
