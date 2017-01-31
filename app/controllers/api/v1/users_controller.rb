@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsersController < Api::BaseController
-      before_action :authenticate
+      before_action :authenticate, except: :create
       load_and_authorize_resource :user, parent: false, only: [:update, :password, :destroy]
       before_action only: [:show, :update, :destroy, :password] do
         load_user(CR.roles)
