@@ -60,7 +60,9 @@ class Context < ApplicationRecord
       id: id,
       description: description,
       mentor_id:  mentor_id,
+      mentor_email: mentor.email,
       organization_id: organization_id,
+      organization_email: organization.email,
       status: status
     }
     options.empty? ? custom_response : super

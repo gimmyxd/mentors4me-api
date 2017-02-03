@@ -21,9 +21,9 @@ class User < ApplicationRecord
 
   def contexts
     if admin?
-      Context.all
+      Context.includes(:mentor).all
     else
-      Context.where('mentor_id = ? OR organization_id = ?', id, id)
+      Context.includes(:mentor).where('mentor_id = ? OR organization_id = ?', id, id)
     end
   end
 
