@@ -76,5 +76,5 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.web_socket_server_url = ENV['CABLE_URL']
-  config.action_cable.allowed_request_origins = [ENV['FRONTEND_URL']]
+  config.action_cable.allowed_request_origins = [ENV['FRONTEND_URL'], ENV['LOCALHOST']]
 end
