@@ -13,7 +13,9 @@ class Message < ApplicationRecord
     custom_response = {
       conversation_id: context_id,
       sender:  sender_name,
+      sender_id: sender_id,
       receiver: reciever_name,
+      receiver_id: receiver_id,
       message: message,
       sent_at: created_at.to_s
     }
