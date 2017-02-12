@@ -13,7 +13,7 @@ class ChatChannel < ApplicationCable::Channel
   private
 
   def messages
-    @messages = Message.where(context_id: context_id).to_json
+    @messages = Message.where(context_id: context_id).order(created_at: :asc).to_json
   end
 
   def stream_name
