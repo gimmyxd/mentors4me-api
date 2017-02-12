@@ -90,6 +90,12 @@ describe Api::V1::MentorsController do
   describe 'POST #create' do
     let(:http_method) { :post }
     let(:action) { :create }
+
+    before do
+      stub_request(:post, 'https://api.sendgrid.com/v3/mail/send')
+        .to_return(status: 200, body: '', headers: {})
+    end
+
     context 'unauthorized' do
       before do
         send_request(http_method, action, {}, format)

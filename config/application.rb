@@ -29,13 +29,15 @@ module Mentors4meApi
     config.autoload_paths += Dir[Rails.root.join('app', 'utils', '*')]
     config.autoload_paths += Dir[Rails.root.join('app', 'abilities', '*')]
     config.autoload_paths += Dir[Rails.root.join('lib', 'custom', '*')]
+    config.autoload_paths += Dir[Rails.root.join('app', 'services', '*')]
 
     config.eager_load_paths += [
       "#{Rails.root}/lib",
       "#{Rails.root}/lib/custom",
       "#{Rails.root}/app/docs",
       "#{Rails.root}/app/abilities",
-      "#{Rails.root}/app/utils"
+      "#{Rails.root}/app/utils",
+      "#{Rails.root}/app/services"
     ]
 
     config.autoload_paths += [
@@ -43,7 +45,8 @@ module Mentors4meApi
       "#{Rails.root}/lib/custom",
       "#{Rails.root}/app/docs",
       "#{Rails.root}/app/abilities",
-      "#{Rails.root}/app/utils"
+      "#{Rails.root}/app/utils",
+      "#{Rails.root}/app/services"
     ]
 
     # Rspec config

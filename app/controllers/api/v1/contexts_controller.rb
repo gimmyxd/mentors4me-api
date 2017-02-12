@@ -41,6 +41,7 @@ module Api
         context = Context.new(context_params)
         context.pending
         if context.save
+          send_context_confirmation(context)
           render json: build_data_object(context), status: 200
         else
           render json: build_error_object(context), status: 422
@@ -48,6 +49,19 @@ module Api
       end
 
       private
+
+      def send_context_confirmation(context)
+        mentor = context.mentor.mentor
+        organization = context.organization.organization
+        MentorsMailer.send_context_confirmation(
+          context.mentor.email,
+          name: mentor.first_name,
+          organization_name: organization.name,
+          context_description: context.description,
+          organization_adress: organization.city,
+          organization_description: organization.description
+        ).deliver_later
+      end
 
       def load_context
         @context = Context.find(params[:id])

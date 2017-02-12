@@ -35,6 +35,9 @@ module Api
         user.mentor.assign_skills(params[:skills])
         if user.save
           reset_proposal_token
+          MentorsMailer.send_confirmation(
+            user.email, user.mentor.first_name
+          ).deliver_later
           render json: build_data_object(user), status: 201
         else
           render json: build_error_object(user), status: 422

@@ -80,6 +80,11 @@ describe Api::V1::OrganizationsController do
     let(:http_method) { :post }
     let(:action) { :create }
 
+    before do
+      stub_request(:post, 'https://api.sendgrid.com/v3/mail/send')
+        .to_return(status: 200, body: '', headers: {})
+    end
+
     it 'successfully creates an organization user' do
       user_params = FactoryGirl.attributes_for(:user)
       organization_params = FactoryGirl.attributes_for(:organization)

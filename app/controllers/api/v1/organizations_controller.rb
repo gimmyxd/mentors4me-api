@@ -30,6 +30,9 @@ module Api
         user.active = true
         user.organization = Organization.new(organization_params)
         if user.save
+          OrganizationsMailer.send_confirmation(
+            user.email, user.organization.asignee
+          ).deliver_later
           render json: build_data_object(user), status: 201
         else
           render json: build_error_object(user), status: 422
