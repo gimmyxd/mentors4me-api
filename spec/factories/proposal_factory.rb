@@ -5,6 +5,7 @@ FactoryGirl.define do
     proposer_email { Faker::Internet.email }
     proposer_phone_number { Faker::PhoneNumber.cell_phone }
     mentor_first_name { Faker::Name.name }
+    mentor_last_name { Faker::Name.name }
     mentor_organization { Faker::Name.name }
     mentor_email { Faker::Internet.email }
     mentor_phone_number { Faker::PhoneNumber.cell_phone }

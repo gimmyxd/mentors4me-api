@@ -5,6 +5,7 @@ describe Proposal, type: :model do
     it { is_expected.to respond_to(:proposer_email) }
     it { is_expected.to respond_to(:proposer_phone_number) }
     it { is_expected.to respond_to(:mentor_first_name) }
+    it { is_expected.to respond_to(:mentor_last_name) }
     it { is_expected.to respond_to(:mentor_organization) }
     it { is_expected.to respond_to(:mentor_email) }
     it { is_expected.to respond_to(:mentor_phone_number) }
@@ -17,6 +18,7 @@ describe Proposal, type: :model do
     it { is_expected.to validate_presence_of(:proposer_email) }
     it { is_expected.to validate_presence_of(:proposer_phone_number) }
     it { is_expected.to validate_presence_of(:mentor_first_name) }
+    it { is_expected.to validate_presence_of(:mentor_last_name) }
     it { is_expected.to validate_presence_of(:mentor_organization) }
     it { is_expected.to validate_presence_of(:mentor_email) }
     it { is_expected.to validate_presence_of(:mentor_phone_number) }

@@ -55,7 +55,7 @@ module Api
       def proposal_params
         params.permit(
           :proposer_first_name, :proposer_last_name, :proposer_email, :proposer_phone_number,
-          :mentor_first_name, :mentor_organization, :mentor_email, :mentor_phone_number,
+          :mentor_first_name, :mentor_last_name, :mentor_organization, :mentor_email, :mentor_phone_number,
           :mentor_facebook, :mentor_linkedin, :reason
         )
       end

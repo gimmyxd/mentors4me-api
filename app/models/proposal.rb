@@ -2,8 +2,8 @@ class Proposal < ApplicationRecord
   include TokenGenerator
 
   validates :proposer_first_name, :proposer_last_name, :proposer_email, :proposer_phone_number,
-            :mentor_first_name, :mentor_organization, :mentor_email, :mentor_phone_number, :status,
-            presence: true
+            :mentor_first_name, :mentor_last_name, :mentor_organization, :mentor_email, :mentor_phone_number,
+            :status, presence: true
   validates :reason, presence: true, length: { maximum: 500 }
   validates :proposer_first_name, :proposer_last_name, :proposer_phone_number,
             :mentor_first_name, :mentor_organization, :mentor_email, :mentor_phone_number,
@@ -57,6 +57,7 @@ class Proposal < ApplicationRecord
       proposer_email: proposer_email,
       proposer_phone_number: proposer_phone_number,
       mentor_first_name: mentor_first_name,
+      mentor_last_name: mentor_last_name,
       mentor_organization: mentor_organization,
       mentor_email: mentor_email,
       mentor_phone_number: mentor_phone_number,

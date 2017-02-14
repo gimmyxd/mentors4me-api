@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170214180355) do
+ActiveRecord::Schema.define(version: 20170214192214) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,6 +79,7 @@ ActiveRecord::Schema.define(version: 20170214180355) do
     t.string   "mentor_facebook"
     t.string   "mentor_linkedin"
     t.text     "reason"
+    t.string   "mentor_last_name"
     t.index ["auth_token"], name: "index_proposals_on_auth_token", unique: true, using: :btree
   end
 

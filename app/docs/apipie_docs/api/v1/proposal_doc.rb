@@ -35,6 +35,7 @@ module ApipieDocs
           param :proposer_email, String, desc: 'Proposer\'s email', required: true
           param :proposer_phone_number, String, desc: 'Proposer\'s phone number', required: true
           param :mentor_first_name, String, desc: 'Mentor\'s first name', required: true
+          param :mentor_last_name, String, desc: 'Mentor\'s last name', required: true
           param :mentor_organization, String, desc: 'Mentor\'s organization', required: true
           param :mentor_email, String, desc: 'Mentor\'s email', required: true
           param :mentor_phone_number, String, desc: 'Mentor\'s phone number', required: true
