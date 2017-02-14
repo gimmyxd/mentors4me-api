@@ -52,9 +52,17 @@ class Proposal < ApplicationRecord
   def as_json(options = {})
     custom_response = {
       id: id,
+      proposer_first_name: proposer_first_name,
+      proposer_last_name: proposer_last_name,
+      proposer_email: proposer_email,
+      proposer_phone_number: proposer_phone_number,
+      mentor_first_name: mentor_first_name,
+      mentor_organization: mentor_organization,
       mentor_email: mentor_email,
+      mentor_phone_number: mentor_phone_number,
+      mentor_facebook: mentor_facebook,
+      mentor_linkedin: mentor_linkedin,
       reason: reason,
-      status: status,
       auth_token: auth_token
     }
     options.empty? ? custom_response : super

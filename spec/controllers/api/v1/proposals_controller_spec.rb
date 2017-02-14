@@ -72,16 +72,32 @@ describe Api::V1::ProposalsController do
             data: [
               {
                 id: proposal1.id,
+                proposer_first_name: proposal1.proposer_first_name,
+                proposer_last_name: proposal1.proposer_last_name,
+                proposer_email: proposal1.proposer_email,
+                proposer_phone_number: proposal1.proposer_phone_number,
+                mentor_first_name: proposal1.mentor_first_name,
+                mentor_organization: proposal1.mentor_organization,
                 mentor_email: proposal1.mentor_email,
+                mentor_phone_number: proposal1.mentor_phone_number,
+                mentor_facebook: proposal1.mentor_facebook,
+                mentor_linkedin: proposal1.mentor_linkedin,
                 reason: proposal1.reason,
-                status: proposal1.status,
                 auth_token: proposal1.reload.auth_token
               },
               {
                 id: proposal2.id,
+                proposer_first_name: proposal2.proposer_first_name,
+                proposer_last_name: proposal2.proposer_last_name,
+                proposer_email: proposal2.proposer_email,
+                proposer_phone_number: proposal2.proposer_phone_number,
+                mentor_first_name: proposal2.mentor_first_name,
+                mentor_organization: proposal2.mentor_organization,
                 mentor_email: proposal2.mentor_email,
+                mentor_phone_number: proposal2.mentor_phone_number,
+                mentor_facebook: proposal2.mentor_facebook,
+                mentor_linkedin: proposal2.mentor_linkedin,
                 reason: proposal2.reason,
-                status: proposal2.status,
                 auth_token: proposal2.reload.auth_token
               }
             ]
@@ -115,8 +131,17 @@ describe Api::V1::ProposalsController do
           data:
             {
               mentor_email: proposal_params[:mentor_email],
+              proposer_first_name: proposal_params[:proposer_first_name],
+              proposer_last_name: proposal_params[:proposer_last_name],
+              proposer_email: proposal_params[:proposer_email],
+              proposer_phone_number: proposal_params[:proposer_phone_number],
+              mentor_first_name: proposal_params[:mentor_first_name],
+              mentor_organization: proposal_params[:mentor_organization],
+              mentor_email: proposal_params[:mentor_email],
+              mentor_phone_number: proposal_params[:mentor_phone_number],
+              mentor_facebook: proposal_params[:mentor_facebook],
+              mentor_linkedin: proposal_params[:mentor_linkedin],
               reason: proposal_params[:reason],
-              status: proposal_params[:status],
               auth_token: proposal_params[:auth_token]
             }
         }
