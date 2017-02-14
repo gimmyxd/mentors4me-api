@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170128155947) do
+ActiveRecord::Schema.define(version: 20170214180355) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,15 +63,23 @@ ActiveRecord::Schema.define(version: 20170128155947) do
   end
 
   create_table "proposals", force: :cascade do |t|
-    t.string   "email"
-    t.text     "description"
     t.string   "status"
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
     t.string   "auth_token"
     t.datetime "auth_token_created_at"
+    t.string   "proposer_first_name"
+    t.string   "proposer_last_name"
+    t.string   "proposer_email"
+    t.string   "proposer_phone_number"
+    t.string   "mentor_first_name"
+    t.string   "mentor_organization"
+    t.string   "mentor_email"
+    t.string   "mentor_phone_number"
+    t.string   "mentor_facebook"
+    t.string   "mentor_linkedin"
+    t.text     "reason"
     t.index ["auth_token"], name: "index_proposals_on_auth_token", unique: true, using: :btree
-    t.index ["email"], name: "index_proposals_on_email", unique: true, using: :btree
   end
 
   create_table "role_assignments", force: :cascade do |t|

@@ -1,20 +1,36 @@
-RSpec.describe Proposal, type: :model do
+describe Proposal, type: :model do
   context 'fields' do
-    it { is_expected.to respond_to(:email) }
-    it { is_expected.to respond_to(:description) }
+    it { is_expected.to respond_to(:proposer_first_name) }
+    it { is_expected.to respond_to(:proposer_last_name) }
+    it { is_expected.to respond_to(:proposer_email) }
+    it { is_expected.to respond_to(:proposer_phone_number) }
+    it { is_expected.to respond_to(:mentor_first_name) }
+    it { is_expected.to respond_to(:mentor_organization) }
+    it { is_expected.to respond_to(:mentor_email) }
+    it { is_expected.to respond_to(:mentor_phone_number) }
+    it { is_expected.to respond_to(:mentor_facebook) }
+    it { is_expected.to respond_to(:mentor_linkedin) }
+    it { is_expected.to respond_to(:reason) }
     it { is_expected.to respond_to(:status) }
-    it { is_expected.to respond_to(:auth_token) }
-    it { is_expected.to validate_presence_of(:email) }
-    it { is_expected.to validate_presence_of(:description) }
+    it { is_expected.to validate_presence_of(:proposer_first_name) }
+    it { is_expected.to validate_presence_of(:proposer_last_name) }
+    it { is_expected.to validate_presence_of(:proposer_email) }
+    it { is_expected.to validate_presence_of(:proposer_phone_number) }
+    it { is_expected.to validate_presence_of(:mentor_first_name) }
+    it { is_expected.to validate_presence_of(:mentor_organization) }
+    it { is_expected.to validate_presence_of(:mentor_email) }
+    it { is_expected.to validate_presence_of(:mentor_phone_number) }
+    it { is_expected.to validate_presence_of(:reason) }
     it { is_expected.to validate_presence_of(:status) }
-    it { is_expected.to validate_length_of(:description).is_at_most(500) }
+    it { is_expected.to validate_length_of(:reason).is_at_most(500) }
     it { is_expected.to validate_uniqueness_of(:auth_token) }
+    it { is_expected.to validate_uniqueness_of(:mentor_email) }
   end
 
   context 'validations' do
     context 'uniqueness of proposed user' do
-      let!(:proposal1) { FactoryGirl.create(:proposal, email: 'test@example.com') }
-      let!(:proposal2) { FactoryGirl.build(:proposal, email: 'test@example.com') }
+      let!(:proposal1) { FactoryGirl.create(:proposal, mentor_email: 'test@example.com') }
+      let!(:proposal2) { FactoryGirl.build(:proposal, mentor_email: 'test@example.com') }
 
       it 'returns valid for unique user' do
         expect(proposal1).to be_valid
@@ -22,7 +38,7 @@ RSpec.describe Proposal, type: :model do
 
       it 'returns email validation error for used email' do
         expect(proposal2).not_to be_valid
-        expect(proposal2.errors.details[:email].first).to eql(error: :taken, value: 'test@example.com')
+        expect(proposal2.errors.details[:mentor_email].first).to eql(error: :taken, value: 'test@example.com')
       end
     end
   end

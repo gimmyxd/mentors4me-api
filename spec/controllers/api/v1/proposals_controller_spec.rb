@@ -32,7 +32,7 @@ describe Api::V1::ProposalsController do
         end
 
         it 'returns the information about a reporter on a hash' do
-          expect(parsed_response(response)[:data][:email]).to eql(proposal.email)
+          expect(parsed_response(response)[:data][:mentor_email]).to eql(proposal.mentor_email)
         end
       end
 
@@ -72,15 +72,15 @@ describe Api::V1::ProposalsController do
             data: [
               {
                 id: proposal1.id,
-                email: proposal1.email,
-                description: proposal1.description,
+                mentor_email: proposal1.mentor_email,
+                reason: proposal1.reason,
                 status: proposal1.status,
                 auth_token: proposal1.reload.auth_token
               },
               {
                 id: proposal2.id,
-                email: proposal2.email,
-                description: proposal2.description,
+                mentor_email: proposal2.mentor_email,
+                reason: proposal2.reason,
                 status: proposal2.status,
                 auth_token: proposal2.reload.auth_token
               }
@@ -114,8 +114,8 @@ describe Api::V1::ProposalsController do
           success: true,
           data:
             {
-              email: proposal_params[:email],
-              description: proposal_params[:description],
+              mentor_email: proposal_params[:mentor_email],
+              reason: proposal_params[:reason],
               status: proposal_params[:status],
               auth_token: proposal_params[:auth_token]
             }
@@ -162,15 +162,15 @@ describe Api::V1::ProposalsController do
           expect(response.status).to eq(200)
         end
 
-        it 'calls send_invitation_email' do
-          expect(subject).to receive(:send_invitation_email)
+        it 'calls send_invitation_mentor_email' do
+          expect(InvitationsMailer).to receive(:send_invitation)
           send_request(http_method, action, { id: proposal.id }, format)
         end
       end
 
       it 'returns false if proposal is allready accepted' do
         proposal.accept
-        expect(subject).not_to receive(:send_invitation_email)
+        expect(InvitationsMailer).not_to receive(:send_invitation)
         send_request(http_method, action, { id: proposal.id }, format)
       end
 
@@ -200,15 +200,15 @@ describe Api::V1::ProposalsController do
           expect(response.status).to eq(200)
         end
 
-        it 'calls send_rejection_email' do
-          expect(subject).to receive(:send_rejection_email)
+        xit 'calls send_rejection_mentor_email' do
+          expect(subject).to receive(:send_rejection_mentor_email)
           send_request(http_method, action, { id: proposal.id }, format)
         end
       end
 
       it 'returns false if proposal is allready accepted' do
         proposal.accept
-        expect(subject).not_to receive(:send_rejection_email)
+        expect(subject).not_to receive(:send_rejection_mentor_email)
         send_request(http_method, action, { id: proposal.id }, format)
       end
 

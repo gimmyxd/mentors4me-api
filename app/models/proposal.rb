@@ -1,9 +1,15 @@
 class Proposal < ApplicationRecord
   include TokenGenerator
 
-  validates :email, :description, :status, presence: true
-  validates :description, presence: true, length: { maximum: 500 }
-  validates :email, uniqueness: true
+  validates :proposer_first_name, :proposer_last_name, :proposer_email, :proposer_phone_number,
+            :mentor_first_name, :mentor_organization, :mentor_email, :mentor_phone_number, :status,
+            presence: true
+  validates :reason, presence: true, length: { maximum: 500 }
+  validates :proposer_first_name, :proposer_last_name, :proposer_phone_number,
+            :mentor_first_name, :mentor_organization, :mentor_email, :mentor_phone_number,
+            length: { maximum: 50 }
+  validates :proposer_email, :mentor_email, length: { maximum: 100 }
+  validates :mentor_email, uniqueness: true
   validate :validate_uniqueness_of_user
   validates :auth_token, uniqueness: true, allow_nil: true
 
@@ -42,12 +48,12 @@ class Proposal < ApplicationRecord
 
   # Public: models JSON representation of the object
   # _options - parameter that is provided by the standard method
-  # returns - hash with user data
+  # returns - hash with proposal data
   def as_json(options = {})
     custom_response = {
       id: id,
-      email: email,
-      description: description,
+      mentor_email: mentor_email,
+      reason: reason,
       status: status,
       auth_token: auth_token
     }
@@ -57,6 +63,6 @@ class Proposal < ApplicationRecord
   private
 
   def validate_uniqueness_of_user
-    errors.add(:email, 'taken') if User.find_by(email: email).present?
+    errors.add(:mentor_email, 'taken') if User.find_by(email: mentor_email).present?
   end
 end

@@ -34,7 +34,7 @@ module Api
 
       def accept
         if @proposal.accept
-          send_invitation_email(@proposal.email, @proposal.auth_token)
+          send_invitation_email(@proposal.mentor_email, @proposal.auth_token)
           render json: build_data_object(@proposal), status: 200
         else
           render json: build_error_object(@proposal), status: 422
@@ -43,7 +43,7 @@ module Api
 
       def reject
         if @proposal.reject
-          send_rejection_email(@proposal.email)
+          send_rejection_email(@proposal.mentor_email)
           render json: build_data_object(@proposal), status: 200
         else
           render json: build_error_object(@proposal), status: 422
@@ -53,7 +53,11 @@ module Api
       private
 
       def proposal_params
-        params.permit(:email, :description)
+        params.permit(
+          :proposer_first_name, :proposer_last_name, :proposer_email, :proposer_phone_number,
+          :mentor_first_name, :mentor_organization, :mentor_email, :mentor_phone_number,
+          :mentor_facebook, :mentor_linkedin, :reason
+        )
       end
 
       def load_proposal
