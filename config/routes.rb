@@ -33,6 +33,7 @@ Rails.application.routes.draw do
       end
       resources :mentors, only: [:index, :show, :create, :update, :destroy]
       resources :organizations, only: [:index, :show, :create, :update, :destroy]
+      resources :contacts, only: :create
     end
   end
 end
