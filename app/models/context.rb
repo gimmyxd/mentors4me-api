@@ -5,6 +5,7 @@ class Context < ApplicationRecord
   validates :description, presence: true, length: { maximum: 500 }
   validates :mentor_id, presence: true
   validates :organization_id, presence: true
+  validates :mentor_id, uniqueness: { scope: :organization_id }
 
   # Filer contexts by mentor_id
   # /contexts?mentor_id=1

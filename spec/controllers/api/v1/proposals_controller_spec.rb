@@ -227,11 +227,6 @@ describe Api::V1::ProposalsController do
           send_request(http_method, action, { id: proposal.id }, format)
           expect(response.status).to eq(200)
         end
-
-        xit 'calls send_rejection_mentor_email' do
-          expect(subject).to receive(:send_rejection_mentor_email)
-          send_request(http_method, action, { id: proposal.id }, format)
-        end
       end
 
       it 'returns false if proposal is allready accepted' do

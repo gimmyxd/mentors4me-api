@@ -37,7 +37,6 @@ module Api
       end
 
       def create
-        validate_context
         context = Context.new(context_params)
         context.pending
         if context.save
@@ -69,15 +68,6 @@ module Api
 
       def context_params
         params.permit(:mentor_id, :organization_id, :description)
-      end
-
-      def validate_context
-        Mentor.find_by!(user_id: params[:mentor_id])
-        Organization.find_by(user_id: params[:organization_id])
-        raise InvalidAPIRequest.new('context_already_exists', 422) if Context.where(
-          mentor_id: params[:mentor_id],
-          organization_id: params[:organization_id]
-        ).any?
       end
     end
   end
