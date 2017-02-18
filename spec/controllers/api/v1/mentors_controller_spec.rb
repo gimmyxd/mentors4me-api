@@ -178,6 +178,7 @@ describe Api::V1::MentorsController do
     context 'success' do
       before do
         user = FactoryGirl.create(:user, :mentor_user)
+        request.headers['Authorization'] = user.auth_token
         mentor_params = FactoryGirl.attributes_for(:mentor)
         mentor_params[:facebook] = 'nelu santinelu'
         mentor_params[:id] = user.id
@@ -231,6 +232,8 @@ describe Api::V1::MentorsController do
 
     context 'mentor not found' do
       before(:each) do
+        user = FactoryGirl.create(:user, :mentor_user)
+        request.headers['Authorization'] = user.auth_token
         send_request(http_method, action, { id: 'invalid_id' }, format)
       end
       it 'return 404' do
@@ -244,6 +247,8 @@ describe Api::V1::MentorsController do
 
     context 'forrbiden' do
       before do
+        user = FactoryGirl.create(:user, :mentor_user)
+        request.headers['Authorization'] = user.auth_token
         user = FactoryGirl.create(:user, :mentor_user)
         send_request(http_method, action, { id: user.id }, format)
       end
@@ -290,6 +295,8 @@ describe Api::V1::MentorsController do
 
     context 'mentor not found' do
       before(:each) do
+        user = FactoryGirl.create(:user, :mentor_user)
+        request.headers['Authorization'] = user.auth_token
         send_request(http_method, action, { id: 'invalid_id' }, format)
       end
       it 'return 404' do
@@ -303,6 +310,8 @@ describe Api::V1::MentorsController do
 
     context 'forrbiden' do
       before do
+        user = FactoryGirl.create(:user, :mentor_user)
+        request.headers['Authorization'] = user.auth_token
         user = FactoryGirl.create(:user, :mentor_user)
         send_request(http_method, action, { id: user.id }, format)
       end

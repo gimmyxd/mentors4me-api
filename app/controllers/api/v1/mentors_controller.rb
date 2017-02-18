@@ -2,7 +2,7 @@ module Api
   module V1
     class MentorsController < UsersController
       before_action :authenticate_create, only: :create
-      before_action :authenticate, only: [:update, :destroy]
+      prepend_before_action :authenticate, only: [:update, :destroy, :password]
       before_action only: [:show, :update, :destroy, :password] do
         load_user(CR::MENTOR)
       end
