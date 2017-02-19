@@ -45,6 +45,7 @@ describe Api::V1::OrganizationsController do
             asignee: @user.organization.asignee,
             phone_number: @user.organization.phone_number,
             city: @user.organization.city,
+            facebook: 'www.facebook.com/organization',
             description: @user.organization.description
           },
           {
@@ -55,6 +56,7 @@ describe Api::V1::OrganizationsController do
             asignee: user1.organization.asignee,
             phone_number: user1.organization.phone_number,
             city: user1.organization.city,
+            facebook: 'www.facebook.com/organization',
             description: user1.organization.description
           },
           {
@@ -65,6 +67,7 @@ describe Api::V1::OrganizationsController do
             asignee: user2.organization.asignee,
             phone_number: user2.organization.phone_number,
             city: user2.organization.city,
+            facebook: 'www.facebook.com/organization',
             description: user2.organization.description
           }
         ]
@@ -99,6 +102,7 @@ describe Api::V1::OrganizationsController do
             asignee: user_params[:asignee],
             phone_number: user_params[:phone_number],
             city: user_params[:city],
+            facebook: user_params[:facebook],
             description: user_params[:description]
           }
       }
@@ -140,6 +144,7 @@ describe Api::V1::OrganizationsController do
             asignee: organization_params[:asignee],
             phone_number: organization_params[:phone_number],
             city: organization_params[:city],
+            facebook: organization_params[:facebook],
             description: organization_params[:description]
           }
       }

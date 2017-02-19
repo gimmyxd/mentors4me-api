@@ -95,6 +95,7 @@ class User < ApplicationRecord
     response[:asignee] = organization.asignee
     response[:phone_number] = organization.phone_number
     response[:city] = organization.city
+    response[:facebook] = organization.facebook
     response[:description] = organization.description
     response
   end

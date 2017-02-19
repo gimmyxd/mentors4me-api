@@ -68,6 +68,7 @@ describe Api::V1::UsersController do
             asignee: user2.organization.asignee,
             phone_number: user2.organization.phone_number,
             city: user2.organization.city,
+            facebook: user2.organization.facebook,
             description: user2.organization.description
           }
         ]

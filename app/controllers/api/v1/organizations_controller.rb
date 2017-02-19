@@ -57,7 +57,7 @@ module Api
       def organization_params
         params.permit(
           :name, :asignee, :phone_number,
-          :city, :description
+          :city, :description, :facebook
         )
       end
     end

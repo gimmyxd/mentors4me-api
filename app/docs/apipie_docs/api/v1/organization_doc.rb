@@ -14,6 +14,7 @@ module ApipieDocs
           param :asignee, String, desc: 'Name of the responsable person', required: true, action_aware: true
           param :phone_number, String, desc: 'Must be a valid phone number', required: true, action_aware: true
           param :city, String, desc: 'City of the organization', required: true, action_aware: true
+          param :facebook, String, desc: 'Facebook of the organization', required: false, action_aware: true
           param :description, String, desc: 'organization description', required: true, action_aware: true
           param :password, String, desc: 'Password for login', required: true, action_aware: true
           param :password_confirmation, String, desc: 'Password confirmation', required: true, action_aware: true

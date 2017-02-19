@@ -4,6 +4,7 @@ FactoryGirl.define do
     asignee { Faker::Name.name }
     phone_number { Faker::PhoneNumber.cell_phone }
     city Faker::Address.city
+    facebook 'www.facebook.com/organization'
     description 'some description'
   end
 end
