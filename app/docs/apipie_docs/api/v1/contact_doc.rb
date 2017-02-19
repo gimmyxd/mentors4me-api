@@ -10,10 +10,10 @@ module ApipieDocs
 
         doc_for :create do
           api :POST, '/contacts', 'Send email to contact support'
-          param :first_name, String, desc: 'Sender first name', required: false
-          param :last_name, String, desc: 'Sender last name', required: false
-          param :email, String, desc: 'Sender email', required: false
-          param :message, String, desc: 'Sender message', required: false
+          param :first_name, String, desc: 'Sender first name', required: true
+          param :last_name, String, desc: 'Sender last name', required: true
+          param :email, String, desc: 'Sender email', required: true
+          param :message, String, desc: 'Sender message', required: true
         end
       end
     end
