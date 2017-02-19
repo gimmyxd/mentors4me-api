@@ -125,39 +125,50 @@ describe Api::V1::ProposalsController do
     describe 'POST #create' do
       let(:http_method) { :post }
       let(:action) { :create }
-      before do
-        proposal_params = FactoryGirl.attributes_for(:proposal)
-        send_request(http_method, action, proposal_params, format)
-        @expected_response = {
-          success: true,
-          data:
-            {
-              mentor_email: proposal_params[:mentor_email],
-              proposer_first_name: proposal_params[:proposer_first_name],
-              proposer_last_name: proposal_params[:proposer_last_name],
-              proposer_email: proposal_params[:proposer_email],
-              proposer_phone_number: proposal_params[:proposer_phone_number],
-              mentor_first_name: proposal_params[:mentor_first_name],
-              mentor_last_name: proposal_params[:mentor_last_name],
-              mentor_organization: proposal_params[:mentor_organization],
-              mentor_email: proposal_params[:mentor_email],
-              mentor_phone_number: proposal_params[:mentor_phone_number],
-              mentor_facebook: proposal_params[:mentor_facebook],
-              mentor_linkedin: proposal_params[:mentor_linkedin],
-              reason: proposal_params[:reason],
-              auth_token: proposal_params[:auth_token]
-            }
-        }
-      end
 
-      it 'returns 201' do
-        expect(response.status).to eql(201)
-      end
+      context 'success' do
+        before(:each) do
+          stub_request(:post, 'https://api.sendgrid.com/v3/mail/send')
+            .to_return(status: 200, body: '', headers: {})
+          @proposal_params = FactoryGirl.attributes_for(:proposal)
+          @expected_response = {
+            success: true,
+            data:
+              {
+                proposer_first_name: @proposal_params[:proposer_first_name],
+                proposer_last_name: @proposal_params[:proposer_last_name],
+                proposer_email: @proposal_params[:proposer_email],
+                proposer_phone_number: @proposal_params[:proposer_phone_number],
+                mentor_first_name: @proposal_params[:mentor_first_name],
+                mentor_last_name: @proposal_params[:mentor_last_name],
+                mentor_organization: @proposal_params[:mentor_organization],
+                mentor_email: @proposal_params[:mentor_email],
+                mentor_phone_number: @proposal_params[:mentor_phone_number],
+                mentor_facebook: @proposal_params[:mentor_facebook],
+                mentor_linkedin: @proposal_params[:mentor_linkedin],
+                reason: @proposal_params[:reason],
+                auth_token: @proposal_params[:auth_token]
+              }
+          }
+        end
 
-      it 'succesfully creates a proposal' do
-        json_response = parsed_response(response)
-        json_response[:data] = json_response[:data].except(:id)
-        expect(json_response).to eql(@expected_response)
+        it 'returns 201' do
+          send_request(http_method, action, @proposal_params, format)
+          expect(response.status).to eql(201)
+        end
+
+        it 'succesfully creates a proposal' do
+          send_request(http_method, action, @proposal_params, format)
+          json_response = parsed_response(response)
+          json_response[:data] = json_response[:data].except(:id)
+          expect(json_response).to eql(@expected_response)
+        end
+
+        it 'succesfully sends email to proposer' do
+          expect(ProposalsMailer).to receive(:send_confirmation)
+          @proposal_params = FactoryGirl.attributes_for(:proposal)
+          send_request(http_method, action, @proposal_params, format)
+        end
       end
 
       context 'validation error' do
@@ -172,6 +183,11 @@ describe Api::V1::ProposalsController do
         it 'returns proper errors' do
           expect(parsed_response(response)).to have_key(:errors)
         end
+
+        it 'does not send email' do
+          expect(ProposalsMailer).not_to receive(:send_confirmation)
+          send_request(http_method, action, {}, format)
+        end
       end
     end
 
@@ -179,10 +195,6 @@ describe Api::V1::ProposalsController do
       let(:http_method) { :post }
       let(:action) { :accept }
       let!(:proposal) { FactoryGirl.create(:proposal) }
-      before do
-        stub_request(:post, 'https://api.sendgrid.com/v3/mail/send')
-          .to_return(status: 200, body: '', headers: {})
-      end
 
       context 'success' do
         it 'returns 200' do

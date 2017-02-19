@@ -8,7 +8,7 @@ class MentorsMailer < ApplicationMailer
       }
     ]
 
-    perfrom(email, '6e3e2c04-c214-4757-8640-805f89e76faa', substitutions).deliver_later
+    perfrom(email, '6e3e2c04-c214-4757-8640-805f89e76faa', substitutions)
   end
 
   def send_context_confirmation(email, options)

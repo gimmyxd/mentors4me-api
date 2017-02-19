@@ -76,6 +76,11 @@ RSpec.configure do |config|
     c.syntax = [:should, :expect]
   end
 
+  config.before :each, type: :controller do
+    stub_request(:post, 'https://api.sendgrid.com/v3/mail/send')
+      .to_return(status: 200, body: '', headers: {})
+  end
+
   Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
   include UsefulHelper
 end

@@ -2,10 +2,7 @@ describe Api::V1::ContactsController, type: :controller do
   let(:format) { :json }
   let(:http_method) { :post }
   let(:action) { :create }
-  before do
-    stub_request(:post, 'https://api.sendgrid.com/v3/mail/send')
-      .to_return(status: 200, body: '', headers: {})
-  end
+
   context 'success' do
     it 'returns 200' do
       params = {

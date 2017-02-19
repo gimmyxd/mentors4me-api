@@ -26,6 +26,7 @@ module Api
         proposal = Proposal.new(proposal_params)
         proposal.pending
         if proposal.save
+          notify_proposer(proposal_params[:proposer_email], proposal_params[:proposer_first_name])
           render json: build_data_object(proposal), status: 201
         else
           render json: build_error_object(proposal), status: 422
@@ -66,6 +67,10 @@ module Api
 
       def send_invitation_email(email, auth_token)
         InvitationsMailer.send_invitation(email, auth_token).deliver_later
+      end
+
+      def notify_proposer(email, first_name)
+        ProposalsMailer.send_confirmation(email, first_name: first_name).deliver_later
       end
 
       def send_rejection_email(email)
