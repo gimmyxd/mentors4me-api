@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Message < ApplicationRecord
   belongs_to :context
   validates :message, presence: true, length: { maximum: 10_000 }

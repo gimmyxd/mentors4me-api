@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe Api::V1::UsersController do
@@ -104,6 +105,120 @@ describe Api::V1::UsersController do
       request.headers['Authorization'] = '123'
       send_request(http_method, action, {}, format)
       expect(response.status).to eq 401
+    end
+  end
+
+  describe 'PUT/PATCH activate' do
+    let(:http_method) { :put }
+    let(:action) { :activate }
+    let!(:user) { FactoryGirl.create(:user, active: false) }
+    let(:params) { { id: user.id } }
+
+    context 'not found' do
+      it 'returns 404' do
+        send_request(http_method, action, { id: 'not_found' }, format)
+        expect(response.status).to eql 404
+      end
+
+      it 'returns the correct error key' do
+        send_request(http_method, action, { id: 'not_found' }, format)
+        expect(parsed_response(response)[:errors].first).to eq('record_not_found')
+      end
+    end
+
+    context 'admin' do
+      it 'is success' do
+        send_request(http_method, action, params, format)
+        expect(response.status).to eql 200
+      end
+
+      it 'sets active to true' do
+        send_request(http_method, action, params, format)
+        expect(user.reload.active).to eql(true)
+      end
+    end
+
+    context 'as mentor' do
+      it 'does not have access' do
+        mentor = FactoryGirl.create(:user, :mentor_user)
+        request.headers['Authorization'] = mentor.auth_token
+        send_request(http_method, action, params, format)
+        expect(response.status).to eql 403
+      end
+    end
+
+    context 'as organization' do
+      it 'does not have access' do
+        organization = FactoryGirl.create(:user, :organization_user)
+        request.headers['Authorization'] = organization.auth_token
+        send_request(http_method, action, params, format)
+        expect(response.status).to eql 403
+      end
+    end
+  end
+
+  describe 'PUT/PATCH deactivate' do
+    let(:http_method) { :put }
+    let(:action) { :deactivate }
+    let!(:user) { FactoryGirl.create(:user, active: true) }
+    let(:params) { { id: user.id } }
+
+    context 'not found' do
+      it 'returns 404' do
+        send_request(http_method, action, { id: 'not_found' }, format)
+        expect(response.status).to eql 404
+      end
+
+      it 'returns the correct error key' do
+        send_request(http_method, action, { id: 'not_found' }, format)
+        expect(parsed_response(response)[:errors].first).to eq('record_not_found')
+      end
+    end
+
+    context 'admin' do
+      it 'is success' do
+        send_request(http_method, action, params, format)
+        expect(response.status).to eql 200
+      end
+
+      it 'sets active to true' do
+        send_request(http_method, action, params, format)
+        expect(user.reload.active).to eql(false)
+      end
+    end
+
+    context 'as mentor' do
+      it 'does not have access' do
+        mentor = FactoryGirl.create(:user, :mentor_user)
+        request.headers['Authorization'] = mentor.auth_token
+        send_request(http_method, action, params, format)
+        expect(response.status).to eql 403
+      end
+
+      it 'deactivates personal account' do
+        mentor = FactoryGirl.create(:user, :mentor_user)
+        request.headers['Authorization'] = mentor.auth_token
+        send_request(http_method, action, { id: mentor.id }, format)
+        expect(response.status).to eql 200
+        expect(mentor.reload.active).to eql(false)
+      end
+    end
+
+    context 'as organization' do
+      it 'does not have access' do
+        organization = FactoryGirl.create(:user, :organization_user)
+        request.headers['Authorization'] = organization.auth_token
+        send_request(http_method, action, params, format)
+        expect(response.status).to eql 403
+      end
+
+      it 'deactivates personal account' do
+        organization = FactoryGirl.create(:user, :organization_user)
+        request.headers['Authorization'] = organization.auth_token
+        send_request(http_method, action, { id: organization.id }, format)
+        expect(response.status).to eql 200
+        expect(organization.reload.active).to eql(false)
+      end
     end
   end
 

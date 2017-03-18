@@ -4,7 +4,7 @@ AllCops:
    - config.ru
  Exclude:
    - db/schema.rb
- TargetRubyVersion: 2.2
+ TargetRubyVersion: 2.3
 Documentation:
  Enabled: false
 Style/IfUnlessModifier:

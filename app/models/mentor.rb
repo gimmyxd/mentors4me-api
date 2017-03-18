@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Mentor < ApplicationRecord
   belongs_to :user
   has_many :skill_assignments

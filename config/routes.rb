@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Rails.application.routes.draw do
   # apipie documentation endpoint
   apipie
@@ -29,11 +30,26 @@ Rails.application.routes.draw do
         get :me, on: :collection
         member do
           put :password
+          put :activate
+          put :deactivate
         end
       end
-      resources :mentors, only: [:index, :show, :create, :update, :destroy]
-      resources :organizations, only: [:index, :show, :create, :update, :destroy]
-      resources :contacts, only: :create
+      resources :mentors, only: [:index, :show, :create, :update, :destroy] do
+        member do
+          put :password
+          put :activate
+          put :deactivate
+        end
+      end
+      resources :organizations, only: [:index, :show, :create, :update, :destroy] do
+        member do
+          put :password
+          put :activate
+          put :deactivate
+        end
+      end
+
+      post '/contact', to: 'contacts#create'
     end
   end
 end

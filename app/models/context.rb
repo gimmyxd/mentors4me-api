@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Context < ApplicationRecord
   belongs_to :mentor, class_name: 'User', foreign_key: 'mentor_id'
   belongs_to :organization, class_name: 'User', foreign_key: 'organization_id'

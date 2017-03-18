@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AddInvitationTokenToProposal < ActiveRecord::Migration[5.0]
   def change
     add_column :proposals, :invitation_token, :string

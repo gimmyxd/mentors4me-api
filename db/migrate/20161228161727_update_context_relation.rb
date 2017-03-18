@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class UpdateContextRelation < ActiveRecord::Migration[5.0]
   def change
     change_table :contexts do |t|

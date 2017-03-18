@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 describe Proposal, type: :model do
   context 'fields' do
     it { is_expected.to respond_to(:proposer_first_name) }

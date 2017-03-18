@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module TokenGenerator
   def generate_authentication_token!
     loop do

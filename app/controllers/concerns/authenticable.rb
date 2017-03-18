@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Authenticable
   # Public: validates the token
   # returns - boolean

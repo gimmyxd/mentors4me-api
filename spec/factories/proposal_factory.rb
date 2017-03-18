@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 FactoryGirl.define do
   factory :proposal do
     proposer_first_name { Faker::Name.name }

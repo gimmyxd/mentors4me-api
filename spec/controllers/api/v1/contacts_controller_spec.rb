@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 describe Api::V1::ContactsController, type: :controller do
   let(:format) { :json }
   let(:http_method) { :post }

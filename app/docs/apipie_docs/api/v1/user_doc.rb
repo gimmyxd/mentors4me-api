@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ApipieDocs
   module Api
     module V1
@@ -10,10 +11,12 @@ module ApipieDocs
 
         doc_for :index do
           api :GET, '/users', 'Retrevie a list of users'
-          param :filter, %w(limit offset),
+          param :filter, %w(limit offset status),
                 'The filtering query:
-                - url example for filtering by limit and offset:
-                    .../api/users?limit=10&offset=2
+                - url example for by status:
+                    .../api/users?status=active
+
+                    status = [active, inactive]
               '
           error 401, 'Unauthorized'
         end
@@ -37,6 +40,20 @@ module ApipieDocs
           error 401, 'Unauthorized'
           error 404, 'Not Found'
           error 422, 'Validation Error'
+        end
+
+        doc_for :activate do
+          api :PUT, '/users/:id/activate', 'Activates a specific user'
+          error 401, 'Unauthorized'
+          error 403, 'Forbidden'
+          error 404, 'Not Found'
+        end
+
+        doc_for :deactivate do
+          api :PUT, '/users/:id/deactivate', 'Deactivates a specific user'
+          error 401, 'Unauthorized'
+          error 403, 'Forbidden'
+          error 404, 'Not Found'
         end
       end
     end

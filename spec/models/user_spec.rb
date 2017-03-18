@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe User, type: :model do
   context 'fields' do
     it { is_expected.to respond_to(:email) }

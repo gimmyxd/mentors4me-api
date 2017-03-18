@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ApipieDocs
   module Api
     module V1
@@ -24,10 +25,12 @@ module ApipieDocs
 
         doc_for :index do
           api :GET, '/organizations', 'Retrevie a list of organizations'
-          param :filter, %w(limit offset),
+          param :filter, %w(limit offset status),
                 'The filtering query:
-                - url example for filtering by limit and offset:
-                    .../api/organizations?limit=10&offset=2
+                - url example for by status:
+                    .../api/users?status=active
+
+                    status = [active, inactive]
               '
         end
 
@@ -44,12 +47,6 @@ module ApipieDocs
         doc_for :update do
           api :PUT, '/organizations/:id', 'Update a specific organization'
           param_group :organization, as: :update
-          error 404, 'Not Found'
-        end
-
-        doc_for :destroy do
-          api :DELETE, '/organizations/:id', 'Delete a specific organization'
-          error 401, 'Unauthorized'
           error 404, 'Not Found'
         end
       end

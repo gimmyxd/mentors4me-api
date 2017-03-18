@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 describe SubstitutionParsingService do
   it 'generates an array of hashes to use as sengrid substitutions' do
     options = {

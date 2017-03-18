@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   module V1
     class MentorsController < UsersController
@@ -18,7 +19,6 @@ module Api
               .includes(:role_assignments)
               .includes(:roles)
               .mentor
-              .active
           )
         )
       end
@@ -52,10 +52,6 @@ module Api
         else
           render json: build_error_object(@user), status: 422
         end
-      end
-
-      def destroy
-        perform_destroy(@user)
       end
 
       private

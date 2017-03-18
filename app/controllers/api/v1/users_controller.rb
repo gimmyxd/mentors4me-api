@@ -1,13 +1,19 @@
+# frozen_string_literal: true
 module Api
   module V1
     class UsersController < Api::BaseController
       before_action :authenticate, except: :create
-      load_and_authorize_resource :user, parent: false, only: [:update, :password, :destroy]
-      before_action only: [:show, :update, :destroy, :password] do
+      load_and_authorize_resource :user, parent: false, only: [:update, :password, :destroy, :activate, :deactivate]
+      before_action only: [:show, :update, :destroy, :password, :activate, :deactivate] do
         load_user(CR.roles)
       end
-      before_action :validate_limit, :validate_offset, only: :index
-      has_scope :offset, :limit
+      before_action only: :index do
+        validate_limit
+        validate_offset
+        validate_status(%w(active inactive))
+      end
+
+      has_scope :offset, :limit, :status
 
       include ApipieDocs::Api::V1::UserDoc
       include Validators::FilterValidator
@@ -18,7 +24,7 @@ module Api
 
       def index
         respond_with build_data_object(
-          apply_scopes(User.includes(mentor: :skills).includes(:organization).includes(:roles).active)
+          apply_scopes(User.includes(mentor: :skills).includes(:organization).includes(:roles))
         )
       end
 
@@ -35,21 +41,31 @@ module Api
         end
       end
 
+      def deactivate
+        @user.active = false
+        @user.generate_authentication_token!
+        if @user.save
+          render json: { success: true }, status: 200
+        else
+          render json: build_error_object(@user), status: 422
+        end
+      end
+
+      def activate
+        @user.active = true
+        if @user.save
+          render json: { success: true }, status: 200
+        else
+          render json: build_error_object(@user), status: 422
+        end
+      end
+
       private
 
       def load_user(roles)
         @user = User.includes(:roles).find_by!(id: params[:id], roles: { slug: Array(roles) })
+        return if current_user.present? && current_user.admin?
         raise ActiveRecord::RecordNotFound unless @user.active?
-      end
-
-      def perform_destroy(user)
-        user.active = false
-        user.generate_authentication_token!
-        if user.save
-          render json: { success: true }, status: 201
-        else
-          render json: build_error_object(user), status: 422
-        end
       end
 
       def create_user_params

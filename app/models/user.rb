@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class User < ApplicationRecord
   include SharedMethods
   include TokenGenerator
@@ -19,11 +20,21 @@ class User < ApplicationRecord
   scope :mentor, -> { includes(:roles).where(roles: { slug: CR::MENTOR }) }
   scope :organization, -> { includes(:roles).where(roles: { slug: CR::ORGANIZATION }) }
 
+  # Filer users by status
+  # /contexts?status='status'
+  def self.status(status)
+    if status == CU::ACTIVE
+      where(active: true)
+    elsif status == CU::INACTIVE
+      where(active: false)
+    end
+  end
+
   def contexts
     if admin?
-      Context.includes(:mentor).all
+      load_contexts.all
     else
-      Context.includes(:mentor).where('mentor_id = ? OR organization_id = ?', id, id)
+      load_contexts.where('mentor_id = ? OR organization_id = ?', id, id)
     end
   end
 
@@ -68,18 +79,26 @@ class User < ApplicationRecord
     custom_response = {
       id: id,
       email: email,
-      role:  roles.pluck(:slug)
+      active: active,
+      role: roles.pluck(:slug)
     }
-
     add_mentor_data(custom_response) if mentor.present?
-    add_skills_data(custom_response) if mentor.present?
     add_organization_data(custom_response) if organization .present?
     options.empty? ? custom_response : super
   end
 
   private
 
-  def add_mentor_data(response)
+  def load_contexts
+    Context.includes(:mentor)
+  end
+
+  def add_mentor_data(custom_response)
+    add_profile_data(custom_response)
+    add_skills_data(custom_response)
+  end
+
+  def add_profile_data(response)
     response[:first_name] = mentor.first_name
     response[:last_name] = mentor.last_name
     response[:phone_number] = mentor.phone_number

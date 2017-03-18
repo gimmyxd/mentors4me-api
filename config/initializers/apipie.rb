@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Apipie.configure do |config|
   config.app_name                = 'Mentors4meApi'
   config.api_base_url            = '/api'

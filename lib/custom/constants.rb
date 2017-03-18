@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Custom
   module Constants
     class Default
@@ -19,10 +20,15 @@ module Custom
       }.freeze
     end
 
+    class User
+      ACTIVE = 'active'
+      INACTIVE = 'inactive'
+    end
+
     class Role
-      ADMIN = 'admin'.freeze
-      MENTOR = 'mentor'.freeze
-      ORGANIZATION = 'organization'.freeze
+      ADMIN = 'admin'
+      MENTOR = 'mentor'
+      ORGANIZATION = 'organization'
 
       def self.roles
         [ADMIN, MENTOR, ORGANIZATION]
@@ -30,9 +36,9 @@ module Custom
     end
 
     class Proposal
-      ACCEPTED = 'accepted'.freeze
-      REJECTED = 'rejected'.freeze
-      PENDING = 'pending'.freeze
+      ACCEPTED = 'accepted'
+      REJECTED = 'rejected'
+      PENDING = 'pending'
 
       def self.statuses
         %w(accepted pending rejected)
@@ -40,9 +46,9 @@ module Custom
     end
 
     class Context
-      ACCEPTED = 'accepted'.freeze
-      REJECTED = 'rejected'.freeze
-      PENDING = 'pending'.freeze
+      ACCEPTED = 'accepted'
+      REJECTED = 'rejected'
+      PENDING = 'pending'
 
       def self.statuses
         %w(accepted pending rejected)

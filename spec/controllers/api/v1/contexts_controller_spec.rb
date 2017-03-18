@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 describe Api::V1::ContextsController do
   let(:format) { :json }
   context 'unauthorized' do

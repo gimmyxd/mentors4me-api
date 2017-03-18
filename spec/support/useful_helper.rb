@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module UsefulHelper
   CD = Custom::Constants::Default
   CR = Custom::Constants::Role
