@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170219121111) do
+ActiveRecord::Schema.define(version: 20170319115112) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,9 +45,12 @@ ActiveRecord::Schema.define(version: 20170219121111) do
     t.text     "message"
     t.integer  "sender_id"
     t.integer  "receiver_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "uuid",                        null: false
+    t.boolean  "seen",        default: false, null: false
     t.index ["context_id"], name: "index_messages_on_context_id", using: :btree
+    t.index ["uuid"], name: "index_messages_on_uuid", unique: true, using: :btree
   end
 
   create_table "organizations", force: :cascade do |t|

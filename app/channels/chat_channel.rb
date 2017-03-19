@@ -2,12 +2,13 @@
 class ChatChannel < ApplicationCable::Channel
   def subscribed
     stream_from stream_name
-    MessageBroadcastJob.perform_later(stream_name, messages)
+    MessageBroadcastJob.perform_now(stream_name, messages)
   end
 
   def receive(data)
     data = data.fetch('message').slice('sender_id', 'receiver_id', 'message')
     data['context_id'] = context_id
+    data['uuid'] = SecureRandom.uuid
     Message.create!(data)
   end
 
