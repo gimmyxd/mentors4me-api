@@ -6,6 +6,10 @@ RSpec.describe Mentor, type: :model do
     it { is_expected.to respond_to(:phone_number) }
     it { is_expected.to respond_to(:city) }
     it { is_expected.to respond_to(:description) }
+    it { is_expected.to respond_to(:organization) }
+    it { is_expected.to respond_to(:position) }
+    it { is_expected.to respond_to(:occupation) }
+    it { is_expected.to respond_to(:availability) }
     it { is_expected.to validate_presence_of(:first_name) }
     it { is_expected.to validate_presence_of(:last_name) }
     it { is_expected.to validate_presence_of(:phone_number) }
@@ -16,6 +20,7 @@ RSpec.describe Mentor, type: :model do
     it { is_expected.to validate_length_of(:phone_number).is_at_most(50) }
     it { is_expected.to validate_length_of(:city).is_at_most(50) }
     it { is_expected.to validate_length_of(:description).is_at_most(500) }
+    it { is_expected.to validate_numericality_of(:availability) }
     it { is_expected.to belong_to(:user) }
     it { is_expected.to have_many(:skills) }
     it { is_expected.to have_many(:skill_assignments) }

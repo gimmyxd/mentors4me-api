@@ -59,6 +59,7 @@ describe Api::V1::MentorsController do
               id: user1.id,
               email: user1.email,
               role: ['mentor'],
+              active: true,
               first_name: user1.mentor.first_name,
               last_name: user1.mentor.last_name,
               phone_number: user1.mentor.phone_number,
@@ -66,12 +67,17 @@ describe Api::V1::MentorsController do
               description: user1.mentor.description,
               skills: user1.mentor.skills.pluck(:name).sort,
               facebook: nil,
-              linkedin: nil
+              linkedin: nil,
+              organization: user1.mentor.organization,
+              position: user1.mentor.position,
+              occupation: user1.mentor.occupation,
+              availability: user1.mentor.availability
             },
             {
               id: user2.id,
               email: user2.email,
               role: ['mentor'],
+              active: true,
               first_name: user2.mentor.first_name,
               last_name: user2.mentor.last_name,
               phone_number: user2.mentor.phone_number,
@@ -79,7 +85,11 @@ describe Api::V1::MentorsController do
               description: user2.mentor.description,
               skills: user2.mentor.skills.pluck(:name).sort,
               facebook: nil,
-              linkedin: nil
+              linkedin: nil,
+              organization: user2.mentor.organization,
+              position: user2.mentor.position,
+              occupation: user2.mentor.occupation,
+              availability: user2.mentor.availability
             }
           ]
         }
@@ -122,6 +132,7 @@ describe Api::V1::MentorsController do
             {
               email: user_params[:email],
               role: ['mentor'],
+              active: true,
               first_name: user_params[:first_name],
               last_name: user_params[:last_name],
               phone_number: user_params[:phone_number],
@@ -129,7 +140,11 @@ describe Api::V1::MentorsController do
               description: user_params[:description],
               facebook: nil,
               linkedin: nil,
-              skills: Skill.pluck(:name)
+              skills: Skill.pluck(:name),
+              organization: user_params[:organization],
+              position: user_params[:position],
+              occupation: user_params[:occupation],
+              availability: user_params[:availability]
             }
         }
       end
@@ -188,6 +203,7 @@ describe Api::V1::MentorsController do
               id: user.id,
               email: user.email,
               role: ['mentor'],
+              active: true,
               first_name: mentor_params[:first_name],
               last_name: mentor_params[:last_name],
               phone_number: mentor_params[:phone_number],
@@ -195,7 +211,11 @@ describe Api::V1::MentorsController do
               description: mentor_params[:description],
               skills: Array(Skill.last.name),
               facebook: 'nelu santinelu',
-              linkedin: nil
+              linkedin: nil,
+              organization: mentor_params[:organization],
+              position: mentor_params[:position],
+              occupation: mentor_params[:occupation],
+              availability: mentor_params[:availability]
             }
         }
       end

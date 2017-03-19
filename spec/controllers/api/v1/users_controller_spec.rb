@@ -1,3 +1,4 @@
+
 # frozen_string_literal: true
 require 'spec_helper'
 
@@ -46,12 +47,14 @@ describe Api::V1::UsersController do
           {
             id: @user.id,
             email: @user.email,
+            active: true,
             role: ['admin']
           },
           {
             id: user1.id,
             email: user1.email,
             role: ['mentor'],
+            active: true,
             first_name: user1.mentor.first_name,
             last_name: user1.mentor.last_name,
             phone_number: user1.mentor.phone_number,
@@ -59,12 +62,17 @@ describe Api::V1::UsersController do
             description: user1.mentor.description,
             skills: user1.mentor.skills.pluck(:name).sort,
             facebook: user1.mentor.facebook,
-            linkedin: user1.mentor.linkedin
+            linkedin: user1.mentor.linkedin,
+            organization: user1.mentor.organization,
+            position: user1.mentor.position,
+            occupation: user1.mentor.occupation,
+            availability: user1.mentor.availability
           },
           {
             id: user2.id,
             email: user2.email,
             role: ['organization'],
+            active: true,
             name: user2.organization.name,
             asignee: user2.organization.asignee,
             phone_number: user2.organization.phone_number,
@@ -91,6 +99,7 @@ describe Api::V1::UsersController do
         data: {
           id: @user.id,
           email: @user.email,
+          active: true,
           role: ['admin']
         }
       }

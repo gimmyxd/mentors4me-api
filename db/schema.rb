@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170319115112) do
+ActiveRecord::Schema.define(version: 20170319192710) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,10 @@ ActiveRecord::Schema.define(version: 20170319115112) do
     t.string   "city"
     t.text     "description"
     t.integer  "user_id"
+    t.string   "organization"
+    t.string   "position"
+    t.string   "occupation"
+    t.float    "availability"
     t.index ["user_id"], name: "index_mentors_on_user_id", using: :btree
   end
 

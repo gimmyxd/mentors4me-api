@@ -106,6 +106,10 @@ class User < ApplicationRecord
     response[:description] = mentor.description
     response[:facebook] = mentor.facebook
     response[:linkedin] = mentor.linkedin
+    response[:organization] = mentor.organization
+    response[:position] = mentor.position
+    response[:occupation] = mentor.occupation
+    response[:availability] = mentor.availability
     response
   end
 

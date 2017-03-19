@@ -63,8 +63,8 @@ module Api
 
       def mentor_params
         params.permit(
-          :first_name, :last_name, :phone_number,
-          :city, :description, :facebook, :linkedin
+          :first_name, :last_name, :phone_number, :organization, :position,
+          :city, :description, :facebook, :linkedin, :occupation, :availability
         )
       end
     end
