@@ -16,6 +16,12 @@ module ApipieDocs
           param :phone_number, String, desc: 'Must be a valid phone number', required: true, action_aware: true
           param :city, String, desc: 'City of the mentor', required: true, action_aware: true
           param :description, String, desc: 'Mentor description', required: true, action_aware: true
+          param :organization, String, desc: 'Mentor organization', required: false, action_aware: true
+          param :position, String, desc: 'Mentor position in organization', required: false, action_aware: true
+          param :occupation, String, desc: 'Mentor occupation/profession', required: false, action_aware: true
+          param :availability, Float, desc: 'Mentor available slots(hours)', required: true, action_aware: true
+          param :facebook, String, desc: 'Mentor facebook', required: false, action_aware: true
+          param :linkedin, String, desc: 'Mentor linkedin', required: false, action_aware: true
           param :skill_ids, String, desc: 'The ids of the mentor skills', required: true, action_aware: true
           param :password, String, desc: 'Password for login', required: true, action_aware: true
           param :password_confirmation, String, desc: 'Password confirmation', required: true, action_aware: true

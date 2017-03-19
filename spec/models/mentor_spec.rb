@@ -10,6 +10,8 @@ RSpec.describe Mentor, type: :model do
     it { is_expected.to respond_to(:position) }
     it { is_expected.to respond_to(:occupation) }
     it { is_expected.to respond_to(:availability) }
+    it { is_expected.to respond_to(:facebook) }
+    it { is_expected.to respond_to(:linkedin) }
     it { is_expected.to validate_presence_of(:first_name) }
     it { is_expected.to validate_presence_of(:last_name) }
     it { is_expected.to validate_presence_of(:phone_number) }
