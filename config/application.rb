@@ -19,6 +19,9 @@ Bundler.require(*Rails.groups)
 
 module Mentors4meApi
   class Application < Rails::Application
+    config.time_zone = 'Bucharest'
+    config.active_record.default_timezone = :local
+
     ActionMailer::Base.delivery_method = :smtp
     config.api_only = true
     # Use the responders controller from the responders gem

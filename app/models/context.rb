@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class Context < ApplicationRecord
+  include SharedMethods
+
   belongs_to :mentor, class_name: 'User', foreign_key: 'mentor_id'
   belongs_to :organization, class_name: 'User', foreign_key: 'organization_id'
   has_many :messages, dependent: :destroy
@@ -68,5 +70,42 @@ class Context < ApplicationRecord
       status: status
     }
     options.empty? ? custom_response : super
+  end
+
+  def self.send_notification
+    Context.find_each do |context|
+      mentor = context.mentor
+      organization = context.organization
+
+      mentor_unread_messages = context.messages.where(
+        'updated_at > ? AND seen = ? AND sender_id = ?',
+        Time.current - 1.hour, false, mentor.id
+      ).reorder(created_at: :asc).pluck(:created_at, :message).map do |pair|
+        SharedMethods.format_date(pair[0]) + ": #{pair[1]}"
+      end.join(' <br> ').html_safe
+
+      organization_unread_messages = context.messages.where(
+        'updated_at > ? AND seen = ? AND sender_id = ?',
+        Time.current - 1.hour, false, organization.id
+      ).reorder(created_at: :asc).pluck(:created_at, :message).map do |pair|
+        SharedMethods.format_date(pair[0]) + ": #{pair[1]}"
+      end.join(' <br> ').html_safe
+
+      if mentor_unread_messages.present?
+        MentorsMailer.send_unread_messages(
+          mentor.email,
+          name: organization.full_name,
+          messages: mentor_unread_messages
+        ).deliver_later
+      end
+
+      if organization_unread_messages.present?
+        OrganizationsMailer.send_unread_messages(
+          organization.email,
+          name: mentor.full_name,
+          messages: organization_unread_messages
+        ).deliver_later
+      end
+    end
   end
 end
