@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Api::V1::OrganizationsController do
   let(:format) { :json }
   before :each do
-    @user = FactoryGirl.create(:user, :organization_user)
+    @user = FactoryBot.create(:user, :organization_user)
     request.headers['Authorization'] = @user.auth_token
   end
 
@@ -30,10 +30,10 @@ describe Api::V1::OrganizationsController do
     let(:action) { :index }
 
     it 'returns the information about all users on a hash' do
-      user1 = FactoryGirl.create(:user, :organization_user)
-      user2 = FactoryGirl.create(:user, :organization_user)
-      FactoryGirl.create(:user, :mentor_user)
-      FactoryGirl.create(:user, :admin_user)
+      user1 = FactoryBot.create(:user, :organization_user)
+      user2 = FactoryBot.create(:user, :organization_user)
+      FactoryBot.create(:user, :mentor_user)
+      FactoryBot.create(:user, :admin_user)
 
       expected_response = {
         success: true,
@@ -88,8 +88,8 @@ describe Api::V1::OrganizationsController do
     let(:action) { :create }
 
     it 'successfully creates an organization user' do
-      user_params = FactoryGirl.attributes_for(:user)
-      organization_params = FactoryGirl.attributes_for(:organization)
+      user_params = FactoryBot.attributes_for(:user)
+      organization_params = FactoryBot.attributes_for(:organization)
       user_params.merge!(organization_params)
       expected_response = {
         success: true,
@@ -128,9 +128,9 @@ describe Api::V1::OrganizationsController do
     let(:action) { :update }
 
     it 'successfully updates an user' do
-      user = FactoryGirl.create(:user, :organization_user)
+      user = FactoryBot.create(:user, :organization_user)
       request.headers['Authorization'] = user.auth_token
-      organization_params = FactoryGirl.attributes_for(:organization)
+      organization_params = FactoryBot.attributes_for(:organization)
       organization_params[:id] = user.id
 
       expected_response = {
@@ -159,7 +159,7 @@ describe Api::V1::OrganizationsController do
 
     it 'renders proper errors' do
       allow_any_instance_of(User).to receive(:update).and_return(false)
-      user = FactoryGirl.create(:user, :organization_user)
+      user = FactoryBot.create(:user, :organization_user)
       request.headers['Authorization'] = user.auth_token
 
       send_request(http_method, action, { id: user.id }, format)
@@ -176,7 +176,7 @@ describe Api::V1::OrganizationsController do
     end
 
     it 'returns 403 when trying to update another' do
-      user = FactoryGirl.create(:user, :organization_user)
+      user = FactoryBot.create(:user, :organization_user)
       send_request(http_method, action, { id: user.id }, format)
       json_response = parsed_response(response)
       expect(response.status).to eq 403
@@ -187,8 +187,8 @@ describe Api::V1::OrganizationsController do
   describe 'PUT/PATCH activate' do
     let(:http_method) { :put }
     let(:action) { :activate }
-    let(:admin) { FactoryGirl.create(:user, :admin_user) }
-    let!(:user) { FactoryGirl.create(:user, :organization_user, active: false) }
+    let(:admin) { FactoryBot.create(:user, :admin_user) }
+    let!(:user) { FactoryBot.create(:user, :organization_user, active: false) }
     let(:params) { { id: user.id } }
 
     context 'not found' do
@@ -221,7 +221,7 @@ describe Api::V1::OrganizationsController do
 
     context 'as mentor' do
       it 'does not have access' do
-        mentor = FactoryGirl.create(:user, :mentor_user)
+        mentor = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = mentor.auth_token
         send_request(http_method, action, params, format)
         expect(response.status).to eql 403
@@ -230,7 +230,7 @@ describe Api::V1::OrganizationsController do
 
     context 'as organization' do
       it 'does not have access' do
-        organization = FactoryGirl.create(:user, :organization_user)
+        organization = FactoryBot.create(:user, :organization_user)
         request.headers['Authorization'] = organization.auth_token
         send_request(http_method, action, params, format)
         expect(response.status).to eql 403
@@ -241,8 +241,8 @@ describe Api::V1::OrganizationsController do
   describe 'PUT/PATCH deactivate' do
     let(:http_method) { :put }
     let(:action) { :deactivate }
-    let(:admin) { FactoryGirl.create(:user, :admin_user) }
-    let!(:user) { FactoryGirl.create(:user, :organization_user, active: true) }
+    let(:admin) { FactoryBot.create(:user, :admin_user) }
+    let!(:user) { FactoryBot.create(:user, :organization_user, active: true) }
     let(:params) { { id: user.id } }
 
     context 'not found' do
@@ -275,7 +275,7 @@ describe Api::V1::OrganizationsController do
 
     context 'as mentor' do
       it 'does not have access' do
-        mentor = FactoryGirl.create(:user, :mentor_user)
+        mentor = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = mentor.auth_token
         send_request(http_method, action, params, format)
         expect(response.status).to eql 403
@@ -284,7 +284,7 @@ describe Api::V1::OrganizationsController do
 
     context 'as organization' do
       it 'does not have access' do
-        organization = FactoryGirl.create(:user, :organization_user)
+        organization = FactoryBot.create(:user, :organization_user)
         request.headers['Authorization'] = organization.auth_token
         send_request(http_method, action, params, format)
         expect(response.status).to eql 403

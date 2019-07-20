@@ -2,7 +2,7 @@
 describe Api::V1::ProposalsController do
   let(:format) { :json }
   context 'unauthorized' do
-    let(:proposal) { FactoryGirl.create(:proposal) }
+    let(:proposal) { FactoryBot.create(:proposal) }
     before do
       send_request(:get, :show, { id: proposal.id }, format)
     end
@@ -17,14 +17,14 @@ describe Api::V1::ProposalsController do
 
   context 'authorized' do
     before do
-      user = FactoryGirl.create(:user)
+      user = FactoryBot.create(:user)
       request.headers['Authorization'] = user.auth_token
     end
     describe 'GET #show' do
       let(:http_method) { :get }
       let(:action) { :show }
       context 'success' do
-        let(:proposal) { FactoryGirl.create(:proposal) }
+        let(:proposal) { FactoryBot.create(:proposal) }
         before(:each) do
           send_request(http_method, action, { id: proposal.id }, format)
         end
@@ -56,8 +56,8 @@ describe Api::V1::ProposalsController do
       let(:action) { :index }
 
       context 'success' do
-        let!(:proposal1) { FactoryGirl.create(:proposal) }
-        let!(:proposal2) { FactoryGirl.create(:proposal) }
+        let!(:proposal1) { FactoryBot.create(:proposal) }
+        let!(:proposal2) { FactoryBot.create(:proposal) }
 
         before do
           send_request(http_method, action, {}, format)
@@ -131,7 +131,7 @@ describe Api::V1::ProposalsController do
         before(:each) do
           stub_request(:post, 'https://api.sendgrid.com/v3/mail/send')
             .to_return(status: 200, body: '', headers: {})
-          @proposal_params = FactoryGirl.attributes_for(:proposal)
+          @proposal_params = FactoryBot.attributes_for(:proposal)
           @expected_response = {
             success: true,
             data:
@@ -167,7 +167,7 @@ describe Api::V1::ProposalsController do
 
         it 'succesfully sends email to proposer' do
           expect(ProposalsMailer).to receive(:send_confirmation)
-          @proposal_params = FactoryGirl.attributes_for(:proposal)
+          @proposal_params = FactoryBot.attributes_for(:proposal)
           send_request(http_method, action, @proposal_params, format)
         end
       end
@@ -195,7 +195,7 @@ describe Api::V1::ProposalsController do
     describe 'POST #accept' do
       let(:http_method) { :post }
       let(:action) { :accept }
-      let!(:proposal) { FactoryGirl.create(:proposal) }
+      let!(:proposal) { FactoryBot.create(:proposal) }
 
       context 'success' do
         it 'returns 200' do
@@ -233,7 +233,7 @@ describe Api::V1::ProposalsController do
     describe 'POST #reject' do
       let(:http_method) { :post }
       let(:action) { :reject }
-      let!(:proposal) { FactoryGirl.create(:proposal) }
+      let!(:proposal) { FactoryBot.create(:proposal) }
 
       context 'success' do
         it 'returns 200' do

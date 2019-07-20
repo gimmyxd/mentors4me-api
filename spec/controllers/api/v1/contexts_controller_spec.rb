@@ -2,7 +2,7 @@
 describe Api::V1::ContextsController do
   let(:format) { :json }
   context 'unauthorized' do
-    let(:context) { FactoryGirl.create(:context) }
+    let(:context) { FactoryBot.create(:context) }
     before do
       send_request(:get, :show, { id: context.id }, format)
     end

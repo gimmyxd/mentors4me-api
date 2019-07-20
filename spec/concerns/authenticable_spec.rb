@@ -11,7 +11,7 @@ describe Authenticable, type: :controller do
 
   describe 'unauthorized authentication' do
     before do
-      @user = FactoryGirl.create :user
+      @user = FactoryBot.create :user
       allow(authentication).to receive(:current_user).and_return(nil)
       allow(response).to receive(:response_code).and_return(401)
       allow(response).to receive(:body).and_return(
@@ -34,7 +34,7 @@ describe Authenticable, type: :controller do
 
   describe 'authorized authentication' do
     before do
-      @user = FactoryGirl.create :user
+      @user = FactoryBot.create :user
       allow(authentication).to receive(:current_user).and_return(@user)
       allow(response).to receive(:response_code).and_return(200)
       allow(response).to receive(:body).and_return({ success: true }.to_json)
@@ -51,7 +51,7 @@ describe Authenticable, type: :controller do
 
   describe 'After 24h' do
     before do
-      @user = FactoryGirl.create :user
+      @user = FactoryBot.create :user
       @user.generate_authentication_token!
       @user[:auth_token_created_at] = Time.now - 25.hours
       @user.save!
@@ -65,7 +65,7 @@ describe Authenticable, type: :controller do
 
   describe '#current_user' do
     before do
-      @user = FactoryGirl.create :user
+      @user = FactoryBot.create :user
       request.headers['Authorization'] = @user.auth_token
       allow(authentication).to receive(:request).and_return(request)
     end

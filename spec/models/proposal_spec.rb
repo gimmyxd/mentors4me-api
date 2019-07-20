@@ -32,8 +32,8 @@ describe Proposal, type: :model do
 
   context 'validations' do
     context 'uniqueness of proposed user' do
-      let!(:proposal1) { FactoryGirl.create(:proposal, mentor_email: 'test@example.com') }
-      let!(:proposal2) { FactoryGirl.build(:proposal, mentor_email: 'test@example.com') }
+      let!(:proposal1) { FactoryBot.create(:proposal, mentor_email: 'test@example.com') }
+      let!(:proposal2) { FactoryBot.build(:proposal, mentor_email: 'test@example.com') }
 
       it 'returns valid for unique user' do
         expect(proposal1).to be_valid
@@ -47,9 +47,9 @@ describe Proposal, type: :model do
   end
 
   context 'scopes' do
-    let!(:pending_proposals) { FactoryGirl.create_list(:proposal, 3, status: CP::PENDING) }
-    let!(:accepted_proposals) { FactoryGirl.create_list(:proposal, 4, status: CP::ACCEPTED) }
-    let!(:rejected_proposals) { FactoryGirl.create_list(:proposal, 5, status: CP::REJECTED) }
+    let!(:pending_proposals) { FactoryBot.create_list(:proposal, 3, status: CP::PENDING) }
+    let!(:accepted_proposals) { FactoryBot.create_list(:proposal, 4, status: CP::ACCEPTED) }
+    let!(:rejected_proposals) { FactoryBot.create_list(:proposal, 5, status: CP::REJECTED) }
 
     it 'returns the pending proposals' do
       expect(Proposal.status(CP::PENDING).sort).to eql(pending_proposals.sort)
@@ -65,9 +65,9 @@ describe Proposal, type: :model do
   end
 
   context 'instance methods' do
-    let!(:pending_proposal) { FactoryGirl.create(:proposal, status: CP::PENDING) }
-    let!(:accepted_proposal) { FactoryGirl.create(:proposal, status: CP::ACCEPTED) }
-    let!(:rejected_proposal) { FactoryGirl.create(:proposal, status: CP::REJECTED) }
+    let!(:pending_proposal) { FactoryBot.create(:proposal, status: CP::PENDING) }
+    let!(:accepted_proposal) { FactoryBot.create(:proposal, status: CP::ACCEPTED) }
+    let!(:rejected_proposal) { FactoryBot.create(:proposal, status: CP::REJECTED) }
     context 'accept' do
       it 'returns false for already accepted proposal' do
         expect(accepted_proposal.accept).to eq(false)

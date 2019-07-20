@@ -11,17 +11,20 @@ gem 'rails-i18n'
 gem 'responders'
 gem 'figaro'
 gem 'has_scope'
-gem 'newrelic_rpm'
+gem 'newrelic_rpm', '~> 3.17'
 gem 'apipie-rails'
 gem 'sendgrid-ruby'
-gem 'factory_girl_rails'
+gem "factory_bot"
+gem 'factory_bot_rails'
 gem 'faker'
 gem 'redis'
+gem 'bootsnap'
 
 
 group :development, :test do
   gem 'rubocop', require: false
   gem 'rubocop-rails', require: false
+  gem 'rubocop-rspec', require: false
   gem 'pry-byebug'
 end
 

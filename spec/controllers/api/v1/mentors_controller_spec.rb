@@ -6,7 +6,7 @@ describe Api::V1::MentorsController do
     let(:http_method) { :get }
     let(:action) { :show }
     context 'success' do
-      let(:mentor) { FactoryGirl.create(:user, :mentor_user) }
+      let(:mentor) { FactoryBot.create(:user, :mentor_user) }
       before(:each) do
         send_request(http_method, action, { id: mentor.id }, format)
       end
@@ -38,10 +38,10 @@ describe Api::V1::MentorsController do
     let(:action) { :index }
 
     context 'success' do
-      let!(:user1) { FactoryGirl.create(:user, :mentor_user) }
-      let!(:user2) { FactoryGirl.create(:user, :mentor_user) }
-      FactoryGirl.create(:user, :organization_user)
-      FactoryGirl.create(:user, :admin_user)
+      let!(:user1) { FactoryBot.create(:user, :mentor_user) }
+      let!(:user2) { FactoryBot.create(:user, :mentor_user) }
+      FactoryBot.create(:user, :organization_user)
+      FactoryBot.create(:user, :admin_user)
 
       before do
         send_request(http_method, action, {}, format)
@@ -117,13 +117,13 @@ describe Api::V1::MentorsController do
 
     context 'authorized' do
       before do
-        proposal = FactoryGirl.create(:proposal)
+        proposal = FactoryBot.create(:proposal)
         proposal.accept
         request.headers['Authorization'] = proposal.auth_token
-        user_params = FactoryGirl.attributes_for(:user)
-        mentor_params = FactoryGirl.attributes_for(:mentor)
+        user_params = FactoryBot.attributes_for(:user)
+        mentor_params = FactoryBot.attributes_for(:mentor)
         user_params.merge!(mentor_params)
-        FactoryGirl.create(:skill)
+        FactoryBot.create(:skill)
         user_params[:skills] = Skill.pluck(:id)
         send_request(http_method, action, user_params, format)
         @expected_response = {
@@ -166,7 +166,7 @@ describe Api::V1::MentorsController do
 
       context 'validation error' do
         before do
-          proposal = FactoryGirl.create(:proposal)
+          proposal = FactoryBot.create(:proposal)
           proposal.accept
           request.headers['Authorization'] = proposal.auth_token
           allow_any_instance_of(User).to receive(:create).and_return(false)
@@ -188,9 +188,9 @@ describe Api::V1::MentorsController do
     let(:action) { :update }
     context 'success' do
       before do
-        user = FactoryGirl.create(:user, :mentor_user)
+        user = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = user.auth_token
-        mentor_params = FactoryGirl.attributes_for(:mentor)
+        mentor_params = FactoryBot.attributes_for(:mentor)
         mentor_params[:facebook] = 'nelu santinelu'
         mentor_params[:id] = user.id
         mentor_params[:skills] = Skill.last.id.to_s
@@ -233,7 +233,7 @@ describe Api::V1::MentorsController do
     context 'validation error' do
       before do
         allow_any_instance_of(User).to receive(:update).and_return(false)
-        user = FactoryGirl.create(:user, :mentor_user)
+        user = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = user.auth_token
         send_request(http_method, action, { id: user.id }, format)
       end
@@ -248,7 +248,7 @@ describe Api::V1::MentorsController do
 
     context 'mentor not found' do
       before(:each) do
-        user = FactoryGirl.create(:user, :mentor_user)
+        user = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = user.auth_token
         send_request(http_method, action, { id: 'invalid_id' }, format)
       end
@@ -263,9 +263,9 @@ describe Api::V1::MentorsController do
 
     context 'forrbiden' do
       before do
-        user = FactoryGirl.create(:user, :mentor_user)
+        user = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = user.auth_token
-        user = FactoryGirl.create(:user, :mentor_user)
+        user = FactoryBot.create(:user, :mentor_user)
         send_request(http_method, action, { id: user.id }, format)
       end
 
@@ -278,8 +278,8 @@ describe Api::V1::MentorsController do
   describe 'PUT/PATCH activate' do
     let(:http_method) { :put }
     let(:action) { :activate }
-    let(:admin) { FactoryGirl.create(:user, :admin_user) }
-    let!(:user) { FactoryGirl.create(:user, :mentor_user, active: false) }
+    let(:admin) { FactoryBot.create(:user, :admin_user) }
+    let!(:user) { FactoryBot.create(:user, :mentor_user, active: false) }
     let(:params) { { id: user.id } }
 
     context 'not found' do
@@ -312,7 +312,7 @@ describe Api::V1::MentorsController do
 
     context 'as mentor' do
       it 'does not have access' do
-        mentor = FactoryGirl.create(:user, :mentor_user)
+        mentor = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = mentor.auth_token
         send_request(http_method, action, params, format)
         expect(response.status).to eql 403
@@ -321,7 +321,7 @@ describe Api::V1::MentorsController do
 
     context 'as organization' do
       it 'does not have access' do
-        organization = FactoryGirl.create(:user, :organization_user)
+        organization = FactoryBot.create(:user, :organization_user)
         request.headers['Authorization'] = organization.auth_token
         send_request(http_method, action, params, format)
         expect(response.status).to eql 403
@@ -332,8 +332,8 @@ describe Api::V1::MentorsController do
   describe 'PUT/PATCH deactivate' do
     let(:http_method) { :put }
     let(:action) { :deactivate }
-    let(:admin) { FactoryGirl.create(:user, :admin_user) }
-    let!(:user) { FactoryGirl.create(:user, :mentor_user, active: true) }
+    let(:admin) { FactoryBot.create(:user, :admin_user) }
+    let!(:user) { FactoryBot.create(:user, :mentor_user, active: true) }
     let(:params) { { id: user.id } }
 
     context 'not found' do
@@ -366,7 +366,7 @@ describe Api::V1::MentorsController do
 
     context 'as mentor' do
       it 'does not have access' do
-        mentor = FactoryGirl.create(:user, :mentor_user)
+        mentor = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = mentor.auth_token
         send_request(http_method, action, params, format)
         expect(response.status).to eql 403
@@ -375,7 +375,7 @@ describe Api::V1::MentorsController do
 
     context 'as organization' do
       it 'does not have access' do
-        organization = FactoryGirl.create(:user, :organization_user)
+        organization = FactoryBot.create(:user, :organization_user)
         request.headers['Authorization'] = organization.auth_token
         send_request(http_method, action, params, format)
         expect(response.status).to eql 403

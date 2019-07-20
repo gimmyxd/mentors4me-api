@@ -7,7 +7,7 @@ describe Api::V1::SessionsController do
     let(:http_method) { :post }
     let(:action) { :create }
     before(:each) do
-      @user = FactoryGirl.create(:user)
+      @user = FactoryBot.create(:user)
     end
 
     context 'when the credentials are correct' do
@@ -29,7 +29,7 @@ describe Api::V1::SessionsController do
       end
 
       it 'returns error if user is inactive' do
-        user = FactoryGirl.create(:user, active: false)
+        user = FactoryBot.create(:user, active: false)
         credentials = { email: user.email, password: user.password }
         send_request(http_method, action, credentials, format)
         expect(response.status).to eql 401
@@ -59,7 +59,7 @@ describe Api::V1::SessionsController do
     let(:http_method) { :delete }
     let(:action) { :destroy }
     before(:each) do
-      @user = FactoryGirl.create :user
+      @user = FactoryBot.create :user
       @user.generate_authentication_token!
       @user.save
       sign_in @user

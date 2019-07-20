@@ -1,10 +1,10 @@
 # frozen_string_literal: true
-FactoryGirl.define do
+FactoryBot.define do
   factory :user do
     email { Faker::Internet.email }
     password { 'password' }
     password_confirmation { 'password' }
-    role_id 1
+    role_id { 1 }
 
     before(:create, &:generate_authentication_token!)
 
@@ -15,17 +15,21 @@ FactoryGirl.define do
     end
   end
 
-  trait :admin_user do |_f|
-    role_id 1
+  trait :admin_user do
+    role_id { 1 }
   end
 
-  trait :mentor_user do |_f|
-    association :mentor
-    role_id 2
+  trait :mentor_user do
+    after(:create) do |user|
+      create(:mentor, user_id: user.id)
+    end
+    role_id { 2 }
   end
 
-  trait :organization_user do |_f|
-    association :organization
-    role_id 3
+  trait :organization_user do
+    after(:create) do |user|
+      create(:organization, user_id: user.id)
+    end
+    role_id { 3 }
   end
 end

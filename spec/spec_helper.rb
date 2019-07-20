@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV['RAILS_ENV'] ||= 'test'
 if ENV['COVERAGE'] == 'on'
@@ -23,7 +22,7 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'database_cleaner'
 require 'webmock/rspec'
-require 'factory_girl'
+require 'factory_bot'
 require 'rake'
 
 Rails.application.eager_load!
@@ -62,11 +61,11 @@ RSpec.configure do |config|
   end
 
   RSpec.configure do |config|
-    config.include FactoryGirl::Syntax::Methods
+    config.include FactoryBot::Syntax::Methods
   end
 
   config.before(:all) do
-    FactoryGirl.reload
+    FactoryBot.reload
   end
 
   # warnings deprecation

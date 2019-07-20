@@ -5,7 +5,7 @@ require 'spec_helper'
 describe Api::V1::UsersController do
   let(:format) { :json }
   before :each do
-    @user = FactoryGirl.create(:user, :admin_user)
+    @user = FactoryBot.create(:user, :admin_user)
     request.headers['Authorization'] = @user.auth_token
   end
 
@@ -38,8 +38,8 @@ describe Api::V1::UsersController do
     let(:action) { :index }
 
     it 'returns the information about all users on a hash' do
-      user1 = FactoryGirl.create(:user, :mentor_user)
-      user2 = FactoryGirl.create(:user, :organization_user)
+      user1 = FactoryBot.create(:user, :mentor_user)
+      user2 = FactoryBot.create(:user, :organization_user)
 
       expected_response = {
         success: true,
@@ -120,7 +120,7 @@ describe Api::V1::UsersController do
   describe 'PUT/PATCH activate' do
     let(:http_method) { :put }
     let(:action) { :activate }
-    let!(:user) { FactoryGirl.create(:user, active: false) }
+    let!(:user) { FactoryBot.create(:user, active: false) }
     let(:params) { { id: user.id } }
 
     context 'not found' do
@@ -149,7 +149,7 @@ describe Api::V1::UsersController do
 
     context 'as mentor' do
       it 'does not have access' do
-        mentor = FactoryGirl.create(:user, :mentor_user)
+        mentor = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = mentor.auth_token
         send_request(http_method, action, params, format)
         expect(response.status).to eql 403
@@ -158,7 +158,7 @@ describe Api::V1::UsersController do
 
     context 'as organization' do
       it 'does not have access' do
-        organization = FactoryGirl.create(:user, :organization_user)
+        organization = FactoryBot.create(:user, :organization_user)
         request.headers['Authorization'] = organization.auth_token
         send_request(http_method, action, params, format)
         expect(response.status).to eql 403
@@ -169,7 +169,7 @@ describe Api::V1::UsersController do
   describe 'PUT/PATCH deactivate' do
     let(:http_method) { :put }
     let(:action) { :deactivate }
-    let!(:user) { FactoryGirl.create(:user, active: true) }
+    let!(:user) { FactoryBot.create(:user, active: true) }
     let(:params) { { id: user.id } }
 
     context 'not found' do
@@ -198,14 +198,14 @@ describe Api::V1::UsersController do
 
     context 'as mentor' do
       it 'does not have access' do
-        mentor = FactoryGirl.create(:user, :mentor_user)
+        mentor = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = mentor.auth_token
         send_request(http_method, action, params, format)
         expect(response.status).to eql 403
       end
 
       it 'deactivates personal account' do
-        mentor = FactoryGirl.create(:user, :mentor_user)
+        mentor = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = mentor.auth_token
         send_request(http_method, action, { id: mentor.id }, format)
         expect(response.status).to eql 200
@@ -215,14 +215,14 @@ describe Api::V1::UsersController do
 
     context 'as organization' do
       it 'does not have access' do
-        organization = FactoryGirl.create(:user, :organization_user)
+        organization = FactoryBot.create(:user, :organization_user)
         request.headers['Authorization'] = organization.auth_token
         send_request(http_method, action, params, format)
         expect(response.status).to eql 403
       end
 
       it 'deactivates personal account' do
-        organization = FactoryGirl.create(:user, :organization_user)
+        organization = FactoryBot.create(:user, :organization_user)
         request.headers['Authorization'] = organization.auth_token
         send_request(http_method, action, { id: organization.id }, format)
         expect(response.status).to eql 200
@@ -235,7 +235,7 @@ describe Api::V1::UsersController do
     let(:http_method) { :put }
     let(:action) { :password }
     context 'admin' do
-      let(:admin) { FactoryGirl.create(:user) }
+      let(:admin) { FactoryBot.create(:user) }
       it 'successfully updates a user\'s password' do
         params = {
           id: admin.id,
@@ -256,8 +256,8 @@ describe Api::V1::UsersController do
     end
 
     context 'mentor' do
-      let(:mentor) { FactoryGirl.create(:user, :mentor_user) }
-      let(:another_mentor) { FactoryGirl.create(:user, :mentor_user) }
+      let(:mentor) { FactoryBot.create(:user, :mentor_user) }
+      let(:another_mentor) { FactoryBot.create(:user, :mentor_user) }
       before do
         request.headers['Authorization'] = mentor.auth_token
       end
@@ -286,8 +286,8 @@ describe Api::V1::UsersController do
     end
 
     context 'organization' do
-      let(:organization) { FactoryGirl.create(:user, :organization_user) }
-      let(:another_organization) { FactoryGirl.create(:user, :organization_user) }
+      let(:organization) { FactoryBot.create(:user, :organization_user) }
+      let(:another_organization) { FactoryBot.create(:user, :organization_user) }
       before do
         request.headers['Authorization'] = organization.auth_token
       end
