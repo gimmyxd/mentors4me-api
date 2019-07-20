@@ -118,7 +118,7 @@ GEM
       byebug (~> 9.0)
       pry (~> 0.10)
     public_suffix (2.0.4)
-    puma (3.6.2)
+    puma (3.12.1)
     rack (2.0.1)
     rack-cors (0.4.0)
     rack-test (0.6.3)
@@ -223,6 +223,8 @@ GEM
 
 PLATFORMS
   ruby
+  x86_64-darwin-17
+  x86_64-darwin-18
 
 DEPENDENCIES
   apipie-rails
@@ -261,7 +263,7 @@ DEPENDENCIES
   webmock
 
 RUBY VERSION
-   ruby 2.3.1p112
+   ruby 2.6.3p62
 
 BUNDLED WITH
-   1.14.6
+   1.17.3
