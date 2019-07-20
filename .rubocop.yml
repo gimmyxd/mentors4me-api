@@ -1,14 +1,17 @@
+require: rubocop-rails
 AllCops:
  Include:
    - Rakefile
    - config.ru
  Exclude:
    - db/schema.rb
+   - 'vendor/**/*'
  TargetRubyVersion: 2.4
 Documentation:
  Enabled: false
 Style/IfUnlessModifier:
- MaxLineLength: 120
+ Metrics/LineLength:
+  Max: 120
 Metrics/MethodLength:
  Enabled: false
 Style/Documentation:
