@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class OrganizationsMailer < ApplicationMailer
   def send_confirmation(email, name)
     email.gsub!(/\+(.*?)\@/, '@')

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class MessageChannel < ApplicationCable::Channel
   def subscribed
     stream_from receiver_stream_name
@@ -43,6 +44,6 @@ class MessageChannel < ApplicationCable::Channel
   end
 
   def sender_id
-    @id ||= Message.where(context_id: context_id, receiver_id: receiver_id).last.try(:sender_id)
+    @sender_id ||= Message.where(context_id: context_id, receiver_id: receiver_id).last.try(:sender_id)
   end
 end

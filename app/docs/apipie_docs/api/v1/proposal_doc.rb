@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ApipieDocs
   module Api
     module V1
@@ -17,7 +18,7 @@ module ApipieDocs
 
         doc_for :index do
           api :GET, '/proposals', 'Retrevie a list of proposals'
-          param :filter, %w(status limit offset),
+          param :filter, %w[status limit offset],
                 'The filtering query:
                 - url example for filtering by status:
                     .../api/proposals?status=pending

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   module V1
     class SessionsController < Api::BaseController
@@ -11,6 +12,7 @@ module Api
       def create
         user = User.find_by(email: params[:email])
         raise InvalidAPIRequest.new('session.invalid', 401) unless valid_sign_in?(user)
+
         user.generate_authentication_token!
         user.save
         render json: { success: true, data: user.as_json(only: :auth_token) }, status: 200

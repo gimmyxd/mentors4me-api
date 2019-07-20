@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ApipieDocs
   module Api
     module V1
@@ -18,7 +19,7 @@ module ApipieDocs
 
         doc_for :index do
           api :GET, '/contexts', 'Retrevie a list of contexts'
-          param :filter, %w(mentor_id organization_id start_date end_date status limit offset),
+          param :filter, %w[mentor_id organization_id start_date end_date status limit offset],
                 'The filtering query:
                 - url example for filtering by organization_id:
                     .../api/contexts?organization_id=1

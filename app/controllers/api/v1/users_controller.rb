@@ -1,16 +1,17 @@
 # frozen_string_literal: true
+
 module Api
   module V1
     class UsersController < Api::BaseController
-      before_action :authenticate, except: :create
-      load_and_authorize_resource :user, parent: false, only: [:update, :password, :destroy, :activate, :deactivate]
-      before_action only: [:show, :update, :destroy, :password, :activate, :deactivate] do
+      before_action :authenticate
+      load_and_authorize_resource :user, parent: false, only: %i[update password destroy activate deactivate]
+      before_action only: %i[show update destroy password activate deactivate] do
         load_user(CR.roles)
       end
       before_action only: :index do
         validate_limit
         validate_offset
-        validate_status(%w(active inactive))
+        validate_status(%w[active inactive])
       end
 
       has_scope :offset, :limit, :status
@@ -30,6 +31,7 @@ module Api
 
       def me
         raise InvalidAPIRequest.new('unauthorized', 401) unless current_user
+
         respond_with build_data_object(current_user)
       end
 

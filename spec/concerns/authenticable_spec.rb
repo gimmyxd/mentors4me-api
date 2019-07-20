@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 class Authentication
@@ -6,8 +7,9 @@ class Authentication
 end
 
 describe Authenticable, type: :controller do
-  let(:authentication) { Authentication.new }
   subject { authentication }
+
+  let(:authentication) { Authentication.new }
 
   describe 'unauthorized authentication' do
     before do
@@ -25,7 +27,7 @@ describe Authenticable, type: :controller do
 
     it 'renders a json error message' do
       json_response = JSON.parse(response.body, symbolize_names: true)
-      expect(json_response[:success]).to eql false
+      expect(json_response[:success]).to be false
       expect(json_response[:errors]).to eql('unauthorized')
     end
 
@@ -43,7 +45,7 @@ describe Authenticable, type: :controller do
 
     it 'renders successful response' do
       json_response = JSON.parse(response.body, symbolize_names: true)
-      expect(json_response[:success]).to eql true
+      expect(json_response[:success]).to be true
     end
 
     it { is_expected.to respond_with 200 }
@@ -53,11 +55,11 @@ describe Authenticable, type: :controller do
     before do
       @user = FactoryBot.create :user
       @user.generate_authentication_token!
-      @user[:auth_token_created_at] = Time.now - 25.hours
+      @user[:auth_token_created_at] = Time.zone.now - 25.hours
       @user.save!
     end
 
-    it 'it should render unauthorized' do
+    it 'renders unauthorized' do
       response = authentication.validate_token(@user.auth_token)
       expect(response).to eq false
     end
@@ -69,6 +71,7 @@ describe Authenticable, type: :controller do
       request.headers['Authorization'] = @user.auth_token
       allow(authentication).to receive(:request).and_return(request)
     end
+
     it 'returns the user from the authorization header' do
       expect(authentication.current_user.auth_token).to eql @user.auth_token
     end

@@ -1,10 +1,11 @@
 # frozen_string_literal: true
+
 module Api
   module V1
     class ContextsController < Api::BaseController
       before_action :authenticate
       load_and_authorize_resource :context, parent: false
-      before_action :load_context, only: [:show, :update, :destroy, :accept]
+      before_action :load_context, only: %i[show accept]
       before_action :validate_limit, :validate_mentor_id,
                     :validate_organization_id, :validate_offset, only: :index
       before_action only: :index do
@@ -14,7 +15,7 @@ module Api
         validate_status(CC.statuses)
       end
       has_scope :mentor_id, :organization_id, :start_date, :end_date, :status, :offset, :limit
-      has_scope :date_interval, using: [:start_date, :end_date], type: :hash
+      has_scope :date_interval, using: %i[start_date end_date], type: :hash
 
       include ApipieDocs::Api::V1::ContextDoc
       include Validators::FilterValidator

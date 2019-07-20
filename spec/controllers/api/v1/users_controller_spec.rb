@@ -1,10 +1,11 @@
-
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Api::V1::UsersController do
   let(:format) { :json }
-  before :each do
+
+  before do
     @user = FactoryBot.create(:user, :admin_user)
     request.headers['Authorization'] = @user.auth_token
   end
@@ -21,7 +22,7 @@ describe Api::V1::UsersController do
     end
 
     it 'timeout after 24 hours' do
-      @user[:auth_token_created_at] = Time.now - 25.hours
+      @user[:auth_token_created_at] = Time.zone.now - 25.hours
       @user.save
       send_request(http_method, action, { id: @user.id }, format)
       expect(response.status).to eq 401
@@ -85,7 +86,7 @@ describe Api::V1::UsersController do
 
       send_request(http_method, action, {}, format)
       expect(parsed_response(response).sort).to eql expected_response.sort
-      expect(response.status).to eql 200
+      expect(response.status).to be 200
     end
   end
 
@@ -126,7 +127,7 @@ describe Api::V1::UsersController do
     context 'not found' do
       it 'returns 404' do
         send_request(http_method, action, { id: 'not_found' }, format)
-        expect(response.status).to eql 404
+        expect(response.status).to be 404
       end
 
       it 'returns the correct error key' do
@@ -138,12 +139,12 @@ describe Api::V1::UsersController do
     context 'admin' do
       it 'is success' do
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 200
+        expect(response.status).to be 200
       end
 
       it 'sets active to true' do
         send_request(http_method, action, params, format)
-        expect(user.reload.active).to eql(true)
+        expect(user.reload.active).to be(true)
       end
     end
 
@@ -152,7 +153,7 @@ describe Api::V1::UsersController do
         mentor = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = mentor.auth_token
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 403
+        expect(response.status).to be 403
       end
     end
 
@@ -161,7 +162,7 @@ describe Api::V1::UsersController do
         organization = FactoryBot.create(:user, :organization_user)
         request.headers['Authorization'] = organization.auth_token
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 403
+        expect(response.status).to be 403
       end
     end
   end
@@ -175,7 +176,7 @@ describe Api::V1::UsersController do
     context 'not found' do
       it 'returns 404' do
         send_request(http_method, action, { id: 'not_found' }, format)
-        expect(response.status).to eql 404
+        expect(response.status).to be 404
       end
 
       it 'returns the correct error key' do
@@ -187,12 +188,12 @@ describe Api::V1::UsersController do
     context 'admin' do
       it 'is success' do
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 200
+        expect(response.status).to be 200
       end
 
       it 'sets active to true' do
         send_request(http_method, action, params, format)
-        expect(user.reload.active).to eql(false)
+        expect(user.reload.active).to be(false)
       end
     end
 
@@ -201,15 +202,15 @@ describe Api::V1::UsersController do
         mentor = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = mentor.auth_token
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 403
+        expect(response.status).to be 403
       end
 
       it 'deactivates personal account' do
         mentor = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = mentor.auth_token
         send_request(http_method, action, { id: mentor.id }, format)
-        expect(response.status).to eql 200
-        expect(mentor.reload.active).to eql(false)
+        expect(response.status).to be 200
+        expect(mentor.reload.active).to be(false)
       end
     end
 
@@ -218,15 +219,15 @@ describe Api::V1::UsersController do
         organization = FactoryBot.create(:user, :organization_user)
         request.headers['Authorization'] = organization.auth_token
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 403
+        expect(response.status).to be 403
       end
 
       it 'deactivates personal account' do
         organization = FactoryBot.create(:user, :organization_user)
         request.headers['Authorization'] = organization.auth_token
         send_request(http_method, action, { id: organization.id }, format)
-        expect(response.status).to eql 200
-        expect(organization.reload.active).to eql(false)
+        expect(response.status).to be 200
+        expect(organization.reload.active).to be(false)
       end
     end
   end
@@ -234,8 +235,10 @@ describe Api::V1::UsersController do
   describe 'PUT/PATCH password' do
     let(:http_method) { :put }
     let(:action) { :password }
+
     context 'admin' do
       let(:admin) { FactoryBot.create(:user) }
+
       it 'successfully updates a user\'s password' do
         params = {
           id: admin.id,
@@ -244,23 +247,25 @@ describe Api::V1::UsersController do
           password_confirmation: 'newpassword'
         }
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 200
-        expect(admin.reload.valid_password?(params[:password])).to eql true
+        expect(response.status).to be 200
+        expect(admin.reload.valid_password?(params[:password])).to be true
       end
 
       it 'raises proper errors when request does not contain any password params' do
         send_request(http_method, action, { id: admin.id }, format)
         expect(parsed_response(response)).to have_key(:errors)
-        expect(response.status).to eql 422
+        expect(response.status).to be 422
       end
     end
 
     context 'mentor' do
       let(:mentor) { FactoryBot.create(:user, :mentor_user) }
       let(:another_mentor) { FactoryBot.create(:user, :mentor_user) }
+
       before do
         request.headers['Authorization'] = mentor.auth_token
       end
+
       it 'successfully updates a user\'s password' do
         params = {
           id: mentor.id,
@@ -269,28 +274,30 @@ describe Api::V1::UsersController do
           password_confirmation: 'newpassword'
         }
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 200
-        expect(mentor.reload.valid_password?(params[:password])).to eql true
+        expect(response.status).to be 200
+        expect(mentor.reload.valid_password?(params[:password])).to be true
       end
 
       it 'does not allow changing password of other user' do
         send_request(http_method, action, { id: another_mentor.id }, format)
-        expect(response.status).to eql 403
+        expect(response.status).to be 403
       end
 
       it 'raises proper errors when request does not contain any password params' do
         send_request(http_method, action, { id: mentor.id }, format)
         expect(parsed_response(response)).to have_key(:errors)
-        expect(response.status).to eql 422
+        expect(response.status).to be 422
       end
     end
 
     context 'organization' do
       let(:organization) { FactoryBot.create(:user, :organization_user) }
       let(:another_organization) { FactoryBot.create(:user, :organization_user) }
+
       before do
         request.headers['Authorization'] = organization.auth_token
       end
+
       it 'successfully updates a user\'s password' do
         params = {
           id: organization.id,
@@ -299,19 +306,19 @@ describe Api::V1::UsersController do
           password_confirmation: 'newpassword'
         }
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 200
-        expect(organization.reload.valid_password?(params[:password])).to eql true
+        expect(response.status).to be 200
+        expect(organization.reload.valid_password?(params[:password])).to be true
       end
 
       it 'does not allow changing password of other user' do
         send_request(http_method, action, { id: another_organization.id }, format)
-        expect(response.status).to eql 403
+        expect(response.status).to be 403
       end
 
       it 'raises proper errors when request does not contain any password params' do
         send_request(http_method, action, { id: organization.id }, format)
         expect(parsed_response(response)).to have_key(:errors)
-        expect(response.status).to eql 422
+        expect(response.status).to be 422
       end
     end
   end

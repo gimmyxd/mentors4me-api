@@ -1,10 +1,11 @@
 # frozen_string_literal: true
+
 module Api
   module V1
     class MentorsController < UsersController
       before_action :authenticate_create, only: :create
-      prepend_before_action :authenticate, only: [:update, :destroy, :password]
-      before_action only: [:show, :update, :destroy, :password] do
+      prepend_before_action :authenticate, only: %i[update password]
+      before_action only: %i[show update destroy password] do
         load_user(CR::MENTOR)
       end
 
@@ -54,11 +55,15 @@ module Api
         end
       end
 
+      def password
+        super
+      end
+
       private
 
       def reset_proposal_token
         proposal = Proposal.find_by(auth_token: request.headers['Authorization'])
-        proposal.update_attribute(:auth_token, nil)
+        proposal.update(auth_token: nil)
       end
 
       def mentor_params

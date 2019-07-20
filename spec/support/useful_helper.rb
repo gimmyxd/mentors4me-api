@@ -1,22 +1,23 @@
 # frozen_string_literal: true
+
 module UsefulHelper
   CD = Custom::Constants::Default
   CR = Custom::Constants::Role
   CP = Custom::Constants::Proposal
   CC = Custom::Constants::Context
 
-  def send_request(http_method, action, options = {}, format = nil, session = {})
+  def send_request(http_method, action, options = {}, format = nil, _session = {})
     options[:format] = format if format.present?
 
     case http_method
     when :post
-      post action, { params: options }
+      post action, params: options
     when :put
-      put action, { params: options }
+      put action, params: options
     when :get
-      get action, { params: options }
+      get action, params: options
     when :delete
-      delete action, { params: options }
+      delete action, params: options
     end
   end
 

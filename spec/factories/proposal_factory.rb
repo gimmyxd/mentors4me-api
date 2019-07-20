@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 FactoryBot.define do
   factory :proposal do
     proposer_first_name { Faker::Name.name }

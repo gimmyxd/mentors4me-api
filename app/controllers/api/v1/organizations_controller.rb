@@ -1,8 +1,9 @@
 # frozen_string_literal: true
+
 module Api
   module V1
     class OrganizationsController < UsersController
-      before_action only: [:show, :update, :destroy, :password] do
+      before_action only: %i[show update destroy password] do
         load_user(CR::ORGANIZATION)
       end
 

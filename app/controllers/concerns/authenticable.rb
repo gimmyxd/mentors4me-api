@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Authenticable
   # Public: validates the token
   # returns - boolean
@@ -19,9 +20,11 @@ module Authenticable
   def validate_token(token = nil)
     token ||= request.headers['Authorization']
     return unless token
+
     user = User.find_by(auth_token: token)
-    return unless user.present?
-    user[:auth_token_created_at] + 24.hours > Time.now
+    return if user.blank?
+
+    user[:auth_token_created_at] + 24.hours > Time.zone.now
   end
 
   # Public: verifies validation of token
@@ -30,6 +33,7 @@ module Authenticable
   def authenticate_create(token = nil)
     token ||= request.headers['Authorization']
     return if token.present? && Proposal.where(auth_token: token).any?
+
     raise Api::BaseController::InvalidAPIRequest.new('unauthorized', 401)
   end
 

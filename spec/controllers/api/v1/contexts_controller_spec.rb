@@ -1,13 +1,17 @@
 # frozen_string_literal: true
+
 describe Api::V1::ContextsController do
   let(:format) { :json }
+
   context 'unauthorized' do
     let(:context) { FactoryBot.create(:context) }
+
     before do
       send_request(:get, :show, { id: context.id }, format)
     end
+
     it 'returns 401' do
-      expect(response.status).to eql(401)
+      expect(response.status).to be(401)
     end
 
     it 'returns the error key' do

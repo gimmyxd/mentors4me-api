@@ -1,10 +1,11 @@
 # frozen_string_literal: true
+
 module Api
   module V1
     class SkillsController < Api::BaseController
-      before_action :authenticate, only: [:create, :update, :destroy]
+      before_action :authenticate, only: %i[create update destroy]
       load_and_authorize_resource :skill, parent: false
-      before_action :load_skill, only: [:show, :update, :destroy]
+      before_action :load_skill, only: %i[show update destroy]
 
       include ApipieDocs::Api::V1::SkillDoc
 

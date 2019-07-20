@@ -1,17 +1,21 @@
 # frozen_string_literal: true
+
 describe Api::V1::MentorsController do
   let(:format) { :json }
 
   describe 'GET #show' do
     let(:http_method) { :get }
     let(:action) { :show }
+
     context 'success' do
       let(:mentor) { FactoryBot.create(:user, :mentor_user) }
-      before(:each) do
+
+      before do
         send_request(http_method, action, { id: mentor.id }, format)
       end
+
       it 'request is successfully made' do
-        expect(response.status).to eql(200)
+        expect(response.status).to be(200)
       end
 
       it 'returns the information about a reporter on a hash' do
@@ -20,9 +24,10 @@ describe Api::V1::MentorsController do
     end
 
     context 'mentor not found' do
-      before(:each) do
+      before do
         send_request(http_method, action, { id: 'invalid_id' }, format)
       end
+
       it 'return 404' do
         expect(response.status).to eq 404
       end
@@ -40,6 +45,7 @@ describe Api::V1::MentorsController do
     context 'success' do
       let!(:user1) { FactoryBot.create(:user, :mentor_user) }
       let!(:user2) { FactoryBot.create(:user, :mentor_user) }
+
       FactoryBot.create(:user, :organization_user)
       FactoryBot.create(:user, :admin_user)
 
@@ -48,7 +54,7 @@ describe Api::V1::MentorsController do
       end
 
       it 'returns status 200' do
-        expect(response.status).to eql 200
+        expect(response.status).to be 200
       end
 
       it 'returns the information about' do
@@ -106,8 +112,9 @@ describe Api::V1::MentorsController do
       before do
         send_request(http_method, action, {}, format)
       end
+
       it 'returns 401' do
-        expect(response.status).to eql(401)
+        expect(response.status).to be(401)
       end
 
       it 'returns the error key' do
@@ -150,7 +157,7 @@ describe Api::V1::MentorsController do
       end
 
       it 'returns 201' do
-        expect(response.status).to eql(201)
+        expect(response.status).to be(201)
       end
 
       it 'succesfully creates a mentor' do
@@ -161,7 +168,7 @@ describe Api::V1::MentorsController do
 
       it 'returns 401 if token is used again' do
         send_request(http_method, action, {}, format)
-        expect(response.status).to eql(401)
+        expect(response.status).to be(401)
       end
 
       context 'validation error' do
@@ -172,8 +179,9 @@ describe Api::V1::MentorsController do
           allow_any_instance_of(User).to receive(:create).and_return(false)
           send_request(http_method, action, {}, format)
         end
+
         it 'returns 422' do
-          expect(response.status).to eql(422)
+          expect(response.status).to be(422)
         end
 
         it 'returns proper errors' do
@@ -186,6 +194,7 @@ describe Api::V1::MentorsController do
   describe 'PUT/PATCH #update' do
     let(:http_method) { :put }
     let(:action) { :update }
+
     context 'success' do
       before do
         user = FactoryBot.create(:user, :mentor_user)
@@ -221,7 +230,7 @@ describe Api::V1::MentorsController do
       end
 
       it 'returns 200' do
-        expect(response.status).to eql(200)
+        expect(response.status).to be(200)
       end
 
       it 'successfully updates a mentor' do
@@ -237,8 +246,9 @@ describe Api::V1::MentorsController do
         request.headers['Authorization'] = user.auth_token
         send_request(http_method, action, { id: user.id }, format)
       end
+
       it 'returns 422' do
-        expect(response.status).to eql(422)
+        expect(response.status).to be(422)
       end
 
       it 'returns proper errors' do
@@ -247,11 +257,12 @@ describe Api::V1::MentorsController do
     end
 
     context 'mentor not found' do
-      before(:each) do
+      before do
         user = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = user.auth_token
         send_request(http_method, action, { id: 'invalid_id' }, format)
       end
+
       it 'return 404' do
         expect(response.status).to eq 404
       end
@@ -286,7 +297,7 @@ describe Api::V1::MentorsController do
       it 'returns 404' do
         request.headers['Authorization'] = admin.auth_token
         send_request(http_method, action, { id: 'not_found' }, format)
-        expect(response.status).to eql 404
+        expect(response.status).to be 404
       end
 
       it 'returns the correct error key' do
@@ -300,13 +311,13 @@ describe Api::V1::MentorsController do
       it 'is success' do
         request.headers['Authorization'] = admin.auth_token
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 200
+        expect(response.status).to be 200
       end
 
       it 'sets active to true' do
         request.headers['Authorization'] = admin.auth_token
         send_request(http_method, action, params, format)
-        expect(user.reload.active).to eql(true)
+        expect(user.reload.active).to be(true)
       end
     end
 
@@ -315,7 +326,7 @@ describe Api::V1::MentorsController do
         mentor = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = mentor.auth_token
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 403
+        expect(response.status).to be 403
       end
     end
 
@@ -324,7 +335,7 @@ describe Api::V1::MentorsController do
         organization = FactoryBot.create(:user, :organization_user)
         request.headers['Authorization'] = organization.auth_token
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 403
+        expect(response.status).to be 403
       end
     end
   end
@@ -340,7 +351,7 @@ describe Api::V1::MentorsController do
       it 'returns 404' do
         request.headers['Authorization'] = admin.auth_token
         send_request(http_method, action, { id: 'not_found' }, format)
-        expect(response.status).to eql 404
+        expect(response.status).to be 404
       end
 
       it 'returns the correct error key' do
@@ -354,13 +365,13 @@ describe Api::V1::MentorsController do
       it 'is success' do
         request.headers['Authorization'] = admin.auth_token
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 200
+        expect(response.status).to be 200
       end
 
       it 'sets active to true' do
         request.headers['Authorization'] = admin.auth_token
         send_request(http_method, action, params, format)
-        expect(user.reload.active).to eql(false)
+        expect(user.reload.active).to be(false)
       end
     end
 
@@ -369,7 +380,7 @@ describe Api::V1::MentorsController do
         mentor = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = mentor.auth_token
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 403
+        expect(response.status).to be 403
       end
     end
 
@@ -378,7 +389,7 @@ describe Api::V1::MentorsController do
         organization = FactoryBot.create(:user, :organization_user)
         request.headers['Authorization'] = organization.auth_token
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 403
+        expect(response.status).to be 403
       end
     end
   end

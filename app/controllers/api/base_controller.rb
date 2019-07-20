@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'new_relic/agent/instrumentation/controller_instrumentation'
 require 'new_relic/agent/instrumentation/rails3/action_controller'
 require 'new_relic/agent/instrumentation/rails3/errors'
@@ -54,7 +55,7 @@ module Api
                       end
 
           if Rails.env.development?
-            puts "API Response #{code} is #{resp_hash.inspect} backtrace is #{ex.backtrace.inspect}"
+            Rails.logger "API Response #{code} is #{resp_hash.inspect} backtrace is #{ex.backtrace.inspect}"
             resp_hash['stack_trace'] = ex.backtrace
           end
 

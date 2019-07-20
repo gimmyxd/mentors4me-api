@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 describe Proposal, type: :model do
   context 'fields' do
     it { is_expected.to respond_to(:proposer_first_name) }
@@ -68,6 +69,7 @@ describe Proposal, type: :model do
     let!(:pending_proposal) { FactoryBot.create(:proposal, status: CP::PENDING) }
     let!(:accepted_proposal) { FactoryBot.create(:proposal, status: CP::ACCEPTED) }
     let!(:rejected_proposal) { FactoryBot.create(:proposal, status: CP::REJECTED) }
+
     context 'accept' do
       it 'returns false for already accepted proposal' do
         expect(accepted_proposal.accept).to eq(false)

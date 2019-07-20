@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class User < ApplicationRecord
   include SharedMethods
   include TokenGenerator
@@ -61,15 +62,15 @@ class User < ApplicationRecord
   end
 
   def role?(slug)
-    Role.list_by(:slug, roles).keys.include?(slug)
+    Role.list_by(:slug, roles).key?(slug)
   end
 
   def deactivate
-    update_attributes(active: false)
+    update(active: false)
   end
 
   def activate
-    update_attributes(active: true)
+    update(active: true)
   end
 
   # Public: models JSON representation of the object

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 describe SubstitutionParsingService do
   it 'generates an array of hashes to use as sengrid substitutions' do
     options = {
@@ -16,7 +17,7 @@ describe SubstitutionParsingService do
       { key: '-organization_adress-', value: 'test' },
       { key: '-organization_description-', value: 'password' }
     ]
-    parser = SubstitutionParsingService.new(options)
+    parser = described_class.new(options)
     expect(parser.call).to eql(expected_result)
   end
 end

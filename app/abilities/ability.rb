@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Ability
   include CanCan::Ability
 
@@ -14,7 +15,7 @@ class Ability
         ability = ability.merge(klass.new(user))
       end
     rescue NameError => e
-      puts e.message
+      Rails.logger e.message
     end
     ability
   end

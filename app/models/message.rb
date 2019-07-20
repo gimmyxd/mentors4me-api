@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Message < ApplicationRecord
   belongs_to :context
   validates :message, presence: true, length: { maximum: 10_000 }
@@ -14,7 +15,7 @@ class Message < ApplicationRecord
     custom_response = {
       conversation_id: context_id,
       message_id: uuid,
-      sender:  sender_name,
+      sender: sender_name,
       sender_id: sender_id,
       receiver: reciever_name,
       receiver_id: receiver_id,

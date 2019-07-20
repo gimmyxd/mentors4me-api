@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class Context < ApplicationRecord
   include SharedMethods
 
-  belongs_to :mentor, class_name: 'User', foreign_key: 'mentor_id'
-  belongs_to :organization, class_name: 'User', foreign_key: 'organization_id'
+  belongs_to :mentor, class_name: 'User', foreign_key: 'mentor_id' # rubocop:disable Rails/InverseOf
+  belongs_to :organization, class_name: 'User', foreign_key: 'organization_id' # rubocop:disable Rails/InverseOf
   has_many :messages, dependent: :destroy
   validates :description, presence: true, length: { maximum: 500 }
   validates :mentor_id, presence: true
@@ -63,7 +64,7 @@ class Context < ApplicationRecord
     custom_response = {
       id: id,
       description: description,
-      mentor_id:  mentor_id,
+      mentor_id: mentor_id,
       mentor_email: mentor.email,
       organization_id: organization_id,
       organization_email: organization.email,
@@ -77,19 +78,8 @@ class Context < ApplicationRecord
       mentor = context.mentor
       organization = context.organization
 
-      mentor_unread_messages = context.messages.where(
-        'updated_at > ? AND seen = ? AND sender_id = ?',
-        Time.current - 1.hour, false, mentor.id
-      ).reorder(created_at: :asc).pluck(:created_at, :message).map do |pair|
-        SharedMethods.format_date(pair[0]) + ": #{pair[1]}"
-      end.join(' <br> ').html_safe
-
-      organization_unread_messages = context.messages.where(
-        'updated_at > ? AND seen = ? AND sender_id = ?',
-        Time.current - 1.hour, false, organization.id
-      ).reorder(created_at: :asc).pluck(:created_at, :message).map do |pair|
-        SharedMethods.format_date(pair[0]) + ": #{pair[1]}"
-      end.join(' <br> ').html_safe
+      mentor_unread_messages = mentor_unread_messages(context)
+      organization_unread_messages = organization_unread_messages(context)
 
       if mentor_unread_messages.present?
         MentorsMailer.send_unread_messages(
@@ -107,5 +97,27 @@ class Context < ApplicationRecord
         ).deliver_later
       end
     end
+  end
+
+  private
+
+  def mentor_unread_messages(context)
+    mentor = context.mentor
+    @mentor_unread_messages ||= context.messages.where(
+      'updated_at > ? AND seen = ? AND sender_id = ?',
+      Time.current - 1.hour, false, mentor.id
+    ).reorder(created_at: :asc).pluck(:created_at, :message).map do |pair|
+      SharedMethods.format_date(pair[0]) + ": #{pair[1]}"
+    end.join(' <br> ').html_safe # rubocop:disable Rails/OutputSafety
+  end
+
+  def organization_unread_messages(context)
+    organization = context.organization
+    @organization_unread_messages ||= context.messages.where(
+      'updated_at > ? AND seen = ? AND sender_id = ?',
+      Time.current - 1.hour, false, organization.id
+    ).reorder(created_at: :asc).pluck(:created_at, :message).map do |pair|
+      SharedMethods.format_date(pair[0]) + ": #{pair[1]}"
+    end.join(' <br> ').html_safe # rubocop:disable Rails/OutputSafety
   end
 end

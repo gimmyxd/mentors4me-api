@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 describe Api::V1::ContactsController, type: :controller do
   let(:format) { :json }
   let(:http_method) { :post }
@@ -21,6 +22,7 @@ describe Api::V1::ContactsController, type: :controller do
     before do
       send_request(http_method, action, {}, format)
     end
+
     it 'returns status 422' do
       expect(response.status).to eq(422)
     end

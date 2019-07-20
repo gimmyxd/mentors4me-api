@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class ApplicationMailer < ActionMailer::Base
   include SendGrid
 
@@ -17,11 +18,11 @@ class ApplicationMailer < ActionMailer::Base
     begin
       response = sg.client.mail._('send').post(request_body: mail.to_json)
     rescue StandardError => e
-      puts e.message
+      Rails.logger e.message
     end
 
-    puts response.status_code
-    puts response.body
-    puts response.headers
+    Rails.logger response.status_code
+    Rails.logger response.body
+    Rails.logger response.headers
   end
 end

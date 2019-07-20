@@ -1,13 +1,17 @@
 # frozen_string_literal: true
+
 describe Api::V1::ProposalsController do
   let(:format) { :json }
+
   context 'unauthorized' do
     let(:proposal) { FactoryBot.create(:proposal) }
+
     before do
       send_request(:get, :show, { id: proposal.id }, format)
     end
+
     it 'returns 401' do
-      expect(response.status).to eql(401)
+      expect(response.status).to be(401)
     end
 
     it 'returns the error key' do
@@ -20,16 +24,20 @@ describe Api::V1::ProposalsController do
       user = FactoryBot.create(:user)
       request.headers['Authorization'] = user.auth_token
     end
+
     describe 'GET #show' do
       let(:http_method) { :get }
       let(:action) { :show }
+
       context 'success' do
         let(:proposal) { FactoryBot.create(:proposal) }
-        before(:each) do
+
+        before do
           send_request(http_method, action, { id: proposal.id }, format)
         end
+
         it 'request is successfully made' do
-          expect(response.status).to eql(200)
+          expect(response.status).to be(200)
         end
 
         it 'returns the information about a reporter on a hash' do
@@ -38,9 +46,10 @@ describe Api::V1::ProposalsController do
       end
 
       context 'proposal not found' do
-        before(:each) do
+        before do
           send_request(http_method, action, { id: 'invalid_id' }, format)
         end
+
         it 'return 404' do
           expect(response.status).to eq 404
         end
@@ -64,7 +73,7 @@ describe Api::V1::ProposalsController do
         end
 
         it 'returns status 200' do
-          expect(response.status).to eql 200
+          expect(response.status).to be 200
         end
 
         it 'returns the information about' do
@@ -113,8 +122,9 @@ describe Api::V1::ProposalsController do
         before do
           send_request(http_method, action, { status: 'invalid' }, format)
         end
+
         it 'returns 422 if status is not in list' do
-          expect(response.status).to eql(422)
+          expect(response.status).to be(422)
         end
 
         it 'returns the error key' do
@@ -128,7 +138,7 @@ describe Api::V1::ProposalsController do
       let(:action) { :create }
 
       context 'success' do
-        before(:each) do
+        before do
           stub_request(:post, 'https://api.sendgrid.com/v3/mail/send')
             .to_return(status: 200, body: '', headers: {})
           @proposal_params = FactoryBot.attributes_for(:proposal)
@@ -155,7 +165,7 @@ describe Api::V1::ProposalsController do
 
         it 'returns 201' do
           send_request(http_method, action, @proposal_params, format)
-          expect(response.status).to eql(201)
+          expect(response.status).to be(201)
         end
 
         it 'succesfully creates a proposal' do
@@ -177,8 +187,9 @@ describe Api::V1::ProposalsController do
           allow_any_instance_of(Proposal).to receive(:create).and_return(false)
           send_request(http_method, action, {}, format)
         end
+
         it 'returns 422' do
-          expect(response.status).to eql(422)
+          expect(response.status).to be(422)
         end
 
         it 'returns proper errors' do
@@ -220,8 +231,9 @@ describe Api::V1::ProposalsController do
           allow_any_instance_of(Proposal).to receive(:accept).and_return(false)
           send_request(http_method, action, { id: proposal.id }, format)
         end
+
         it 'returns 422' do
-          expect(response.status).to eql(422)
+          expect(response.status).to be(422)
         end
 
         it 'returns proper errors' do
@@ -253,8 +265,9 @@ describe Api::V1::ProposalsController do
           allow_any_instance_of(Proposal).to receive(:reject).and_return(false)
           send_request(http_method, action, { id: proposal.id }, format)
         end
+
         it 'returns 422' do
-          expect(response.status).to eql(422)
+          expect(response.status).to be(422)
         end
 
         it 'returns proper errors' do

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Custom
   module Constants
     class Default
@@ -41,7 +42,7 @@ module Custom
       PENDING = 'pending'
 
       def self.statuses
-        %w(accepted pending rejected)
+        %w[accepted pending rejected]
       end
     end
 
@@ -51,7 +52,7 @@ module Custom
       PENDING = 'pending'
 
       def self.statuses
-        %w(accepted pending rejected)
+        %w[accepted pending rejected]
       end
     end
   end

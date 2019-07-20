@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   module V1
     class ContactsController < ApplicationController
@@ -16,7 +17,7 @@ module Api
       private
 
       def required_params
-        %w(first_name last_name email message)
+        %w[first_name last_name email message]
       end
 
       def errors

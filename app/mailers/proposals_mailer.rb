@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class ProposalsMailer < ApplicationMailer
   def send_confirmation(email, options = {})
     parser = SubstitutionParsingService.new(options)

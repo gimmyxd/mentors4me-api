@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Validators
   module FilterValidator
     private
@@ -36,13 +37,15 @@ module Validators
     end
 
     def validate_status(list)
-      return unless params[:status].present?
+      return if params[:status].blank?
       return if list.include? params[:status]
+
       raise Api::BaseController::InvalidAPIRequest.new('status.not_in_list', 422)
     end
 
     def validate_date(margin)
       return unless params[margin]
+
       valid_date?(params[margin])
     rescue ArgumentError
       raise Api::BaseController::InvalidAPIRequest.new("#{margin}.invalid_fromat", 422)

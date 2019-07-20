@@ -1,9 +1,11 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Api::V1::OrganizationsController do
   let(:format) { :json }
-  before :each do
+
+  before do
     @user = FactoryBot.create(:user, :organization_user)
     request.headers['Authorization'] = @user.auth_token
   end
@@ -79,7 +81,7 @@ describe Api::V1::OrganizationsController do
 
       send_request(http_method, action, {}, format)
       expect(parsed_response(response).sort).to eql expected_response.sort
-      expect(response.status).to eql 200
+      expect(response.status).to be 200
     end
   end
 
@@ -111,7 +113,7 @@ describe Api::V1::OrganizationsController do
       json_response = parsed_response(response)
 
       json_response[:data] = json_response[:data].except(:id)
-      expect(response.status).to eql 201
+      expect(response.status).to be 201
       expect(json_response).to eql expected_response
     end
 
@@ -119,7 +121,7 @@ describe Api::V1::OrganizationsController do
       allow_any_instance_of(User).to receive(:create).and_return(false)
       send_request(http_method, action, {}, format)
       expect(parsed_response(response)).to have_key(:errors)
-      expect(response.status).to eql 422
+      expect(response.status).to be 422
     end
   end
 
@@ -153,7 +155,7 @@ describe Api::V1::OrganizationsController do
       send_request(http_method, action, organization_params, format)
 
       json_response = parsed_response(response)
-      expect(response.status).to eql 200
+      expect(response.status).to be 200
       expect(json_response).to eql expected_response
     end
 
@@ -165,7 +167,7 @@ describe Api::V1::OrganizationsController do
       send_request(http_method, action, { id: user.id }, format)
 
       expect(parsed_response(response)).to have_key(:errors)
-      expect(response.status).to eql 422
+      expect(response.status).to be 422
     end
 
     it 'returns 404 when trying to update an user that does not exist' do
@@ -195,7 +197,7 @@ describe Api::V1::OrganizationsController do
       it 'returns 404' do
         request.headers['Authorization'] = admin.auth_token
         send_request(http_method, action, { id: 'not_found' }, format)
-        expect(response.status).to eql 404
+        expect(response.status).to be 404
       end
 
       it 'returns the correct error key' do
@@ -209,13 +211,13 @@ describe Api::V1::OrganizationsController do
       it 'is success' do
         request.headers['Authorization'] = admin.auth_token
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 200
+        expect(response.status).to be 200
       end
 
       it 'sets active to true' do
         request.headers['Authorization'] = admin.auth_token
         send_request(http_method, action, params, format)
-        expect(user.reload.active).to eql(true)
+        expect(user.reload.active).to be(true)
       end
     end
 
@@ -224,7 +226,7 @@ describe Api::V1::OrganizationsController do
         mentor = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = mentor.auth_token
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 403
+        expect(response.status).to be 403
       end
     end
 
@@ -233,7 +235,7 @@ describe Api::V1::OrganizationsController do
         organization = FactoryBot.create(:user, :organization_user)
         request.headers['Authorization'] = organization.auth_token
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 403
+        expect(response.status).to be 403
       end
     end
   end
@@ -249,7 +251,7 @@ describe Api::V1::OrganizationsController do
       it 'returns 404' do
         request.headers['Authorization'] = admin.auth_token
         send_request(http_method, action, { id: 'not_found' }, format)
-        expect(response.status).to eql 404
+        expect(response.status).to be 404
       end
 
       it 'returns the correct error key' do
@@ -263,13 +265,13 @@ describe Api::V1::OrganizationsController do
       it 'is success' do
         request.headers['Authorization'] = admin.auth_token
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 200
+        expect(response.status).to be 200
       end
 
       it 'sets active to true' do
         request.headers['Authorization'] = admin.auth_token
         send_request(http_method, action, params, format)
-        expect(user.reload.active).to eql(false)
+        expect(user.reload.active).to be(false)
       end
     end
 
@@ -278,7 +280,7 @@ describe Api::V1::OrganizationsController do
         mentor = FactoryBot.create(:user, :mentor_user)
         request.headers['Authorization'] = mentor.auth_token
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 403
+        expect(response.status).to be 403
       end
     end
 
@@ -287,7 +289,7 @@ describe Api::V1::OrganizationsController do
         organization = FactoryBot.create(:user, :organization_user)
         request.headers['Authorization'] = organization.auth_token
         send_request(http_method, action, params, format)
-        expect(response.status).to eql 403
+        expect(response.status).to be 403
       end
     end
   end

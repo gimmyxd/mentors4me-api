@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class SubstitutionParsingService
   def initialize(options)
     @options = options

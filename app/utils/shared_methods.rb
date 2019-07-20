@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module SharedMethods
   CD = Custom::Constants::Default
   CR = Custom::Constants::Role
@@ -8,8 +9,9 @@ module SharedMethods
 
   def self.format_date(value, format = '%d/%m/%Y %H:%M:%S')
     raise ArgumentError if value.blank? || !(value.is_a? Time)
+
     value.strftime(format)
   rescue ArgumentError
-    return value
+    value
   end
 end

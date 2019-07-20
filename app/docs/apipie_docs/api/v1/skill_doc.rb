@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ApipieDocs
   module Api
     module V1

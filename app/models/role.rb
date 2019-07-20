@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class Role < ApplicationRecord
   include SharedMethods
 
   validates :slug, presence: true, uniqueness: true, length: { maximum: 50 }
-  has_many :role_assignments
+  has_many :role_assignments, dependent: :destroy
   has_many :users, through: :role_assignments, dependent: :restrict_with_exception
 
   def self.admin
@@ -21,7 +22,7 @@ class Role < ApplicationRecord
   def self.list_by(type = :slug, roles = nil)
     role_list = {}
 
-    if [:slug, :id].include?(type)
+    if %i[slug id].include?(type)
       roles ||= Role.all
       roles.each do |role|
         role_list[role.try(type)] = I18n.t("roles.#{role.slug}")

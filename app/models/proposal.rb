@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Proposal < ApplicationRecord
   include TokenGenerator
 
@@ -20,6 +21,7 @@ class Proposal < ApplicationRecord
 
   def accept
     return false unless pending?
+
     generate_authentication_token!
     self.status = CP::ACCEPTED
     save
@@ -27,6 +29,7 @@ class Proposal < ApplicationRecord
 
   def reject
     return false unless pending?
+
     self.status = CP::REJECTED
     save
   end

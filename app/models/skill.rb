@@ -1,6 +1,7 @@
 # frozen_string_literal: true
+
 class Skill < ApplicationRecord
-  has_many :skill_assignments
+  has_many :skill_assignments, dependent: :destroy
   has_many :mentors, through: :skill_assignments, dependent: :restrict_with_exception
 
   # Name validation

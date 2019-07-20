@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class InvitationsMailer < ApplicationMailer
   def send_invitation(email, auth_token)
     url = "#{ENV['FRONTEND_URL']}/#/mentors/register/#{auth_token}"

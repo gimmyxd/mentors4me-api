@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ApipieDocs
   module Api
     module V1
@@ -25,7 +26,7 @@ module ApipieDocs
 
         doc_for :index do
           api :GET, '/organizations', 'Retrevie a list of organizations'
-          param :filter, %w(limit offset status),
+          param :filter, %w[limit offset status],
                 'The filtering query:
                 - url example for by status:
                     .../api/users?status=active

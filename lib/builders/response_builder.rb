@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Builders
   module ResponseBuilder
     # Public: generates the json response
