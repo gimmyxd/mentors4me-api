@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   # apipie documentation endpoint
   apipie
 
+  #swagger
+  mount SwaggerUiEngine::Engine, at: '/api'
+
   # devise
   devise_for :users
 

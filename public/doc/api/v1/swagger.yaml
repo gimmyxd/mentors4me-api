@@ -1,0 +1,21 @@
+# swagger: '2.0'
+# info:
+#   description: |
+#     Mentors4me API documentation
+#   version: '1.0.0'
+#   title: Mentors4me
+#   termsOfService: http://swagger.io/terms/
+#   host: localhost:3000
+#   basePath: '/api'
+#   schemes:
+#   - http
+#   paths:
+#     /sessions:
+#       post:
+#         description: "Sign In"
+#         produces:
+#           - "application/json"
+#         responses:
+#           "200":
+#             description: "Message"
+

@@ -19,6 +19,7 @@ gem 'factory_bot_rails'
 gem 'faker'
 gem 'redis'
 gem 'bootsnap'
+gem 'swagger_ui_engine'
 
 
 group :development, :test do
