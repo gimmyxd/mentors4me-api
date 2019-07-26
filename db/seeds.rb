@@ -1,15 +1,10 @@
 # frozen_string_literal: true
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
 
-FactoryGirl.create(:user, email: 'admin@example.com')
-FactoryGirl.create_list(:skill, 10)
-FactoryGirl.create_list(:user, 10, :mentor_user)
-FactoryGirl.create_list(:user, 10, :organization_user)
-FactoryGirl.create_list(:proposal, 10)
-FactoryGirl.create_list(:context, 10)
+rake generate_user_roles
+
+FactoryBot.create(:user, email: 'admin@example.com')
+FactoryBot.create_list(:skill, 10)
+FactoryBot.create_list(:user, 10, :mentor_user)
+FactoryBot.create_list(:user, 10, :organization_user)
+FactoryBot.create_list(:proposal, 10)
+FactoryBot.create_list(:context, 10)
