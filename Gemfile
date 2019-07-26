@@ -48,7 +48,6 @@ group :test do
   gem 'simplecov-rcov',require: false
   gem 'webmock'
   gem 'rake'
-  gem 'codeclimate-test-reporter'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
