@@ -20,6 +20,7 @@ gem 'faker'
 gem 'redis'
 gem 'bootsnap'
 gem 'swagger_ui_engine'
+gem 'nokogiri'
 
 
 group :development, :test do
