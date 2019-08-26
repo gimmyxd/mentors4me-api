@@ -3,8 +3,6 @@ services:
   postgres:
     restart: always
     image: postgres
-    environment:
-      - POSTGRES_USER=postgres
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
 
