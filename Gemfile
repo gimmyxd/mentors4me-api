@@ -42,7 +42,6 @@ end
 group :test do
   gem 'rspec-rails'
   gem 'shoulda-matchers'
-  gem 'timecop'
   gem 'fuubar'
   gem 'database_cleaner'
   gem 'simplecov',require: false

@@ -31,12 +31,60 @@ class Context < ApplicationRecord
   # /contexts?end_date="2016-01-04"
   scope :end_date, ->(end_date) { where('created_at <= ?', end_date.to_date) }
 
-  def accept
+  class << self
+    def send_notification
+      Context.find_each do |context|
+        mentor = context.mentor
+        organization = context.organization
+
+        mentor_unread_messages = mentor_unread_messages(context)
+        organization_unread_messages = organization_unread_messages(context)
+
+        if mentor_unread_messages.present?
+          MentorsMailer.send_unread_messages(
+            mentor.email,
+            name: organization.full_name,
+            messages: mentor_unread_messages
+          ).deliver_later
+        end
+
+        if organization_unread_messages.present?
+          OrganizationsMailer.send_unread_messages(
+            organization.email,
+            name: mentor.full_name,
+            messages: organization_unread_messages
+          ).deliver_later
+        end
+      end
+    end
+
+    private
+
+    def unread_messages(context, resource_type)
+      resource = context.send(resource_type)
+      context.messages.where(
+        'updated_at > ? AND seen = ? AND sender_id = ?',
+        Time.current - 1.hour, false, resource.id
+      ).reorder(created_at: :asc).pluck(:created_at, :message).map do |pair|
+        "#{SharedMethods.format_date(pair[0])}: #{pair[1]}"
+      end.join(' <br> ').html_safe # rubocop:disable Rails/OutputSafety
+    end
+
+    def mentor_unread_messages(context)
+      unread_messages(context, :mentor)
+    end
+
+    def organization_unread_messages(context)
+      unread_messages(context, :organization)
+    end
+  end
+
+  def accept!
     self.status = CC::ACCEPTED
     save!
   end
 
-  def reject
+  def reject!
     self.status = CC::REJECTED
     save!
   end
@@ -71,51 +119,5 @@ class Context < ApplicationRecord
       status: status
     }
     options.empty? ? custom_response : super
-  end
-
-  def self.send_notification
-    Context.find_each do |context|
-      mentor = context.mentor
-      organization = context.organization
-
-      mentor_unread_messages = mentor_unread_messages(context)
-      organization_unread_messages = organization_unread_messages(context)
-
-      if mentor_unread_messages.present?
-        MentorsMailer.send_unread_messages(
-          mentor.email,
-          name: organization.full_name,
-          messages: mentor_unread_messages
-        ).deliver_later
-      end
-
-      if organization_unread_messages.present?
-        OrganizationsMailer.send_unread_messages(
-          organization.email,
-          name: mentor.full_name,
-          messages: organization_unread_messages
-        ).deliver_later
-      end
-    end
-  end
-
-  private
-
-  def unread_messages(context, resource_type)
-    resource = context.send(resource_type)
-    @unread_messages ||= context.messages.where(
-      'updated_at > ? AND seen = ? AND sender_id = ?',
-      Time.current - 1.hour, false, resource.id
-    ).reorder(created_at: :asc).pluck(:created_at, :message).map do |pair|
-      SharedMethods.format_date("#{pair[0]}: #{pair[1]}")
-    end.join(' <br> ').html_safe # rubocop:disable Rails/OutputSafety
-  end
-
-  def mentor_unread_messages(context)
-    resource_unread_messages(context, :mentor)
-  end
-
-  def organization_unread_messages(context)
-    resource_unread_messages(context, :organization)
   end
 end

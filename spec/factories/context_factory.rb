@@ -3,9 +3,20 @@
 FactoryBot.define do
   factory :context do
     description { Faker::Lorem.paragraph }
-    before(:create) do |c|
-      c.mentor = FactoryBot.create(:user, :mentor_user)
-      c.organization = FactoryBot.create(:user, :organization_user)
+    mentor { FactoryBot.create(:user, :mentor_user) }
+    organization { FactoryBot.create(:user, :organization_user) }
+    status { nil }
+
+    trait :accepted do
+      status { CC::ACCEPTED }
+    end
+
+    trait :pending do
+      status { CC::PENDING }
+    end
+
+    trait :rejected do
+      status { CC::REJECTED }
     end
   end
 end

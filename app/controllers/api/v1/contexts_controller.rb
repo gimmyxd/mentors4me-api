@@ -29,12 +29,12 @@ module Api
       end
 
       def accept
-        @context.accept
+        @context.accept!
         render json: build_data_object(@context), status: 200
       end
 
       def reject
-        @context.reject
+        @context.reject!
         render json: build_data_object(@context), status: 200
       end
 
