@@ -98,7 +98,10 @@ RSpec.describe Context, type: :model do
                       "#{mentor_unread_message.message}"
             )
           .and_return(mentors_mailer)
-        Context.send_notification
+
+        with_modified_env(EMAIL_FROM: 'test@email.com', SENDGRID_API_KEY: 'test') do
+          Context.send_notification
+        end
       end
 
       it do
@@ -109,7 +112,10 @@ RSpec.describe Context, type: :model do
                       "#{organization_unread_message.message}"
             )
           .and_return(organizations_mailer)
-        Context.send_notification
+
+        with_modified_env(EMAIL_FROM: 'test@email.com', SENDGRID_API_KEY: 'test') do
+          Context.send_notification
+        end
       end
     end
   end

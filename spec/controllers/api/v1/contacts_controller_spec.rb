@@ -13,7 +13,15 @@ describe Api::V1::ContactsController, type: :controller do
         email: 'test@email.com',
         message: 'test message'
       }
-      send_request(http_method, action, params, format)
+
+      with_modified_env(
+        EMAIL_FROM: 'test@email.com',
+        SENDGRID_API_KEY: 'test',
+        CONTACT_EMAIL: 'test@email.com'
+      ) do
+        send_request(http_method, action, params, format)
+      end
+
       expect(response.status).to eq(200)
     end
   end

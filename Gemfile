@@ -45,6 +45,7 @@ group :test do
   gem 'simplecov',require: false
   gem 'simplecov-rcov',require: false
   gem 'webmock'
+  gem 'climate_control'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

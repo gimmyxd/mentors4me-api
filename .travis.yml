@@ -11,7 +11,6 @@ matrix:
         - postgresql
       before_script:
         - cp config/database.yml.travis config/database.yml
-        - export EMAIL_FROM='test' && export CONTACT_EMAIL='test' && export SENDGRID_API_KEY='test'
         - bundle exec rake db:create && bundle exec rake db:migrate
         - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         - chmod +x ./cc-test-reporter

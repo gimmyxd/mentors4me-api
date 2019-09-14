@@ -109,7 +109,9 @@ describe Api::V1::OrganizationsController do
           }
       }
 
-      send_request(http_method, action, user_params, format)
+      with_modified_env(EMAIL_FROM: 'test@email.com', SENDGRID_API_KEY: 'test') do
+        send_request(http_method, action, user_params, format)
+      end
       json_response = parsed_response(response)
       json_response[:data] = json_response[:data].except(:id)
       expect(response.status).to be 201

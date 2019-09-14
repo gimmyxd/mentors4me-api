@@ -132,7 +132,11 @@ describe Api::V1::MentorsController do
         user_params.merge!(mentor_params)
         FactoryBot.create(:skill)
         user_params[:skills] = Skill.pluck(:id)
-        send_request(http_method, action, user_params, format)
+
+        with_modified_env(EMAIL_FROM: 'test@email.com', SENDGRID_API_KEY: 'test') do
+          send_request(http_method, action, user_params, format)
+        end
+
         @expected_response = {
           success: true,
           data:

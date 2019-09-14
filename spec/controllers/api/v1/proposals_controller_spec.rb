@@ -164,12 +164,18 @@ describe Api::V1::ProposalsController do
         end
 
         it 'returns 201' do
-          send_request(http_method, action, @proposal_params, format)
+          with_modified_env(EMAIL_FROM: 'test@email.com', SENDGRID_API_KEY: 'test') do
+            send_request(http_method, action, @proposal_params, format)
+          end
+
           expect(response.status).to be(201)
         end
 
         it 'succesfully creates a proposal' do
-          send_request(http_method, action, @proposal_params, format)
+          with_modified_env(EMAIL_FROM: 'test@email.com', SENDGRID_API_KEY: 'test') do
+            send_request(http_method, action, @proposal_params, format)
+          end
+
           json_response = parsed_response(response)
           json_response[:data] = json_response[:data].except(:id)
           expect(json_response).to eql(@expected_response)
@@ -210,7 +216,10 @@ describe Api::V1::ProposalsController do
 
       context 'success' do
         it 'returns 200' do
-          send_request(http_method, action, { id: proposal.id }, format)
+          with_modified_env(EMAIL_FROM: 'test@email.com', SENDGRID_API_KEY: 'test') do
+            send_request(http_method, action, { id: proposal.id }, format)
+          end
+
           expect(response.status).to eq(200)
         end
 

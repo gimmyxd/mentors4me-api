@@ -68,6 +68,7 @@ GEM
       uniform_notifier (~> 1.11)
     byebug (11.0.1)
     cancancan (3.0.1)
+    climate_control (0.2.0)
     coderay (1.1.2)
     concurrent-ruby (1.1.5)
     crack (0.4.3)
@@ -288,6 +289,7 @@ DEPENDENCIES
   bootsnap
   bullet
   cancancan
+  climate_control
   database_cleaner
   devise
   factory_bot

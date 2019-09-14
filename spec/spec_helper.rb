@@ -16,7 +16,7 @@ if ENV['COVERAGE'] == 'on'
     add_group 'Models', 'app/models'
     add_group 'Controllers', 'app/controllers'
     add_group 'Abilities', 'app/abilities'
-    minimum_coverage 85
+    minimum_coverage 75
   end
 end
 
@@ -85,4 +85,8 @@ RSpec.configure do |config|
 
   Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
   include UsefulHelper
+
+  def with_modified_env(options, &block)
+    ClimateControl.modify(options, &block)
+  end
 end

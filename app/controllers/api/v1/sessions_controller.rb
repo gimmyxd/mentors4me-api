@@ -3,7 +3,6 @@
 module Api
   module V1
     class SessionsController < Api::BaseController
-
       def create
         user = User.find_by(email: params[:email])
         raise InvalidAPIRequest.new('session.invalid', 401) unless valid_sign_in?(user)
