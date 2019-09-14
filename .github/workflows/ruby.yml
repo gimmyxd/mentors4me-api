@@ -1,4 +1,4 @@
-name: Ruby
+name: Main Workflow
 
 on: [push]
 

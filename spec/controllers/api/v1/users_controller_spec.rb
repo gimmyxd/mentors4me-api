@@ -85,7 +85,7 @@ describe Api::V1::UsersController do
       }
 
       send_request(http_method, action, {}, format)
-      expect(parsed_response(response).sort).to eql expected_response.sort
+      expect(parsed_response(response)).to match(expected_response)
       expect(response.status).to be 200
     end
   end
