@@ -114,7 +114,7 @@ describe Api::V1::ProposalsController do
               }
             ]
           }
-          expect(parsed_response(response).sort).to eql expected_response.sort
+          expect(parsed_response(response)).to match(expected_response)
         end
       end
 

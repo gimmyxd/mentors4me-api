@@ -16,7 +16,7 @@ if ENV['COVERAGE'] == 'on'
     add_group 'Models', 'app/models'
     add_group 'Controllers', 'app/controllers'
     add_group 'Abilities', 'app/abilities'
-    # minimum_coverage 98
+    minimum_coverage 85
   end
 end
 
@@ -38,6 +38,8 @@ Shoulda::Matchers.configure do |config|
 end
 
 ActiveRecord::Migration.maintain_test_schema!
+Rails.application.load_tasks
+Rake::Task['generate_user_roles'].invoke
 
 RSpec.configure do |config|
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -51,7 +53,7 @@ RSpec.configure do |config|
   # database_cleaner
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with :truncation, except: %w[roles]
+    DatabaseCleaner.clean_with :truncation, { except: %w[role roles] }
   end
 
   config.around do |example|
