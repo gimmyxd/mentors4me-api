@@ -10,8 +10,8 @@ matrix:
         - postgresql
       before_script:
         - cp config/database.yml.travis config/database.yml
-        - psql -c 'create database mentors4me_api_test;' -U postgres
-        - "bundle exec rake db:migrate"
+        - bundle exec rake db:create && bundle exec rake db:migrate
+        - RAILS_ENV=test bundle exec rake generate_user_roles
         - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         - chmod +x ./cc-test-reporter
         - ./cc-test-reporter before-build

@@ -29,9 +29,6 @@ require 'rake'
 
 Rails.application.eager_load!
 
-Rails.application.load_tasks
-Rake::Task['generate_user_roles'].invoke
-
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
     # Choose a test framework:
