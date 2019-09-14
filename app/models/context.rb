@@ -101,13 +101,13 @@ class Context < ApplicationRecord
 
   private
 
-  def resource_unread_messages(context, resource_type)
+  def unread_messages(context, resource_type)
     resource = context.send(resource_type)
     @unread_messages ||= context.messages.where(
       'updated_at > ? AND seen = ? AND sender_id = ?',
       Time.current - 1.hour, false, resource.id
     ).reorder(created_at: :asc).pluck(:created_at, :message).map do |pair|
-      SharedMethods.format_date(pair[0]) + ": #{pair[1]}"
+      SharedMethods.format_date("#{pair[0]}: #{pair[1]}")
     end.join(' <br> ').html_safe # rubocop:disable Rails/OutputSafety
   end
 

@@ -7,18 +7,18 @@ engines:
     enabled: true
     config:
       languages:
-      - ruby
+        - ruby
   fixme:
     enabled: true
   rubocop:
     enabled: false
 ratings:
   paths:
-  - Gemfile.lock
-  - "**.erb"
-  - "**.rb"
+    - Gemfile.lock
+    - "**.erb"
+    - "**.rb"
 exclude_paths:
-- config/
-- db/
-- spec/
-- app/docs/
+  - config/
+  - db/
+  - spec/
+  - app/docs/
