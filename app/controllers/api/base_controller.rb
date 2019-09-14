@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require 'new_relic/agent/instrumentation/controller_instrumentation'
-require 'new_relic/agent/instrumentation/rails3/action_controller'
-require 'new_relic/agent/instrumentation/rails3/errors'
-
 module Api
   class BaseController < ActionController::API
     # minimum required controller functionality for rendering, proper mime-type
@@ -17,9 +13,6 @@ module Api
     MODULES = [
       ActionController::MimeResponds,
       CanCan::ControllerAdditions,
-      NewRelic::Agent::Instrumentation::ControllerInstrumentation,
-      NewRelic::Agent::Instrumentation::Rails3::ActionController,
-      NewRelic::Agent::Instrumentation::Rails3::Errors,
       HasScope
     ].each { |m| include m }
 
@@ -55,11 +48,11 @@ module Api
                       end
 
           if Rails.env.development?
-            Rails.logger "API Response #{code} is #{resp_hash.inspect} backtrace is #{ex.backtrace.inspect}"
+            Rails.logger.error "API Response #{code} is #{resp_hash.inspect} backtrace is #{ex.backtrace.inspect}"
             resp_hash['stack_trace'] = ex.backtrace
           end
 
-          render plain: resp_hash.to_json, status: code
+          render json: resp_hash.to_json, status: code
         end
       end
     end

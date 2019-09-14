@@ -61,7 +61,7 @@ module Api
           context_description: context.description,
           organization_adress: organization.city,
           organization_description: organization.description
-        ).deliver_later
+        )
       end
 
       def load_context

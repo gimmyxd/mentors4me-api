@@ -13,7 +13,7 @@ module Validators
     def valid_date?(date, format = '%Y-%m-%d')
       date = Date.parse(date).to_s
       DateTime.strptime(date, format)
-      raise ArgumentError unless /^\d{4}-\d{2}-\d{2}$/ =~ date
+      raise ArgumentError unless /^\d{4}-\d{2}-\d{2}$/.match?(date)
     end
 
     def validate_mentor_id

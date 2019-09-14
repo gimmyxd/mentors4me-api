@@ -111,7 +111,6 @@ describe Api::V1::OrganizationsController do
 
       send_request(http_method, action, user_params, format)
       json_response = parsed_response(response)
-
       json_response[:data] = json_response[:data].except(:id)
       expect(response.status).to be 201
       expect(json_response).to eql expected_response

@@ -82,8 +82,8 @@ RSpec.describe Context, type: :model do
       let(:organizations_mailer) { double(OrganizationsMailer) }
 
       before do
-        allow(mentors_mailer).to receive(:deliver_later)
-        allow(organizations_mailer).to receive(:deliver_later)
+        stub_request(:post, "https://api.sendgrid.com/v3/mail/send")
+          .to_return(status: 200, body: "", headers: {})
         travel_to(Time.current - 2.hours)
         create(:message, context: context, sender_id: mentor.id, receiver_id: organization.id, seen: false)
         create(:message, context: context, sender_id: mentor.id, receiver_id: organization.id, seen: true)

@@ -9,7 +9,7 @@ module Api
         if errors.any?
           render json: { success: false, errors: errors }, status: 422
         else
-          ContactMailer.send_notification(ENV['CONTACT_EMAIL'], contact_params.to_h).deliver_later
+          ContactMailer.send_notification(ENV['CONTACT_EMAIL'], contact_params.to_h)
           render json: { success: true }, status: 200
         end
       end

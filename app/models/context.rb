@@ -45,7 +45,7 @@ class Context < ApplicationRecord
             mentor.email,
             name: organization.full_name,
             messages: mentor_unread_messages
-          ).deliver_later
+          )
         end
 
         if organization_unread_messages.present?
@@ -53,7 +53,7 @@ class Context < ApplicationRecord
             organization.email,
             name: mentor.full_name,
             messages: organization_unread_messages
-          ).deliver_later
+          )
         end
       end
     end

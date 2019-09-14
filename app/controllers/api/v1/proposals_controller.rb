@@ -68,11 +68,11 @@ module Api
       end
 
       def send_invitation_email(email, auth_token)
-        InvitationsMailer.send_invitation(email, auth_token).deliver_later
+        InvitationsMailer.send_invitation(email, auth_token)
       end
 
       def notify_proposer(email, first_name)
-        ProposalsMailer.send_confirmation(email, first_name: first_name).deliver_later
+        ProposalsMailer.send_confirmation(email, first_name: first_name)
       end
 
       def send_rejection_email(email)
