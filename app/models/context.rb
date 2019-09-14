@@ -101,23 +101,21 @@ class Context < ApplicationRecord
 
   private
 
-  def mentor_unread_messages(context)
-    mentor = context.mentor
-    @mentor_unread_messages ||= context.messages.where(
+  def resource_unread_messages(context, resource_type)
+    resource = context.send(resource_type)
+    @unread_messages ||= context.messages.where(
       'updated_at > ? AND seen = ? AND sender_id = ?',
-      Time.current - 1.hour, false, mentor.id
+      Time.current - 1.hour, false, resource.id
     ).reorder(created_at: :asc).pluck(:created_at, :message).map do |pair|
       SharedMethods.format_date(pair[0]) + ": #{pair[1]}"
     end.join(' <br> ').html_safe # rubocop:disable Rails/OutputSafety
   end
 
+  def mentor_unread_messages(context)
+    resource_unread_messages(context, :mentor)
+  end
+
   def organization_unread_messages(context)
-    organization = context.organization
-    @organization_unread_messages ||= context.messages.where(
-      'updated_at > ? AND seen = ? AND sender_id = ?',
-      Time.current - 1.hour, false, organization.id
-    ).reorder(created_at: :asc).pluck(:created_at, :message).map do |pair|
-      SharedMethods.format_date(pair[0]) + ": #{pair[1]}"
-    end.join(' <br> ').html_safe # rubocop:disable Rails/OutputSafety
+    resource_unread_messages(context, :organization)
   end
 end
