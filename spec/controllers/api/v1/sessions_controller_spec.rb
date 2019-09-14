@@ -66,7 +66,6 @@ describe Api::V1::SessionsController do
       @user = FactoryBot.create :user
       @user.generate_authentication_token!
       @user.save
-      sign_in @user
     end
 
     context 'when the credentials are correct' do

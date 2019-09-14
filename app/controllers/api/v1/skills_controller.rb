@@ -7,8 +7,6 @@ module Api
       load_and_authorize_resource :skill, parent: false
       before_action :load_skill, only: %i[show update destroy]
 
-      include ApipieDocs::Api::V1::SkillDoc
-
       def show
         respond_with build_data_object(@skill)
       end

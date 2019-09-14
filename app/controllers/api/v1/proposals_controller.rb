@@ -13,7 +13,6 @@ module Api
       end
       has_scope :status, :offset, :limit
 
-      include ApipieDocs::Api::V1::ProposalDoc
       include Validators::FilterValidator
 
       def show

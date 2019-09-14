@@ -7,8 +7,6 @@ module Api
         load_user(CR::ORGANIZATION)
       end
 
-      include ApipieDocs::Api::V1::OrganizationDoc
-
       def show
         respond_with build_data_object(@user)
       end

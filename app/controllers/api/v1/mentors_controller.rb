@@ -9,8 +9,6 @@ module Api
         load_user(CR::MENTOR)
       end
 
-      include ApipieDocs::Api::V1::MentorDoc
-
       def index
         respond_with build_data_object(
           apply_scopes(

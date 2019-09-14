@@ -58,8 +58,6 @@ GEM
       zeitwerk (~> 2.1, >= 2.1.8)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    apipie-rails (0.5.16)
-      rails (>= 4.1)
     ast (2.4.0)
     bcrypt (3.1.13)
     bootsnap (1.4.5)
@@ -287,7 +285,6 @@ PLATFORMS
   x86_64-darwin-18
 
 DEPENDENCIES
-  apipie-rails
   bootsnap
   bullet
   cancancan
@@ -309,7 +306,6 @@ DEPENDENCIES
   rails
   rails-i18n
   rails_12factor
-  rake
   redis
   responders
   rspec-rails

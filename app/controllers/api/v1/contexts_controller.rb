@@ -17,7 +17,6 @@ module Api
       has_scope :mentor_id, :organization_id, :start_date, :end_date, :status, :offset, :limit
       has_scope :date_interval, using: %i[start_date end_date], type: :hash
 
-      include ApipieDocs::Api::V1::ContextDoc
       include Validators::FilterValidator
 
       def show

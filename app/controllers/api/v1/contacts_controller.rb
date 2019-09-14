@@ -3,8 +3,6 @@
 module Api
   module V1
     class ContactsController < ApplicationController
-      include ApipieDocs::Api::V1::ContactDoc
-
       def create
         if errors.any?
           render json: { success: false, errors: errors }, status: 422

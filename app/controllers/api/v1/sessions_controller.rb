@@ -3,11 +3,6 @@
 module Api
   module V1
     class SessionsController < Api::BaseController
-      include ApipieDocs::Api::V1::SessionDoc
-
-      resource_description do
-        name 'Sessions - Login/Logout'
-      end
 
       def create
         user = User.find_by(email: params[:email])

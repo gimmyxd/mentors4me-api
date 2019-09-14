@@ -11,7 +11,6 @@ gem 'rails-i18n'
 gem 'responders'
 gem 'figaro'
 gem 'has_scope'
-gem 'apipie-rails'
 gem 'sendgrid-ruby'
 gem 'factory_bot'
 gem 'factory_bot_rails'
@@ -46,7 +45,6 @@ group :test do
   gem 'simplecov',require: false
   gem 'simplecov-rcov',require: false
   gem 'webmock'
-  gem 'rake'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
