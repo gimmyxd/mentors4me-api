@@ -6,10 +6,6 @@
 [![Rails](https://img.shields.io/badge/-Rails%206.0-red)](https://edgeguides.rubyonrails.org/6_0_release_notes.html)
 
 
-application url: https://mentors4me-api.herokuapp.com/ <br>
-documentation: https://mentors4me-api.herokuapp.com/apipie
-
-
 # Run in docker
 - docker-compose up --build(accessible on localhost:3000)
 - docker-compose run web rake(run the tests)
