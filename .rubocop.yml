@@ -1,30 +1,35 @@
+---
+
 require:
   - rubocop-rails
   - rubocop-rspec
   - rubocop-performance
+
 AllCops:
- Include:
-   - Rakefile
-   - config.ru
-   - app/**/*
-   - lib/**/*
-   - confg/**/*
- Exclude:
-   - db/schema.rb
-   - vendor/**/*
-   - app/views/**/*
- TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.4
+  Include:
+    - Rakefile
+    - config.ru
+    - app/**/*
+    - lib/**/*
+    - confg/**/*
+  Exclude:
+    - db/schema.rb
+    - vendor/**/*
+    - app/views/**/*
+    - app/assets/**/*
+
 Documentation:
- Enabled: false
+  Enabled: false
 Metrics/MethodLength:
- Enabled: false
+  Enabled: false
 Style/Documentation:
- Enabled: false
+  Enabled: false
 Metrics/AbcSize:
- Enabled: false
+  Enabled: false
 Metrics/ClassLength:
- Enabled: false
+  Enabled: false
 Style/RescueModifier:
- Enabled: false
+  Enabled: false
 Metrics/LineLength:
- Max: 120
+  Max: 120
