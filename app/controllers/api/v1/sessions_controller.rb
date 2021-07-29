@@ -9,14 +9,14 @@ module Api
 
         user.generate_authentication_token!
         user.save
-        render json: { success: true, data: user.as_json(only: :auth_token) }, status: 200
+        render json: { success: true, data: user.as_json(only: :auth_token) }, status: :ok
       end
 
       def destroy
         user = User.find_by!(auth_token: params[:id])
         user.generate_authentication_token!
         user.save
-        head 204
+        head :no_content
       end
 
       def valid_sign_in?(user)

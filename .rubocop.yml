@@ -6,21 +6,20 @@ require:
   - rubocop-performance
 
 AllCops:
-  TargetRubyVersion: 2.4
+  NewCops: enable
   Include:
     - Rakefile
     - config.ru
     - app/**/*
     - lib/**/*
     - confg/**/*
+
   Exclude:
     - db/schema.rb
     - vendor/**/*
     - app/views/**/*
     - app/assets/**/*
 
-Documentation:
-  Enabled: false
 Metrics/MethodLength:
   Enabled: false
 Style/Documentation:
@@ -31,5 +30,8 @@ Metrics/ClassLength:
   Enabled: false
 Style/RescueModifier:
   Enabled: false
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
+Lint/MissingSuper:
+  Exclude:
+    - app/abilities/*

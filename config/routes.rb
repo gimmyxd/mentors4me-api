@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 Rails.application.routes.draw do
   #swagger
-  mount SwaggerUiEngine::Engine, at: '/api'
+  # mount SwaggerUiEngine::Engine, at: '/api'
 
   # Serve websocket cable requests in-process
   mount ActionCable.server => '/cable'

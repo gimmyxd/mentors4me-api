@@ -24,9 +24,10 @@ class User < ApplicationRecord
   # Filer users by status
   # /contexts?status='status'
   def self.status(status)
-    if status == CU::ACTIVE
+    case status
+    when CU::ACTIVE
       where(active: true)
-    elsif status == CU::INACTIVE
+    when CU::INACTIVE
       where(active: false)
     end
   end
@@ -84,7 +85,7 @@ class User < ApplicationRecord
       role: roles.pluck(:slug)
     }
     add_mentor_data(custom_response) if mentor.present?
-    add_organization_data(custom_response) if organization .present?
+    add_organization_data(custom_response) if organization.present?
     options.empty? ? custom_response : super
   end
 

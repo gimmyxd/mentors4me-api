@@ -32,18 +32,18 @@ module Api
           OrganizationsMailer.send_confirmation(
             user.email, user.organization.asignee
           )
-          render json: build_data_object(user), status: 201
+          render json: build_data_object(user), status: :created
         else
-          render json: build_error_object(user), status: 422
+          render json: build_error_object(user), status: :unprocessable_entity
         end
       end
 
       def update
         @user.organization.update(organization_params)
         if @user.update(update_user_params)
-          render json: build_data_object(@user), status: 200
+          render json: build_data_object(@user), status: :ok
         else
-          render json: build_error_object(@user), status: 422
+          render json: build_error_object(@user), status: :unprocessable_entity
         end
       end
 

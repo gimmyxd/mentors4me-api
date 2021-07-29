@@ -28,27 +28,27 @@ module Api
         proposal.pending
         if proposal.save
           notify_proposer(proposal_params[:proposer_email], proposal_params[:proposer_first_name])
-          render json: build_data_object(proposal), status: 201
+          render json: build_data_object(proposal), status: :created
         else
-          render json: build_error_object(proposal), status: 422
+          render json: build_error_object(proposal), status: :unprocessable_entity
         end
       end
 
       def accept
         if @proposal.accept
           send_invitation_email(@proposal.mentor_email, @proposal.auth_token)
-          render json: build_data_object(@proposal), status: 200
+          render json: build_data_object(@proposal), status: :ok
         else
-          render json: build_error_object(@proposal), status: 422
+          render json: build_error_object(@proposal), status: :unprocessable_entity
         end
       end
 
       def reject
         if @proposal.reject
           send_rejection_email(@proposal.mentor_email)
-          render json: build_data_object(@proposal), status: 200
+          render json: build_data_object(@proposal), status: :ok
         else
-          render json: build_error_object(@proposal), status: 422
+          render json: build_error_object(@proposal), status: :unprocessable_entity
         end
       end
 

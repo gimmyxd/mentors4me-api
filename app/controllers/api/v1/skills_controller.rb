@@ -18,25 +18,25 @@ module Api
       def create
         skill = Skill.new(skill_params)
         if skill.save
-          render json: build_data_object(skill), status: 200
+          render json: build_data_object(skill), status: :ok
         else
-          render json: build_error_object(skill), status: 422
+          render json: build_error_object(skill), status: :unprocessable_entity
         end
       end
 
       def update
         if @skill.update(skill_params)
-          render json: build_data_object(@skill), status: 200
+          render json: build_data_object(@skill), status: :ok
         else
-          render json: build_error_object(@skill), status: 422
+          render json: build_error_object(@skill), status: :unprocessable_entity
         end
       end
 
       def destroy
         if @skill.destroy
-          render json: { success: true }, status: 200
+          render json: { success: true }, status: :ok
         else
-          render json: build_error_object(@skill), status: 422
+          render json: build_error_object(@skill), status: :unprocessable_entity
         end
       end
 

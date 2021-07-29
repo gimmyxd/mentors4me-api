@@ -4,7 +4,7 @@ module Api
   module V1
     class MentorsController < UsersController
       before_action :authenticate_create, only: :create
-      prepend_before_action :authenticate, only: %i[update password]
+      prepend_before_action :authenticate, only: %i[update]
       before_action only: %i[show update destroy password] do
         load_user(CR::MENTOR)
       end
@@ -37,9 +37,9 @@ module Api
           MentorsMailer.send_confirmation(
             user.email, user.mentor.first_name
           )
-          render json: build_data_object(user), status: 201
+          render json: build_data_object(user), status: :created
         else
-          render json: build_error_object(user), status: 422
+          render json: build_error_object(user), status: :unprocessable_entity
         end
       end
 
@@ -47,14 +47,10 @@ module Api
         @user.mentor.update(mentor_params)
         @user.mentor.assign_skills(params[:skills])
         if @user.update(update_user_params)
-          render json: build_data_object(@user), status: 200
+          render json: build_data_object(@user), status: :ok
         else
-          render json: build_error_object(@user), status: 422
+          render json: build_error_object(@user), status: :unprocessable_entity
         end
-      end
-
-      def password
-        super
       end
 
       private

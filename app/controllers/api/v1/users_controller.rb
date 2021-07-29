@@ -36,9 +36,9 @@ module Api
 
       def password
         if @user.update_with_password(password_params)
-          render json: build_data_object(@user), status: 200
+          render json: build_data_object(@user), status: :ok
         else
-          render json: build_error_object(@user), status: 422
+          render json: build_error_object(@user), status: :unprocessable_entity
         end
       end
 
@@ -46,18 +46,18 @@ module Api
         @user.active = false
         @user.generate_authentication_token!
         if @user.save
-          render json: { success: true }, status: 200
+          render json: { success: true }, status: :ok
         else
-          render json: build_error_object(@user), status: 422
+          render json: build_error_object(@user), status: :unprocessable_entity
         end
       end
 
       def activate
         @user.active = true
         if @user.save
-          render json: { success: true }, status: 200
+          render json: { success: true }, status: :ok
         else
-          render json: build_error_object(@user), status: 422
+          render json: build_error_object(@user), status: :unprocessable_entity
         end
       end
 

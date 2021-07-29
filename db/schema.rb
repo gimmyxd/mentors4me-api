@@ -2,15 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_14_152130) do
+ActiveRecord::Schema.define(version: 2021_07_29_063700) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,8 +22,7 @@ ActiveRecord::Schema.define(version: 2019_09_14_152130) do
     t.string "status"
     t.integer "mentor_id"
     t.integer "organization_id"
-    t.index ["mentor_id"], name: "index_contexts_on_mentor_id"
-    t.index ["organization_id"], name: "index_contexts_on_organization_id"
+    t.index ["mentor_id", "organization_id"], name: "index_contexts_on_mentor_id_and_organization_id", unique: true
   end
 
   create_table "mentors", id: :serial, force: :cascade do |t|
@@ -41,6 +40,7 @@ ActiveRecord::Schema.define(version: 2019_09_14_152130) do
     t.string "position"
     t.string "occupation"
     t.float "availability"
+    t.index ["id"], name: "index_mentors_on_id", unique: true
     t.index ["user_id"], name: "index_mentors_on_user_id"
   end
 
@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(version: 2019_09_14_152130) do
     t.datetime "updated_at", null: false
     t.integer "user_id"
     t.string "facebook"
+    t.index ["id"], name: "index_organizations_on_id", unique: true
     t.index ["user_id"], name: "index_organizations_on_user_id"
   end
 
@@ -89,6 +90,7 @@ ActiveRecord::Schema.define(version: 2019_09_14_152130) do
     t.text "reason"
     t.string "mentor_last_name"
     t.index ["auth_token"], name: "index_proposals_on_auth_token", unique: true
+    t.index ["mentor_email"], name: "index_proposals_on_mentor_email", unique: true
   end
 
   create_table "role_assignments", id: :serial, force: :cascade do |t|
@@ -121,6 +123,7 @@ ActiveRecord::Schema.define(version: 2019_09_14_152130) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_skills_on_name", unique: true
   end
 
   create_table "users", id: :serial, force: :cascade do |t|

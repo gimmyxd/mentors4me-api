@@ -29,12 +29,12 @@ module Api
 
       def accept
         @context.accept!
-        render json: build_data_object(@context), status: 200
+        render json: build_data_object(@context), status: :ok
       end
 
       def reject
         @context.reject!
-        render json: build_data_object(@context), status: 200
+        render json: build_data_object(@context), status: :ok
       end
 
       def create
@@ -42,9 +42,9 @@ module Api
         context.pending
         if context.save
           send_context_confirmation(context)
-          render json: build_data_object(context), status: 200
+          render json: build_data_object(context), status: :ok
         else
-          render json: build_error_object(context), status: 422
+          render json: build_error_object(context), status: :unprocessable_entity
         end
       end
 

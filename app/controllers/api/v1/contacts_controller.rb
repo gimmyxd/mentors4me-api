@@ -5,10 +5,10 @@ module Api
     class ContactsController < ApplicationController
       def create
         if errors.any?
-          render json: { success: false, errors: errors }, status: 422
+          render json: { success: false, errors: errors }, status: :unprocessable_entity
         else
           ContactMailer.send_notification(ENV['CONTACT_EMAIL'], contact_params.to_h)
-          render json: { success: true }, status: 200
+          render json: { success: true }, status: :ok
         end
       end
 

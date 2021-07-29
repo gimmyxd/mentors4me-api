@@ -10,6 +10,7 @@ class Mentor < ApplicationRecord
 
   accepts_nested_attributes_for :skill_assignments, allow_destroy: true
   attr_accessor :skill_id
+
   after_validation :validate_skills
 
   def assign_skills(skill_ids)

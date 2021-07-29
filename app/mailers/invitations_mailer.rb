@@ -4,7 +4,7 @@ class InvitationsMailer < ApplicationMailer
   class << self
     def send_invitation(email, auth_token)
       url = "#{ENV['FRONTEND_URL']}/#/mentors/register/#{auth_token}"
-      email.gsub!(/\+(.*?)\@/, '@')
+      email.gsub!(/\+(.*?)@/, '@')
 
       substitutions = [
         {

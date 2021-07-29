@@ -3,8 +3,8 @@
 class Context < ApplicationRecord
   include SharedMethods
 
-  belongs_to :mentor, class_name: 'User', foreign_key: 'mentor_id' # rubocop:disable Rails/InverseOf
-  belongs_to :organization, class_name: 'User', foreign_key: 'organization_id' # rubocop:disable Rails/InverseOf
+  belongs_to :mentor, class_name: 'User'
+  belongs_to :organization, class_name: 'User'
   has_many :messages, dependent: :destroy
   validates :description, presence: true, length: { maximum: 500 }
   validates :mentor_id, presence: true

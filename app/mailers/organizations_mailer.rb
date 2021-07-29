@@ -3,7 +3,7 @@
 class OrganizationsMailer < ApplicationMailer
   class << self
     def send_confirmation(email, name)
-      email.gsub!(/\+(.*?)\@/, '@')
+      email.gsub!(/\+(.*?)@/, '@')
       substitutions = [
         {
           key: '-name-',
@@ -15,7 +15,7 @@ class OrganizationsMailer < ApplicationMailer
     end
 
     def send_unread_messages(email, options)
-      email.gsub!(/\+(.*?)\@/, '@')
+      email.gsub!(/\+(.*?)@/, '@')
       parser = SubstitutionParsingService.new(options)
       substitutions = parser.call
 

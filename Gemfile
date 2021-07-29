@@ -1,5 +1,4 @@
 source 'https://rubygems.org'
-ruby '~> 2.6.0'
 
 gem 'rails'
 gem 'pg'
@@ -17,7 +16,7 @@ gem 'factory_bot_rails'
 gem 'faker'
 gem 'redis'
 gem 'bootsnap'
-gem 'swagger_ui_engine'
+# gem 'swagger_ui_engine'
 gem 'nokogiri'
 
 
