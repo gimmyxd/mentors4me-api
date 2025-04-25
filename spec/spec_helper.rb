@@ -2,22 +2,20 @@
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV['RAILS_ENV'] ||= 'test'
-if ENV['COVERAGE'] == 'on'
-  require 'simplecov'
-  require 'simplecov-rcov'
-  class SimpleCov::Formatter::MergedFormatter
-    def format(result)
-      SimpleCov::Formatter::HTMLFormatter.new.format(result)
-      SimpleCov::Formatter::RcovFormatter.new.format(result)
-    end
+require 'simplecov'
+require 'simplecov-rcov'
+class SimpleCov::Formatter::MergedFormatter
+  def format(result)
+    SimpleCov::Formatter::HTMLFormatter.new.format(result)
+    SimpleCov::Formatter::RcovFormatter.new.format(result)
   end
-  SimpleCov.formatter = SimpleCov::Formatter::MergedFormatter
-  SimpleCov.start 'rails' do
-    add_group 'Models', 'app/models'
-    add_group 'Controllers', 'app/controllers'
-    add_group 'Abilities', 'app/abilities'
-    minimum_coverage 75
-  end
+end
+SimpleCov.formatter = SimpleCov::Formatter::MergedFormatter
+SimpleCov.start 'rails' do
+  add_group 'Models', 'app/models'
+  add_group 'Controllers', 'app/controllers'
+  add_group 'Abilities', 'app/abilities'
+  minimum_coverage 75
 end
 
 require File.expand_path('../config/environment', __dir__)
@@ -42,7 +40,7 @@ Rails.application.load_tasks
 Rake::Task['generate_user_roles'].invoke
 
 RSpec.configure do |config|
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_path = "#{Rails.root}/spec/fixtures"
   config.use_transactional_fixtures = true
   config.infer_base_class_for_anonymous_controllers = false
   config.order = 'random'

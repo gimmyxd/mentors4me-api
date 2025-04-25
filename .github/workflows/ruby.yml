@@ -26,8 +26,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    container:
-      image: ruby:2.7
 
     services:
       postgres:
@@ -45,6 +43,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - uses: actions/checkout@v4
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7
+        bundler-cache: true
+
     - name: Setup DB, Run tests
       env:
         PGHOST: postgres
@@ -55,10 +59,12 @@ jobs:
         bundle install --jobs 4 --retry 3
         bundle exec rake db:create
         bundle exec rake db:migrate
+
     - name: Test & publish code coverage
       uses: paambaati/codeclimate-action@v9.0.0
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       with:
-        coverageCommand: COVERAGE='on' bundle exec rspec spec
+        coverageCommand: bundle exec rspec spec
+        coverageLocations: ./coverage:simplecov
         debug: true
