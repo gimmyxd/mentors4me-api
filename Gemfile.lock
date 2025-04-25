@@ -320,10 +320,11 @@ DEPENDENCIES
   shoulda-matchers
   simplecov
   simplecov-rcov
+  simplecov_json_formatter
   spring
   spring-watcher-listen
   tzinfo-data
   webmock
 
 BUNDLED WITH
-   2.1.4
+   2.3.24
