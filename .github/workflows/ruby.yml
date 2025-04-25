@@ -7,11 +7,10 @@ on:
   pull_request:
 
 jobs:
-  ruby:
+  rubocop:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
     steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
@@ -23,3 +22,35 @@ jobs:
         run: |
           bundle install --jobs 4 --retry 3
           bundle exec rubocop
+  rspec:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    container:
+      image: ruby:2.7
+
+    services:
+      postgres:
+        image: postgres:17.4
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ""
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: postgres
+        ports:
+        - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup DB, Run tests
+      env:
+        PGHOST: postgres
+        PGUSER: postgres
+        PGPORT: ${{ job.services.postgres.ports[5432] }}
+        RAILS_ENV: test
+      run: |
+        bin/rails db:create db:schema:load
+        bundle exec rspec
