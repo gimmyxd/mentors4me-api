@@ -1,51 +1,51 @@
 source 'https://rubygems.org'
 
-gem 'rails'
-gem 'pg'
-gem 'devise'
-gem 'puma'
-gem 'rack-cors'
+gem 'bootsnap'
 gem 'cancancan'
-gem 'rails-i18n'
-gem 'responders'
-gem 'figaro'
-gem 'has_scope'
-gem 'sendgrid-ruby'
+gem 'devise'
 gem 'factory_bot'
 gem 'factory_bot_rails'
 gem 'faker'
+gem 'figaro'
+gem 'has_scope'
+gem 'pg'
+gem 'puma'
+gem 'rack-cors'
+gem 'rails'
+gem 'rails-i18n'
 gem 'redis'
-gem 'bootsnap'
+gem 'responders'
+gem 'sendgrid-ruby'
 # gem 'swagger_ui_engine'
 gem 'nokogiri'
 
-
 group :development, :test do
+  gem 'pry-byebug'
   gem 'rubocop', require: false
+  gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
-  gem 'rubocop-performance', require: false
-  gem 'pry-byebug'
 end
 
 group :development do
+  gem 'bullet'
+  gem 'letter_opener'
   gem 'listen'
   gem 'spring'
   gem 'spring-watcher-listen'
-  gem 'letter_opener'
-  gem 'bullet'
 end
 
 group :test do
+  gem 'climate_control'
+  gem 'database_cleaner'
+  gem 'fuubar'
   gem 'rspec-rails'
   gem 'shoulda-matchers'
-  gem 'fuubar'
-  gem 'database_cleaner'
-  gem 'simplecov',require: false
-  gem 'simplecov-rcov',require: false
+  gem 'simplecov', require: false
+  gem 'simplecov_json_formatter', require: false
+  gem 'simplecov-rcov', require: false
   gem 'webmock'
-  gem 'climate_control'
 end
 
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'rails_12factor', group: :production
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]

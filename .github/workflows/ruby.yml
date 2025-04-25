@@ -1,4 +1,4 @@
-name: Rubocop
+name: Checks
 
 on:
   push:
@@ -28,7 +28,6 @@ jobs:
       contents: read
     container:
       image: ruby:2.7
-
     services:
       postgres:
         image: postgres:17.4
@@ -55,4 +54,16 @@ jobs:
         bundle install --jobs 4 --retry 3
         bundle exec rake db:create
         bundle exec rake db:migrate
-        bundle exec rspec
+
+    - name: Test & publish code coverage
+      uses: paambaati/codeclimate-action@v9.0.0
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        PGHOST: postgres
+        PGUSER: postgres
+        PGPORT: ${{ job.services.postgres.ports[5432] }}
+        RAILS_ENV: test
+      with:
+        coverageCommand: bundle exec rspec spec
+        coverageLocations: ./coverage:simplecov
+        debug: true
