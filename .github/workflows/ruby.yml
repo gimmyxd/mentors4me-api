@@ -44,12 +44,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - uses: actions/checkout@v4
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 2.7
-        bundler-cache: true
-
     - name: Setup DB, Run tests
       env:
         PGHOST: postgres
